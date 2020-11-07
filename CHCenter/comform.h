@@ -19,6 +19,7 @@ public:
     explicit ComForm(QWidget *parent = nullptr);
     ~ComForm();
 
+
 private slots:
     void on_BTNCancle_clicked();
     void on_BTNOK_clicked();
@@ -27,8 +28,8 @@ private slots:
 
 
 signals:
-    void sig_port_chose(QString,int);
-    void sig_port_cancle();
+    void sigPortChose(QString,int);
+    void sigPortCancle();
 
 
 private:

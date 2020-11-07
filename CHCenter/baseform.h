@@ -28,15 +28,47 @@ private slots:
     void SideBar_toggled(int index);
 
     void on_BTNConnect_clicked();
-    void rec_port_chose(QString port_name,int baudrate);
-    void rec_port_cancle();
-    void rec_data();
+    void getsigPortChose(QString port_name,int baudrate);
+    void getsigPortCancle();
+    void getsigData();
+
+    void geterrorOpenPort();
+    void getsigOpenPort();
+
     void update_BTNConnect_state();
-    void display_IMUnumber(receive_imusol_packet_t IMU_data);
+    void displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int m_bitmap);
+
+
 
 private:
     Ui::BaseForm *ui;
     ComForm *comform;
     CHSerialport *ch_serialport;
+
+    struct StatusbarMsg{
+        QString sw_version="";
+        QString port="";
+        QString baudrate="";
+        QString current_status="";
+
+
+        QString getMsg(void){
+
+            QString full_msg="";
+
+            if(!sw_version.isEmpty())
+                full_msg+=sw_version+". ";
+            if(!port.isEmpty())
+                full_msg+=port+". ";
+            if(!baudrate.isEmpty())
+                full_msg+="Baud="+baudrate+". ";
+            if(!current_status.isEmpty())
+                full_msg+=current_status;
+            return full_msg;
+        }
+    };
+    StatusbarMsg statusbar_msg;
+
+
 };
 #endif // BASEFORM_H

@@ -51,7 +51,6 @@ void ComForm::on_ListPort_itemClicked(QListWidgetItem *)
  */
 void ComForm::on_BTNOK_clicked()
 {
-
     QString port_name = ui->ListPort->currentItem()->text().split(" : ").at(0);
 
     int baudrate=115200;
@@ -74,7 +73,7 @@ void ComForm::on_BTNOK_clicked()
     }
 
 
-    emit sig_port_chose(port_name,baudrate);
+    emit sigPortChose(port_name,baudrate);
 }
 
 /**
@@ -82,11 +81,12 @@ void ComForm::on_BTNOK_clicked()
  */
 void ComForm::on_BTNCancle_clicked()
 {
-    emit sig_port_cancle();
+    emit sigPortCancle();
 }
 
 void ComForm::on_BTNPortRefresh_clicked()
 {
+    ui->BTNOK->setEnabled(0);
     ui->ListPort->clear();
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
     {

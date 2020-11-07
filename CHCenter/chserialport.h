@@ -15,31 +15,38 @@
 class CHSerialport : public QObject
 {
   Q_OBJECT
+  QThread *m_thread;
+
 public:
   explicit CHSerialport(QObject *parent = nullptr);
   ~CHSerialport();
 
   int openSerialport(QString, int);
   QSerialPort *m_serial = nullptr;
+
   receive_imusol_packet_t *IMU_data;
   receive_gwsol_packet_t *IMUs_data;
   unsigned int frame_rate=0;
+  unsigned int m_bitmap;
   bool is_gwsol=0;
 
 public slots:
   void handleData();
   void write_data();
-  int initThreadReading();
+  void initThreadReading();
   void closeSerialport();
-  int linkCHdevices(QString, int);
+  void linkCHdevices(QString, int);
 
 signals:
-  void sig_send_data();
+  void sigSendData();
+  void errorOpenPort();
+  void sigOpenPort();
 
 private:
-  QThread *m_thread;
   QTimer *timer_framerate;
   QMutex mutex_writing;
+  QString m_port_name;
+  int m_baudrate;
 
 private slots:
   void countFrameRate();

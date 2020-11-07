@@ -13,17 +13,26 @@ BaseForm::BaseForm(QWidget *parent)
     ui->SideBar->setStyleSheet("background-color:#30302E;");
 
     /*hide the bottom StatusBar.*/
-    this->setStatusBar(nullptr);
+    //this->setStatusBar(nullptr);
+
+    this->statusBar()->setStyleSheet("background-color:#30302E; color: white;");
 
 
-
-
-    ch_serialport = new CHSerialport(this);
+    ch_serialport = new CHSerialport(nullptr);
     comform=new ComForm(this);
     comform->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
-    connect(comform, SIGNAL(sig_port_chose(QString,int)), this, SLOT(rec_port_chose(QString,int)));
-    connect(comform, SIGNAL(sig_port_cancle()), this, SLOT(rec_port_cancle()));
+    connect(comform, SIGNAL(sigPortChose(QString,int)), this, SLOT(getsigPortChose(QString,int)));
+    connect(comform, SIGNAL(sigPortCancle()), this, SLOT(getsigPortCancle()));
+
+    connect(ch_serialport, SIGNAL(errorOpenPort()), this, SLOT(geterrorOpenPort()));
+    connect(ch_serialport, SIGNAL(sigOpenPort()), this, SLOT(getsigOpenPort()));
+
+    statusbar_msg.baudrate="";
+    statusbar_msg.port="";
+    statusbar_msg.current_status="Unconnected";
+    statusbar_msg.sw_version="Software Version: "+QString::number(0.1);
+    ui->statusbar->showMessage(statusbar_msg.getMsg());
 
 }
 
@@ -85,6 +94,12 @@ void BaseForm::on_BTNConnect_clicked()
     }
     else{
         ch_serialport->closeSerialport();
+
+        statusbar_msg.baudrate="";
+        statusbar_msg.port="";
+        statusbar_msg.current_status="Unconnected";
+        statusbar_msg.sw_version="Software Version: "+QString::number(0.1);
+        ui->statusbar->showMessage(statusbar_msg.getMsg());
     }
 
     update_BTNConnect_state();
@@ -96,40 +111,62 @@ void BaseForm::on_BTNConnect_clicked()
  * if ret=0, means connection is build successfully.
  */
 
-void BaseForm::rec_port_chose(QString port_name, int baudrate)
+void BaseForm::getsigPortChose(QString port_name, int baudrate)
 {
-    qDebug()<<port_name;
 
-    int ret=ch_serialport->linkCHdevices(port_name,baudrate);
+    comform->hide();
+    ch_serialport->linkCHdevices(port_name,baudrate);
 
-    if(ret==0){
-        connect(ch_serialport, SIGNAL(sig_send_data()),
-                this, SLOT(rec_data()), Qt::QueuedConnection);
-        comform->hide();
-    }
-    else{
-        QMessageBox msgBox;
-        msgBox.setText("Cannot connect to " + port_name);
-        msgBox.setWindowTitle("Error");
-        msgBox.exec();
-    }
+    statusbar_msg.baudrate=QString::number(baudrate);
+    statusbar_msg.port=port_name;
+    statusbar_msg.current_status="Connecting...";
+    statusbar_msg.sw_version="";
+    ui->statusbar->showMessage(statusbar_msg.getMsg());
 
-    update_BTNConnect_state();
+}
+void BaseForm::geterrorOpenPort()
+{
+    QMessageBox msgBox;
+    msgBox.setText("Cannot build connection");
+    msgBox.setWindowTitle("Error");
+    msgBox.exec();
+    comform->show();
+
+    statusbar_msg.current_status="Cannot build connection. Please check the selected port again";
+    ui->statusbar->showMessage(statusbar_msg.getMsg());
 }
 
-void BaseForm::rec_port_cancle()
+void BaseForm::getsigOpenPort()
+{
+    comform->hide();
+    connect(ch_serialport, SIGNAL(sigSendData()),
+            this, SLOT(getsigData()), Qt::QueuedConnection);
+
+    update_BTNConnect_state();
+
+    statusbar_msg.current_status="Streaming...";
+    ui->statusbar->showMessage(statusbar_msg.getMsg());
+}
+
+void BaseForm::getsigPortCancle()
 {
     comform->hide();
     update_BTNConnect_state();
 }
 
-void BaseForm::rec_data()
+void BaseForm::getsigData()
 {
+
+    receive_imusol_packet_t imuData=*ch_serialport->IMU_data;
+
+
     if(ch_serialport->is_gwsol==0){
-        display_IMUnumber(*ch_serialport->IMU_data);
+        displayIMUnumber(imuData, ch_serialport->m_bitmap);
     }
-    ui->LabelFrameRate->setText("Frame Rate = " + QString::number(ch_serialport->frame_rate) + " Hz");
+
+
 }
+
 
 void BaseForm::update_BTNConnect_state()
 {
@@ -151,26 +188,76 @@ void BaseForm::update_BTNConnect_state()
     }
 }
 
-void BaseForm::display_IMUnumber(receive_imusol_packet_t IMU_data)
+void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int m_bitmap)
 {
-    ui->LabelAccX->setText(QString::number(IMU_data.acc[0],'f',3));
-    ui->LabelAccY->setText(QString::number(IMU_data.acc[1],'f',3));
-    ui->LabelAccZ->setText(QString::number(IMU_data.acc[2],'f',3));
 
-    ui->LabelGyroX->setText(QString::number(IMU_data.gyr[0],'f',3));
-    ui->LabelGyroY->setText(QString::number(IMU_data.gyr[1],'f',3));
-    ui->LabelGyroZ->setText(QString::number(IMU_data.gyr[2],'f',3));
+    ui->LabelFrameRate->setText("Frame Rate = " + QString::number(ch_serialport->frame_rate) + " Hz");
+    if(m_bitmap & BIT_VALID_ID){
+        if(!ui->LabelID->isVisible())
+            ui->LabelID->setVisible(1);
+        ui->LabelID->setText("ID = " + QString::number(imu_data.id));
+    }
+    else{
+        if(ui->LabelID->isVisible())
+            ui->LabelID->setVisible(0);
+    }
+    if(m_bitmap & BIT_VALID_ACC){
+        if(!ui->LabelGPAcc->isVisible()){
+            ui->LabelGPAcc->setVisible(1);
+        }
+        ui->LabelAccX->setText(QString::number(imu_data.acc[0],'f',3));
+        ui->LabelAccY->setText(QString::number(imu_data.acc[1],'f',3));
+        ui->LabelAccZ->setText(QString::number(imu_data.acc[2],'f',3));
+    }
+    else{
+        if(ui->LabelGPAcc->isVisible()){
+            ui->LabelGPAcc->setVisible(0);
+        }
 
-    ui->LabelMagX->setText(QString::number(IMU_data.mag[0],'f',0));
-    ui->LabelMagY->setText(QString::number(IMU_data.mag[1],'f',0));
-    ui->LabelMagZ->setText(QString::number(IMU_data.mag[2],'f',0));
-
-    ui->LabelEulerX->setText(QString::number(IMU_data.eul[0],'f',1));
-    ui->LabelEulerY->setText(QString::number(IMU_data.eul[1],'f',1));
-    ui->LabelEulerZ->setText(QString::number(IMU_data.eul[2],'f',1));
-
-    ui->LabelQuatW->setText(QString::number(IMU_data.quat[0],'f',3));
-    ui->LabelQuatX->setText(QString::number(IMU_data.quat[1],'f',3));
-    ui->LabelQuatY->setText(QString::number(IMU_data.quat[2],'f',3));
-    ui->LabelQuatZ->setText(QString::number(IMU_data.quat[3],'f',3));
+    }
+    if(m_bitmap & BIT_VALID_GYR){
+        if(!ui->LabelGPGyro->isVisible())
+            ui->LabelGPGyro->setVisible(1);
+        ui->LabelGyroX->setText(QString::number(imu_data.gyr[0],'f',3));
+        ui->LabelGyroY->setText(QString::number(imu_data.gyr[1],'f',3));
+        ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2],'f',3));
+    }
+    else{
+        if(ui->LabelGPGyro->isVisible())
+            ui->LabelGPGyro->setVisible(0);
+    }
+    if(m_bitmap & BIT_VALID_MAG){
+        if(!ui->LabelGPMag->isVisible())
+            ui->LabelGPMag->setVisible(1);
+        ui->LabelMagX->setText(QString::number(imu_data.mag[0],'f',0));
+        ui->LabelMagY->setText(QString::number(imu_data.mag[1],'f',0));
+        ui->LabelMagZ->setText(QString::number(imu_data.mag[2],'f',0));
+    }
+    else{
+        if(ui->LabelGPMag->isVisible())
+            ui->LabelGPMag->setVisible(0);
+    }
+    if(m_bitmap & BIT_VALID_EUL){
+        if(!ui->LabelGPEuler->isVisible())
+            ui->LabelGPEuler->setVisible(1);
+        ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',1));
+        ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',1));
+        ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',1));
+    }
+    else{
+        if(ui->LabelGPEuler->isVisible())
+            ui->LabelGPEuler->setVisible(0);
+    }
+    if(m_bitmap & BIT_VALID_QUAT){
+        if(!ui->LabelGPQuat->isVisible())
+            ui->LabelGPQuat->setVisible(1);
+        ui->LabelQuatW->setText(QString::number(imu_data.quat[0],'f',3));
+        ui->LabelQuatX->setText(QString::number(imu_data.quat[1],'f',3));
+        ui->LabelQuatY->setText(QString::number(imu_data.quat[2],'f',3));
+        ui->LabelQuatZ->setText(QString::number(imu_data.quat[3],'f',3));
+    }
+    else{
+        if(ui->LabelGPQuat->isVisible())
+            ui->LabelGPQuat->setVisible(0);
+    }
 }
