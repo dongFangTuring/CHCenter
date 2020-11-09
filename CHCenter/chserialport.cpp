@@ -5,10 +5,10 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     //this->setParent(nullptr);
 
     m_thread = new QThread();
-    m_serial = new QSerialPort();
+    CH_serial = new QSerialPort();
     timer_framerate = new QTimer();
     this->moveToThread(m_thread);
-    m_serial->moveToThread(m_thread);
+    CH_serial->moveToThread(m_thread);
     timer_framerate->moveToThread(m_thread);
     connect(m_thread, SIGNAL(started()), this, SLOT(on_thread_started()),Qt::QueuedConnection);
     connect(m_thread, SIGNAL(finished()), this, SLOT(on_thread_stopped()),Qt::QueuedConnection);
@@ -37,14 +37,14 @@ void CHSerialport::initThreadReading()
 int CHSerialport::openSerialport(QString port_name, int baudrate)
 {
 
-    m_serial->setPortName(port_name);
-    m_serial->setBaudRate(baudrate);
-    m_serial->setDataBits(QSerialPort::Data8);
-    m_serial->setParity(QSerialPort::NoParity);
-    m_serial->setStopBits(QSerialPort::OneStop);
-    m_serial->setFlowControl(QSerialPort::NoFlowControl);
+    CH_serial->setPortName(port_name);
+    CH_serial->setBaudRate(baudrate);
+    CH_serial->setDataBits(QSerialPort::Data8);
+    CH_serial->setParity(QSerialPort::NoParity);
+    CH_serial->setStopBits(QSerialPort::OneStop);
+    CH_serial->setFlowControl(QSerialPort::NoFlowControl);
 
-    if (!m_serial->open(QIODevice::ReadWrite)) {
+    if (!CH_serial->open(QIODevice::ReadWrite)) {
         return -1;
     }
     return 0;
@@ -52,9 +52,9 @@ int CHSerialport::openSerialport(QString port_name, int baudrate)
 
 void CHSerialport::closeSerialport()
 {
-    if(m_serial->isOpen()) {
-        m_serial->disconnect();
-        m_serial->close();
+    if(CH_serial->isOpen()) {
+        CH_serial->disconnect();
+        CH_serial->close();
     }
     m_thread->quit();
     m_thread->wait();
@@ -76,7 +76,7 @@ void CHSerialport::countFrameRate()
 {
 
     mutex_writing.lock();
-    frame_rate=frame_count;
+    Frame_rate=frame_count;
     mutex_writing.unlock();
     frame_count=0;
 
@@ -85,7 +85,7 @@ void CHSerialport::countFrameRate()
 void CHSerialport::on_thread_started()
 {
 
-    connect(m_serial, SIGNAL(readyRead()), this, SLOT(handleData()), Qt::QueuedConnection);
+    connect(CH_serial, SIGNAL(readyRead()), this, SLOT(handleData()), Qt::QueuedConnection);
     connect(timer_framerate, SIGNAL(timeout()), this, SLOT(countFrameRate()),Qt::QueuedConnection);
 
     timer_framerate->start();
@@ -104,6 +104,8 @@ void CHSerialport::on_thread_stopped()
 {
     timer_framerate->stop();
     timer_framerate->disconnect();
+    receive_gwsol.tag=0;
+    receive_gwsol.n=0;
 }
 
 
@@ -111,11 +113,11 @@ void CHSerialport::handleData()
 {
     //qDebug() << "started thread is:" << QThread::currentThreadId();
 
-    if(m_serial->bytesAvailable() > 0 && m_serial->isReadable())
+    if(CH_serial->bytesAvailable() > 0 && CH_serial->isReadable())
     {
-        long long NumberOfBytesToRead=m_serial->bytesAvailable();
+        long long NumberOfBytesToRead=CH_serial->bytesAvailable();
 
-        QByteArray arr = m_serial->readAll();
+        QByteArray arr = CH_serial->readAll();
 
         for (int i=0;i<NumberOfBytesToRead;i++) {
             uint8_t c=arr[i];
@@ -125,20 +127,36 @@ void CHSerialport::handleData()
         mutex_writing.lock();
         if(receive_gwsol.tag != KItemGWSOL)
         {
-            is_gwsol=0;
+            if(Is_gwsol==1){
+                Is_gwsol=0;
+                emit sigUpdateListGWNode();
+            }
+            else
+                Is_gwsol=0;
+
             IMU_data=&receive_imusol;
         }
         else
         {
-            is_gwsol=1;
-            for(int i = 0; i < receive_gwsol.n; i++)
-            {
-                IMUs_data=&receive_gwsol;
+            if(Is_gwsol==0){
+                Is_gwsol=1;
+                emit sigUpdateListGWNode();
             }
+
+
+            if(!(m_number_of_node==receive_gwsol.n)){
+                m_number_of_node=receive_gwsol.n;
+                emit sigUpdateListGWNode();
+                qDebug()<<"updated";
+            }
+
+            IMUs_data=&receive_gwsol;
+
         }
-        if(m_bitmap!=bitmap)
-            m_bitmap=bitmap;
+        if(Content_bits!=bitmap)
+            Content_bits=bitmap;
         mutex_writing.unlock();
+
 
         emit sigSendData();
     }
@@ -149,5 +167,5 @@ void CHSerialport::handleData()
 void CHSerialport::write_data()
 {
     qDebug() << "write_id is:" << QThread::currentThreadId();
-    m_serial->write("data", 4);
+    CH_serial->write("data", 4);
 }

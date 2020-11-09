@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en" sourcelanguage="en">
+<TS version="2.1" language="zh_CN" sourcelanguage="en">
 <context>
     <name>BaseForm</name>
     <message>
@@ -13,33 +13,33 @@
         <location filename="baseform.cpp" line="175"/>
         <source>Connect</source>
         <oldsource>Connect </oldsource>
-        <translation>Connect</translation>
+        <translation>连接设备</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="178"/>
         <source>Data/Dashboard</source>
-        <translation>Data/Dashboard</translation>
+        <translation>数据与图表</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="225"/>
         <source>3D View</source>
-        <translation>3D View</translation>
+        <translation>3D 姿态仿真</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="272"/>
         <source>Setting</source>
-        <translation>Module Setting</translation>
+        <translation>模块参数设置</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="325"/>
         <source>CSV Logger</source>
-        <translation>CSV Logger</translation>
+        <translation>CSV 纪录工具</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="383"/>
         <source>Frame Rate : </source>
         <oldsource>Frame Rate = 0 Hz</oldsource>
-        <translation>Frame Rate : </translation>
+        <translation>幀率 : </translation>
     </message>
     <message>
         <location filename="baseform.ui" line="396"/>
@@ -54,7 +54,7 @@
     <message>
         <location filename="baseform.ui" line="430"/>
         <source>Linear Accelaration (g)</source>
-        <translation>Linear Accelaration (g)</translation>
+        <translation>加速度 (g)</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="453"/>
@@ -104,7 +104,7 @@
         <location filename="baseform.ui" line="580"/>
         <source>Gyroscope (°/s)</source>
         <oldsource>Gyroscope (°/s)     </oldsource>
-        <translation>Gyroscope (°/s)</translation>
+        <translation>陀螺仪 (角速度(°/s))</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="603"/>
@@ -130,34 +130,34 @@
     <message>
         <location filename="baseform.ui" line="724"/>
         <source>Magnetometer (μT)</source>
-        <translation>Magnetometer (μT)</translation>
+        <translation>磁场计 (μT)</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="868"/>
         <source>Euler Angle (°)</source>
         <oldsource>Euler Angle (°)             </oldsource>
-        <translation>Euler Angle (°)</translation>
+        <translation>欧拉角 (°)</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="891"/>
         <source>X(Roll)=</source>
-        <translation>X(Roll)=</translation>
+        <translation>X(横滚角)=</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="898"/>
         <source>Y(Pitch)=</source>
-        <translation>Y(Pitch)=</translation>
+        <translation>Y(俯仰角)=</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="905"/>
         <source>Z(Yaw)=</source>
-        <translation>Z(Yaw)=</translation>
+        <translation>Z(航向角)=</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="1015"/>
         <source>Quaterinion</source>
         <oldsource>Quaterinion (norm)</oldsource>
-        <translation>Quaterinion</translation>
+        <translation>四元数</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="1045"/>
@@ -168,43 +168,43 @@
         <location filename="baseform.cpp" line="33"/>
         <location filename="baseform.cpp" line="100"/>
         <source>Unconnected</source>
-        <translation>Unconnected</translation>
+        <translation>未连接设备</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="34"/>
         <location filename="baseform.cpp" line="101"/>
         <source>Software Version: </source>
-        <translation>Software Version: </translation>
+        <translation>软件版本: </translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="122"/>
         <source>Connecting...</source>
-        <translation>Connecting...</translation>
+        <translation>连接设备中...</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="130"/>
         <source>Cannot build connection</source>
-        <translation>Cannot build connection</translation>
+        <translation>无法连接设备</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="131"/>
         <source>Error</source>
-        <translation>Error</translation>
+        <translation>错误</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="135"/>
         <source>Cannot build connection. Please check the selected port again</source>
-        <translation>Cannot build connection. Please check the selected port again.</translation>
+        <translation>无法连接设备。请检查所选的串口是否正确。</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="147"/>
         <source>Streaming...</source>
-        <translation>Streaming...</translation>
+        <translation>数据串流中...</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="186"/>
         <source>Disconnect</source>
-        <translation>Disconnect</translation>
+        <translation>中断连接</translation>
     </message>
 </context>
 <context>
@@ -212,27 +212,27 @@
     <message>
         <location filename="comform.ui" line="32"/>
         <source>Selecting Port</source>
-        <translation>Selecting Port</translation>
+        <translation>选择串口设备</translation>
     </message>
     <message>
         <location filename="comform.ui" line="189"/>
         <source>Selected :</source>
-        <translation>Selected :</translation>
+        <translation>已选择 :</translation>
     </message>
     <message>
         <location filename="comform.cpp" line="23"/>
         <source>115200(Default)</source>
-        <translation>115200(Default)</translation>
+        <translation>115200(预设)</translation>
     </message>
     <message>
         <location filename="comform.cpp" line="27"/>
         <source>Selected : </source>
-        <translation>Selected : </translation>
+        <translation>已选择 : </translation>
     </message>
     <message>
         <location filename="comform.cpp" line="46"/>
         <source>Selected : %1</source>
-        <translation>Selected : %1</translation>
+        <translation>已选择 : %1</translation>
     </message>
 </context>
 </TS>

@@ -32,6 +32,8 @@ FORMS += \
 
 TRANSLATIONS += \
     CHCenter_en_US.ts
+    CHCenter_tc.ts
+    CHCenter_cn.ts
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -31,7 +31,7 @@ typedef struct receive_imusol_packet_t {
 typedef struct receive_gwsol_packet_t {
 	uint8_t tag;
 	uint8_t gw_id;
-	uint8_t n;
+    uint8_t n;
 	receive_imusol_packet_t receive_imusol[MAX_LENGTH];
 } receive_gwsol_packet_t;
 	 

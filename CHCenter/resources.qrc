@@ -3,5 +3,9 @@
         <file>images/refreshing.png</file>
         <file>images/ok.png</file>
         <file>images/cancel.png</file>
+        <file>CHCenter_cn.qm</file>
+        <file>CHCenter_en_US.qm</file>
+        <file>CHCenter_tc.qm</file>
+        <file>images/mainicon.png</file>
     </qresource>
 </RCC>

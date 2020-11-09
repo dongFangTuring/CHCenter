@@ -9,26 +9,29 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QMutex>
+
 #include "packet/packet.h"
 #include "packet/imu_data_decode.h"
 
 class CHSerialport : public QObject
 {
   Q_OBJECT
-  QThread *m_thread;
+
 
 public:
   explicit CHSerialport(QObject *parent = nullptr);
   ~CHSerialport();
 
-  int openSerialport(QString, int);
-  QSerialPort *m_serial = nullptr;
 
-  receive_imusol_packet_t *IMU_data;
-  receive_gwsol_packet_t *IMUs_data;
-  unsigned int frame_rate=0;
-  unsigned int m_bitmap;
-  bool is_gwsol=0;
+  QSerialPort *CH_serial = nullptr;
+  int openSerialport(QString, int);
+
+
+  receive_imusol_packet_t *IMU_data=&receive_imusol;
+  receive_gwsol_packet_t *IMUs_data=&receive_gwsol;
+  unsigned int Frame_rate=0;
+  unsigned int Content_bits;
+  bool Is_gwsol=0;
 
 public slots:
   void handleData();
@@ -41,12 +44,15 @@ signals:
   void sigSendData();
   void errorOpenPort();
   void sigOpenPort();
+  void sigUpdateListGWNode();
 
 private:
   QTimer *timer_framerate;
   QMutex mutex_writing;
   QString m_port_name;
+  QThread *m_thread;
   int m_baudrate;
+  int m_number_of_node;
 
 private slots:
   void countFrameRate();

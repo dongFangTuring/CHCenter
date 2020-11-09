@@ -20,10 +20,11 @@ ComForm::ComForm(QWidget *parent) :
         com_info = info;
         ui->ListPort->addItem(com_info.portName()+" : "+com_info.description());
     }
-    QStringList buadrate_list={"9600","115200(Default)","460800","921600"};
+    QStringList buadrate_list={"9600",tr("115200(Default)"),"460800","921600"};
     ui->CBoxBaudrate->addItems(buadrate_list);
     ui->CBoxBaudrate->setCurrentIndex(1);
 
+    ui->LabelSelected->setText(tr("Selected : "));
 }
 
 
@@ -42,7 +43,7 @@ void ComForm::on_ListPort_itemClicked(QListWidgetItem *)
 
     ui->BTNOK->setEnabled(1);
     QString port_name = ui->ListPort->currentItem()->text().split(" : ").at(0);
-    ui->LabelSelected->setText("Selected : " + port_name);
+    ui->LabelSelected->setText(tr("Selected : %1").arg(port_name));
 }
 
 /**

@@ -11,19 +11,26 @@
 
 #include <QtCore/QLocale>
 #include <QtCore/QVariant>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -32,23 +39,29 @@ QT_BEGIN_NAMESPACE
 class Ui_BaseForm
 {
 public:
+    QAction *actionTraditional_Chinese;
+    QAction *actionSimplified_Chinese;
+    QAction *actionEnglish;
+    QAction *actionExit;
     QWidget *centralwidget;
-    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout_4;
+    QHBoxLayout *horizontalLayout_10;
     QWidget *SideBar;
+    QVBoxLayout *verticalLayout_3;
     QPushButton *BTNConnect;
+    QListWidget *ListGWNode;
     QPushButton *SideBarBTN1;
     QPushButton *SideBarBTN2;
     QPushButton *SideBarBTN3;
     QPushButton *SideBarBTN4;
     QStackedWidget *stackedWidget;
-    QWidget *page_3;
-    QWidget *PageThreeDView;
     QWidget *PageData;
     QVBoxLayout *verticalLayout;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
     QVBoxLayout *verticalLayout_2;
-    QFormLayout *formLayout_6;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_10;
     QLabel *LabelFrameRate;
     QLabel *LabelID;
     QGroupBox *LabelGPAcc;
@@ -108,7 +121,28 @@ public:
     QLabel *LabelQuatZ;
     QSpacerItem *horizontalSpacer_5;
     QPushButton *pushButton_5;
+    QWidget *PageThreeDView;
+    QHBoxLayout *horizontalLayout_3;
+    QRadioButton *radioButton_2;
+    QRadioButton *radioButton_3;
+    QRadioButton *radioButton;
+    QWidget *PageSetting;
+    QVBoxLayout *verticalLayout_5;
+    QCheckBox *checkBox_3;
+    QCheckBox *checkBox_2;
+    QCheckBox *checkBox;
+    QTextBrowser *textBrowser;
+    QWidget *PageLogger;
+    QHBoxLayout *horizontalLayout_8;
+    QComboBox *comboBox_2;
+    QComboBox *comboBox;
+    QRadioButton *radioButton_4;
+    QRadioButton *radioButton_5;
+    QHBoxLayout *horizontalLayout;
+    QLabel *LabelStatusMsg;
     QMenuBar *menubar;
+    QMenu *menuWindow;
+    QMenu *menuLanguage;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *BaseForm)
@@ -129,12 +163,23 @@ public:
         BaseForm->setDockNestingEnabled(false);
         BaseForm->setDockOptions(QMainWindow::AnimatedDocks);
         BaseForm->setUnifiedTitleAndToolBarOnMac(true);
+        actionTraditional_Chinese = new QAction(BaseForm);
+        actionTraditional_Chinese->setObjectName(QString::fromUtf8("actionTraditional_Chinese"));
+        actionSimplified_Chinese = new QAction(BaseForm);
+        actionSimplified_Chinese->setObjectName(QString::fromUtf8("actionSimplified_Chinese"));
+        actionEnglish = new QAction(BaseForm);
+        actionEnglish->setObjectName(QString::fromUtf8("actionEnglish"));
+        actionExit = new QAction(BaseForm);
+        actionExit->setObjectName(QString::fromUtf8("actionExit"));
         centralwidget = new QWidget(BaseForm);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        horizontalLayout = new QHBoxLayout(centralwidget);
-        horizontalLayout->setSpacing(0);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_4 = new QVBoxLayout(centralwidget);
+        verticalLayout_4->setSpacing(0);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
+        horizontalLayout_10 = new QHBoxLayout();
+        horizontalLayout_10->setSpacing(0);
+        horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
         SideBar = new QWidget(centralwidget);
         SideBar->setObjectName(QString::fromUtf8("SideBar"));
         QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -143,10 +188,13 @@ public:
         sizePolicy1.setHeightForWidth(SideBar->sizePolicy().hasHeightForWidth());
         SideBar->setSizePolicy(sizePolicy1);
         SideBar->setMinimumSize(QSize(300, 300));
+        verticalLayout_3 = new QVBoxLayout(SideBar);
+        verticalLayout_3->setSpacing(20);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        verticalLayout_3->setContentsMargins(30, 20, 30, 20);
         BTNConnect = new QPushButton(SideBar);
         BTNConnect->setObjectName(QString::fromUtf8("BTNConnect"));
-        BTNConnect->setGeometry(QRect(25, 20, 250, 80));
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(BTNConnect->sizePolicy().hasHeightForWidth());
@@ -174,9 +222,22 @@ public:
 "background-color:#dedede;\n"
 "}"));
         BTNConnect->setFlat(true);
+
+        verticalLayout_3->addWidget(BTNConnect);
+
+        ListGWNode = new QListWidget(SideBar);
+        ListGWNode->setObjectName(QString::fromUtf8("ListGWNode"));
+        ListGWNode->setStyleSheet(QString::fromUtf8("QListWidget::item:selected{\n"
+"background: white;\n"
+"color:balck;\n"
+"}"));
+        ListGWNode->setTextElideMode(Qt::ElideMiddle);
+        ListGWNode->setItemAlignment(Qt::AlignCenter);
+
+        verticalLayout_3->addWidget(ListGWNode);
+
         SideBarBTN1 = new QPushButton(SideBar);
         SideBarBTN1->setObjectName(QString::fromUtf8("SideBarBTN1"));
-        SideBarBTN1->setGeometry(QRect(25, 200, 250, 60));
         sizePolicy2.setHeightForWidth(SideBarBTN1->sizePolicy().hasHeightForWidth());
         SideBarBTN1->setSizePolicy(sizePolicy2);
         SideBarBTN1->setMinimumSize(QSize(150, 60));
@@ -200,9 +261,11 @@ public:
 "color: black;\n"
 "}\n"
 ""));
+
+        verticalLayout_3->addWidget(SideBarBTN1);
+
         SideBarBTN2 = new QPushButton(SideBar);
         SideBarBTN2->setObjectName(QString::fromUtf8("SideBarBTN2"));
-        SideBarBTN2->setGeometry(QRect(25, 280, 250, 60));
         sizePolicy2.setHeightForWidth(SideBarBTN2->sizePolicy().hasHeightForWidth());
         SideBarBTN2->setSizePolicy(sizePolicy2);
         SideBarBTN2->setMinimumSize(QSize(150, 60));
@@ -226,9 +289,11 @@ public:
 "color: black;\n"
 "}\n"
 ""));
+
+        verticalLayout_3->addWidget(SideBarBTN2);
+
         SideBarBTN3 = new QPushButton(SideBar);
         SideBarBTN3->setObjectName(QString::fromUtf8("SideBarBTN3"));
-        SideBarBTN3->setGeometry(QRect(25, 360, 250, 60));
         sizePolicy2.setHeightForWidth(SideBarBTN3->sizePolicy().hasHeightForWidth());
         SideBarBTN3->setSizePolicy(sizePolicy2);
         SideBarBTN3->setMinimumSize(QSize(150, 60));
@@ -252,9 +317,11 @@ public:
 "color: black;\n"
 "}\n"
 ""));
+
+        verticalLayout_3->addWidget(SideBarBTN3);
+
         SideBarBTN4 = new QPushButton(SideBar);
         SideBarBTN4->setObjectName(QString::fromUtf8("SideBarBTN4"));
-        SideBarBTN4->setGeometry(QRect(25, 440, 250, 60));
         sizePolicy2.setHeightForWidth(SideBarBTN4->sizePolicy().hasHeightForWidth());
         SideBarBTN4->setSizePolicy(sizePolicy2);
         SideBarBTN4->setMinimumSize(QSize(150, 60));
@@ -282,16 +349,13 @@ public:
 ""));
         SideBarBTN4->setFlat(false);
 
-        horizontalLayout->addWidget(SideBar);
+        verticalLayout_3->addWidget(SideBarBTN4);
+
+
+        horizontalLayout_10->addWidget(SideBar);
 
         stackedWidget = new QStackedWidget(centralwidget);
         stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
-        page_3 = new QWidget();
-        page_3->setObjectName(QString::fromUtf8("page_3"));
-        stackedWidget->addWidget(page_3);
-        PageThreeDView = new QWidget();
-        PageThreeDView->setObjectName(QString::fromUtf8("PageThreeDView"));
-        stackedWidget->addWidget(PageThreeDView);
         PageData = new QWidget();
         PageData->setObjectName(QString::fromUtf8("PageData"));
         verticalLayout = new QVBoxLayout(PageData);
@@ -301,7 +365,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 467, 652));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 449, 662));
         QSizePolicy sizePolicy3(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
@@ -310,26 +374,36 @@ public:
         verticalLayout_2 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_2->setSpacing(10);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        formLayout_6 = new QFormLayout();
-        formLayout_6->setObjectName(QString::fromUtf8("formLayout_6"));
-        formLayout_6->setContentsMargins(-1, 10, -1, 10);
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(-1, 10, -1, 10);
+        label_10 = new QLabel(scrollAreaWidgetContents);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+        QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(label_10->sizePolicy().hasHeightForWidth());
+        label_10->setSizePolicy(sizePolicy4);
+
+        horizontalLayout_2->addWidget(label_10);
+
         LabelFrameRate = new QLabel(scrollAreaWidgetContents);
         LabelFrameRate->setObjectName(QString::fromUtf8("LabelFrameRate"));
-        sizePolicy2.setHeightForWidth(LabelFrameRate->sizePolicy().hasHeightForWidth());
-        LabelFrameRate->setSizePolicy(sizePolicy2);
+        sizePolicy4.setHeightForWidth(LabelFrameRate->sizePolicy().hasHeightForWidth());
+        LabelFrameRate->setSizePolicy(sizePolicy4);
         LabelFrameRate->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        formLayout_6->setWidget(0, QFormLayout::LabelRole, LabelFrameRate);
+        horizontalLayout_2->addWidget(LabelFrameRate);
 
         LabelID = new QLabel(scrollAreaWidgetContents);
         LabelID->setObjectName(QString::fromUtf8("LabelID"));
         sizePolicy2.setHeightForWidth(LabelID->sizePolicy().hasHeightForWidth());
         LabelID->setSizePolicy(sizePolicy2);
 
-        formLayout_6->setWidget(0, QFormLayout::FieldRole, LabelID);
+        horizontalLayout_2->addWidget(LabelID);
 
 
-        verticalLayout_2->addLayout(formLayout_6);
+        verticalLayout_2->addLayout(horizontalLayout_2);
 
         LabelGPAcc = new QGroupBox(scrollAreaWidgetContents);
         LabelGPAcc->setObjectName(QString::fromUtf8("LabelGPAcc"));
@@ -344,11 +418,11 @@ public:
         formLayout->setVerticalSpacing(10);
         label = new QLabel(LabelGPAcc);
         label->setObjectName(QString::fromUtf8("label"));
-        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy5(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy5);
 
         formLayout->setWidget(0, QFormLayout::LabelRole, label);
 
@@ -383,11 +457,11 @@ public:
 
         label_2 = new QLabel(LabelGPAcc);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        QSizePolicy sizePolicy5(QSizePolicy::Maximum, QSizePolicy::Preferred);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
-        label_2->setSizePolicy(sizePolicy5);
+        QSizePolicy sizePolicy6(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        sizePolicy6.setHorizontalStretch(0);
+        sizePolicy6.setVerticalStretch(0);
+        sizePolicy6.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
+        label_2->setSizePolicy(sizePolicy6);
 
         formLayout->setWidget(2, QFormLayout::LabelRole, label_2);
 
@@ -400,11 +474,11 @@ public:
 
         pushButton = new QPushButton(LabelGPAcc);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        QSizePolicy sizePolicy6(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-        sizePolicy6.setHorizontalStretch(0);
-        sizePolicy6.setVerticalStretch(0);
-        sizePolicy6.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
-        pushButton->setSizePolicy(sizePolicy6);
+        QSizePolicy sizePolicy7(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+        sizePolicy7.setHorizontalStretch(0);
+        sizePolicy7.setVerticalStretch(0);
+        sizePolicy7.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy7);
 
         horizontalLayout_4->addWidget(pushButton);
 
@@ -422,8 +496,8 @@ public:
         formLayout_2->setVerticalSpacing(10);
         label_5 = new QLabel(LabelGPGyro);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        sizePolicy5.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
-        label_5->setSizePolicy(sizePolicy5);
+        sizePolicy6.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
+        label_5->setSizePolicy(sizePolicy6);
 
         formLayout_2->setWidget(0, QFormLayout::LabelRole, label_5);
 
@@ -470,8 +544,8 @@ public:
 
         pushButton_2 = new QPushButton(LabelGPGyro);
         pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-        sizePolicy6.setHeightForWidth(pushButton_2->sizePolicy().hasHeightForWidth());
-        pushButton_2->setSizePolicy(sizePolicy6);
+        sizePolicy7.setHeightForWidth(pushButton_2->sizePolicy().hasHeightForWidth());
+        pushButton_2->setSizePolicy(sizePolicy7);
 
         horizontalLayout_5->addWidget(pushButton_2);
 
@@ -489,8 +563,8 @@ public:
         formLayout_3->setVerticalSpacing(10);
         label_9 = new QLabel(LabelGPMag);
         label_9->setObjectName(QString::fromUtf8("label_9"));
-        sizePolicy5.setHeightForWidth(label_9->sizePolicy().hasHeightForWidth());
-        label_9->setSizePolicy(sizePolicy5);
+        sizePolicy6.setHeightForWidth(label_9->sizePolicy().hasHeightForWidth());
+        label_9->setSizePolicy(sizePolicy6);
 
         formLayout_3->setWidget(0, QFormLayout::LabelRole, label_9);
 
@@ -537,8 +611,8 @@ public:
 
         pushButton_3 = new QPushButton(LabelGPMag);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
-        sizePolicy6.setHeightForWidth(pushButton_3->sizePolicy().hasHeightForWidth());
-        pushButton_3->setSizePolicy(sizePolicy6);
+        sizePolicy7.setHeightForWidth(pushButton_3->sizePolicy().hasHeightForWidth());
+        pushButton_3->setSizePolicy(sizePolicy7);
 
         horizontalLayout_6->addWidget(pushButton_3);
 
@@ -556,8 +630,8 @@ public:
         formLayout_4->setVerticalSpacing(10);
         label_20 = new QLabel(LabelGPEuler);
         label_20->setObjectName(QString::fromUtf8("label_20"));
-        sizePolicy5.setHeightForWidth(label_20->sizePolicy().hasHeightForWidth());
-        label_20->setSizePolicy(sizePolicy5);
+        sizePolicy6.setHeightForWidth(label_20->sizePolicy().hasHeightForWidth());
+        label_20->setSizePolicy(sizePolicy6);
 
         formLayout_4->setWidget(0, QFormLayout::LabelRole, label_20);
 
@@ -604,8 +678,8 @@ public:
 
         pushButton_4 = new QPushButton(LabelGPEuler);
         pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
-        sizePolicy6.setHeightForWidth(pushButton_4->sizePolicy().hasHeightForWidth());
-        pushButton_4->setSizePolicy(sizePolicy6);
+        sizePolicy7.setHeightForWidth(pushButton_4->sizePolicy().hasHeightForWidth());
+        pushButton_4->setSizePolicy(sizePolicy7);
 
         horizontalLayout_7->addWidget(pushButton_4);
 
@@ -646,8 +720,8 @@ public:
 
         LabelQuatW = new QLabel(LabelGPQuat);
         LabelQuatW->setObjectName(QString::fromUtf8("LabelQuatW"));
-        sizePolicy4.setHeightForWidth(LabelQuatW->sizePolicy().hasHeightForWidth());
-        LabelQuatW->setSizePolicy(sizePolicy4);
+        sizePolicy5.setHeightForWidth(LabelQuatW->sizePolicy().hasHeightForWidth());
+        LabelQuatW->setSizePolicy(sizePolicy5);
         LabelQuatW->setMinimumSize(QSize(50, 0));
         LabelQuatW->setMaximumSize(QSize(50, 16777215));
         LabelQuatW->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
@@ -687,8 +761,8 @@ public:
 
         pushButton_5 = new QPushButton(LabelGPQuat);
         pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
-        sizePolicy6.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
-        pushButton_5->setSizePolicy(sizePolicy6);
+        sizePolicy7.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
+        pushButton_5->setSizePolicy(sizePolicy7);
 
         gridLayout_5->addWidget(pushButton_5, 0, 4, 1, 1);
 
@@ -700,21 +774,123 @@ public:
         verticalLayout->addWidget(scrollArea);
 
         stackedWidget->addWidget(PageData);
+        PageThreeDView = new QWidget();
+        PageThreeDView->setObjectName(QString::fromUtf8("PageThreeDView"));
+        horizontalLayout_3 = new QHBoxLayout(PageThreeDView);
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        radioButton_2 = new QRadioButton(PageThreeDView);
+        radioButton_2->setObjectName(QString::fromUtf8("radioButton_2"));
 
-        horizontalLayout->addWidget(stackedWidget);
+        horizontalLayout_3->addWidget(radioButton_2);
+
+        radioButton_3 = new QRadioButton(PageThreeDView);
+        radioButton_3->setObjectName(QString::fromUtf8("radioButton_3"));
+
+        horizontalLayout_3->addWidget(radioButton_3);
+
+        radioButton = new QRadioButton(PageThreeDView);
+        radioButton->setObjectName(QString::fromUtf8("radioButton"));
+
+        horizontalLayout_3->addWidget(radioButton);
+
+        stackedWidget->addWidget(PageThreeDView);
+        PageSetting = new QWidget();
+        PageSetting->setObjectName(QString::fromUtf8("PageSetting"));
+        verticalLayout_5 = new QVBoxLayout(PageSetting);
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        checkBox_3 = new QCheckBox(PageSetting);
+        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
+
+        verticalLayout_5->addWidget(checkBox_3);
+
+        checkBox_2 = new QCheckBox(PageSetting);
+        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
+
+        verticalLayout_5->addWidget(checkBox_2);
+
+        checkBox = new QCheckBox(PageSetting);
+        checkBox->setObjectName(QString::fromUtf8("checkBox"));
+
+        verticalLayout_5->addWidget(checkBox);
+
+        textBrowser = new QTextBrowser(PageSetting);
+        textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
+
+        verticalLayout_5->addWidget(textBrowser);
+
+        stackedWidget->addWidget(PageSetting);
+        PageLogger = new QWidget();
+        PageLogger->setObjectName(QString::fromUtf8("PageLogger"));
+        horizontalLayout_8 = new QHBoxLayout(PageLogger);
+        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
+        comboBox_2 = new QComboBox(PageLogger);
+        comboBox_2->setObjectName(QString::fromUtf8("comboBox_2"));
+
+        horizontalLayout_8->addWidget(comboBox_2);
+
+        comboBox = new QComboBox(PageLogger);
+        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+
+        horizontalLayout_8->addWidget(comboBox);
+
+        radioButton_4 = new QRadioButton(PageLogger);
+        radioButton_4->setObjectName(QString::fromUtf8("radioButton_4"));
+
+        horizontalLayout_8->addWidget(radioButton_4);
+
+        radioButton_5 = new QRadioButton(PageLogger);
+        radioButton_5->setObjectName(QString::fromUtf8("radioButton_5"));
+
+        horizontalLayout_8->addWidget(radioButton_5);
+
+        stackedWidget->addWidget(PageLogger);
+
+        horizontalLayout_10->addWidget(stackedWidget);
+
+
+        verticalLayout_4->addLayout(horizontalLayout_10);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(0);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        LabelStatusMsg = new QLabel(centralwidget);
+        LabelStatusMsg->setObjectName(QString::fromUtf8("LabelStatusMsg"));
+        LabelStatusMsg->setMinimumSize(QSize(200, 0));
+        LabelStatusMsg->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+
+        horizontalLayout->addWidget(LabelStatusMsg);
+
+
+        verticalLayout_4->addLayout(horizontalLayout);
 
         BaseForm->setCentralWidget(centralwidget);
         menubar = new QMenuBar(BaseForm);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 812, 26));
+        menubar->setGeometry(QRect(0, 0, 812, 25));
+        menuWindow = new QMenu(menubar);
+        menuWindow->setObjectName(QString::fromUtf8("menuWindow"));
+        menuLanguage = new QMenu(menuWindow);
+        menuLanguage->setObjectName(QString::fromUtf8("menuLanguage"));
         BaseForm->setMenuBar(menubar);
         statusbar = new QStatusBar(BaseForm);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
+        QSizePolicy sizePolicy8(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        sizePolicy8.setHorizontalStretch(0);
+        sizePolicy8.setVerticalStretch(0);
+        sizePolicy8.setHeightForWidth(statusbar->sizePolicy().hasHeightForWidth());
+        statusbar->setSizePolicy(sizePolicy8);
         BaseForm->setStatusBar(statusbar);
+
+        menubar->addAction(menuWindow->menuAction());
+        menuWindow->addAction(menuLanguage->menuAction());
+        menuWindow->addAction(actionExit);
+        menuLanguage->addAction(actionTraditional_Chinese);
+        menuLanguage->addAction(actionSimplified_Chinese);
+        menuLanguage->addAction(actionEnglish);
 
         retranslateUi(BaseForm);
 
-        stackedWidget->setCurrentIndex(2);
+        stackedWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(BaseForm);
@@ -723,12 +899,17 @@ public:
     void retranslateUi(QMainWindow *BaseForm)
     {
         BaseForm->setWindowTitle(QCoreApplication::translate("BaseForm", "BaseForm", nullptr));
-        BTNConnect->setText(QCoreApplication::translate("BaseForm", "Connect ", nullptr));
+        actionTraditional_Chinese->setText(QCoreApplication::translate("BaseForm", "Traditional Chinese", nullptr));
+        actionSimplified_Chinese->setText(QCoreApplication::translate("BaseForm", "Simplified Chinese", nullptr));
+        actionEnglish->setText(QCoreApplication::translate("BaseForm", "English", nullptr));
+        actionExit->setText(QCoreApplication::translate("BaseForm", "Exit", nullptr));
+        BTNConnect->setText(QCoreApplication::translate("BaseForm", "Connect", nullptr));
         SideBarBTN1->setText(QCoreApplication::translate("BaseForm", "Data/Dashboard", nullptr));
         SideBarBTN2->setText(QCoreApplication::translate("BaseForm", "3D View", nullptr));
-        SideBarBTN3->setText(QCoreApplication::translate("BaseForm", "Setting", nullptr));
+        SideBarBTN3->setText(QCoreApplication::translate("BaseForm", "Device Setting", nullptr));
         SideBarBTN4->setText(QCoreApplication::translate("BaseForm", "CSV Logger", nullptr));
-        LabelFrameRate->setText(QCoreApplication::translate("BaseForm", "Frame Rate = 0 Hz", nullptr));
+        label_10->setText(QCoreApplication::translate("BaseForm", "Frame Rate : ", nullptr));
+        LabelFrameRate->setText(QCoreApplication::translate("BaseForm", "0 Hz", nullptr));
         LabelID->setText(QCoreApplication::translate("BaseForm", "ID = 0", nullptr));
         LabelGPAcc->setTitle(QCoreApplication::translate("BaseForm", "Linear Accelaration (g)", nullptr));
         label->setText(QCoreApplication::translate("BaseForm", "X= ", nullptr));
@@ -738,7 +919,7 @@ public:
         LabelAccZ->setText(QCoreApplication::translate("BaseForm", "0", nullptr));
         label_2->setText(QCoreApplication::translate("BaseForm", "Z= ", nullptr));
         pushButton->setText(QCoreApplication::translate("BaseForm", "PushButton", nullptr));
-        LabelGPGyro->setTitle(QCoreApplication::translate("BaseForm", "Gyroscope (\302\260/s)     ", nullptr));
+        LabelGPGyro->setTitle(QCoreApplication::translate("BaseForm", "Gyroscope (\302\260/s)", nullptr));
         label_5->setText(QCoreApplication::translate("BaseForm", "X=", nullptr));
         label_4->setText(QCoreApplication::translate("BaseForm", "Y=", nullptr));
         label_6->setText(QCoreApplication::translate("BaseForm", "Z=", nullptr));
@@ -754,7 +935,7 @@ public:
         LabelMagY->setText(QCoreApplication::translate("BaseForm", "0", nullptr));
         LabelMagZ->setText(QCoreApplication::translate("BaseForm", "0", nullptr));
         pushButton_3->setText(QCoreApplication::translate("BaseForm", "PushButton", nullptr));
-        LabelGPEuler->setTitle(QCoreApplication::translate("BaseForm", "Euler Angle (\302\260)             ", nullptr));
+        LabelGPEuler->setTitle(QCoreApplication::translate("BaseForm", "Euler Angle (\302\260)", nullptr));
         label_20->setText(QCoreApplication::translate("BaseForm", "X(Roll)=", nullptr));
         label_22->setText(QCoreApplication::translate("BaseForm", "Y(Pitch)=", nullptr));
         label_19->setText(QCoreApplication::translate("BaseForm", "Z(Yaw)=", nullptr));
@@ -762,7 +943,7 @@ public:
         LabelEulerY->setText(QCoreApplication::translate("BaseForm", "0", nullptr));
         LabelEulerZ->setText(QCoreApplication::translate("BaseForm", "0", nullptr));
         pushButton_4->setText(QCoreApplication::translate("BaseForm", "PushButton", nullptr));
-        LabelGPQuat->setTitle(QCoreApplication::translate("BaseForm", "Quaterinion (norm)", nullptr));
+        LabelGPQuat->setTitle(QCoreApplication::translate("BaseForm", "Quaterinion", nullptr));
         label_26->setText(QCoreApplication::translate("BaseForm", "X=", nullptr));
         label_27->setText(QCoreApplication::translate("BaseForm", "W=", nullptr));
         label_21->setText(QCoreApplication::translate("BaseForm", "Y=", nullptr));
@@ -772,6 +953,17 @@ public:
         LabelQuatY->setText(QCoreApplication::translate("BaseForm", "0", nullptr));
         LabelQuatZ->setText(QCoreApplication::translate("BaseForm", "0", nullptr));
         pushButton_5->setText(QCoreApplication::translate("BaseForm", "PushButton", nullptr));
+        radioButton_2->setText(QCoreApplication::translate("BaseForm", "3D view", nullptr));
+        radioButton_3->setText(QCoreApplication::translate("BaseForm", "3D view", nullptr));
+        radioButton->setText(QCoreApplication::translate("BaseForm", "3D view", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("BaseForm", "setting", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("BaseForm", "setting", nullptr));
+        checkBox->setText(QCoreApplication::translate("BaseForm", "setting", nullptr));
+        radioButton_4->setText(QCoreApplication::translate("BaseForm", "RadioButton", nullptr));
+        radioButton_5->setText(QCoreApplication::translate("BaseForm", "RadioButton", nullptr));
+        LabelStatusMsg->setText(QCoreApplication::translate("BaseForm", "TextLabel", nullptr));
+        menuWindow->setTitle(QCoreApplication::translate("BaseForm", "Window", nullptr));
+        menuLanguage->setTitle(QCoreApplication::translate("BaseForm", "Language", nullptr));
     } // retranslateUi
 
 };
