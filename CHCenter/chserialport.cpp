@@ -52,10 +52,17 @@ int CHSerialport::openSerialport(QString port_name, int baudrate)
 
 void CHSerialport::closeSerialport()
 {
-    if(CH_serial->isOpen()) {
-        CH_serial->disconnect();
-        CH_serial->close();
+    while(1){
+        if(CH_serial->isOpen()) {
+            CH_serial->disconnect();
+            CH_serial->close();
+        }
+        else {
+            sigPortClosed();
+            break;
+        }
     }
+
     m_thread->quit();
     m_thread->wait();
     //m_thread->deleteLater();

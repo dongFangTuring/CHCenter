@@ -17,14 +17,14 @@ BaseForm::BaseForm(QWidget *parent)
     ui->setupUi(this);
 
 
-    /*hide the bottom StatusBar.*/
+    //hide the bottom StatusBar.
     this->setStatusBar(nullptr);
 
-    /*set the stylesheet of baseform*/
+    //set the stylesheet of baseform
     ui->LabelStatusMsg->setStyleSheet("background-color:#30302E; color: white; padding:15px 30px 15px 30px;");
     ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
 
-    /*initial the HI221GW node choosing widget*/
+    //initial the HI221GW node choosing widget
     ui->ListGWNode->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->ListGWNode->setVisible(0);
 
@@ -32,24 +32,30 @@ BaseForm::BaseForm(QWidget *parent)
     comform=new ComForm(this);
     comform->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
-    /*connect signals from class of CHSerialport and ComForm*/
+    //connect signals from class of CHSerialport and ComForm
     connect(comform, SIGNAL(sigPortChose(QString,int)), this, SLOT(getsigPortChose(QString,int)));
     connect(comform, SIGNAL(sigPortCancle()), this, SLOT(getsigPortCancle()));
 
     connect(ch_serialport, SIGNAL(errorOpenPort()), this, SLOT(geterrorOpenPort()));
     connect(ch_serialport, SIGNAL(sigOpenPort()), this, SLOT(getsigOpenPort()));
+    connect(ch_serialport, SIGNAL(sigPortClosed()), this, SLOT(getsigPortClosed()));
     connect(ch_serialport, SIGNAL(sigUpdateListGWNode()), this, SLOT(updateListGWNode()));
 
 
-    /*Welcome message*/
+
+    //Welcome message
     statusbar_msg.baudrate="";
     statusbar_msg.port="";
     statusbar_msg.current_status=tr("Unconnected");
     statusbar_msg.sw_version=tr("Software Version: ")+QString::number(0.1);
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
+
+    //page 1 is the default page
     on_SideBarBTN1_clicked();
 
+    //page 1 widget initialize;
+    addADI();
 }
 
 BaseForm::~BaseForm()
@@ -57,6 +63,9 @@ BaseForm::~BaseForm()
     delete ui;
 }
 
+///In SideBar///
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief BaseForm::on_SideBarBTN1/2/3/4_clicked
@@ -117,88 +126,14 @@ void BaseForm::SideBar_toggled(int index)
 
 void BaseForm::on_BTNConnect_clicked()
 {
-    if(!ch_serialport->CH_serial->isOpen()){
+    if(!ch_serialport->CH_serial->isOpen()){  
         comform->show();
     }
     else{
-        ch_serialport->closeSerialport();
-
-        statusbar_msg.baudrate="";
-        statusbar_msg.port="";
-        statusbar_msg.current_status=tr("Unconnected");
-        statusbar_msg.sw_version=tr("Software Version: ")+QString::number(0.1);
-        ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+        ch_serialport->closeSerialport();    
     }
 
     update_BTNConnect_state();
-}
-
-/**
- * @brief BaseForm::rec_port_chose -
- * linking to CH device, if port can't opened, thead will be stop and pop up an error message.
- * 1.sigOpenPort():getsigOpenPort() and start sigSendData()
- * 2.errorOpenPort():call geterrorOpenPort()
- */
-void BaseForm::getsigPortChose(QString port_name, int baudrate)
-{
-
-    comform->hide();
-    ch_serialport->linkCHdevices(port_name,baudrate);
-
-    statusbar_msg.baudrate=QString::number(baudrate);
-    statusbar_msg.port=port_name;
-    statusbar_msg.current_status=tr("Connecting...");
-    statusbar_msg.sw_version="";
-    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-}
-void BaseForm::geterrorOpenPort()
-{
-    showMessageBox(tr("Cannot build connection"),tr("Error"));
-
-    comform->show();
-
-    statusbar_msg.current_status=tr("Cannot build connection. Please check the selected port again");
-    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-}
-void BaseForm::getsigOpenPort()
-{
-    comform->hide();
-    connect(ch_serialport, SIGNAL(sigSendData()),
-            this, SLOT(getsigData()), Qt::QueuedConnection);
-
-    update_BTNConnect_state();
-
-    statusbar_msg.current_status=tr("Streaming...");
-    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-}
-void BaseForm::getsigPortCancle()
-{
-    comform->hide();
-    update_BTNConnect_state();
-}
-
-/**
- * @brief BaseForm::getsigData
- * process 2 kinds of data: hi226/hi229/ch110/hi221 vs hi221gw
- * @param Is_gwsol:check if it is hi221gw.
- * @param current_gwnodeIndex: while streaming hi221gw, it will remember the chose node(by ID) until it's offine
- */
-void BaseForm::getsigData()
-{
-    if(ch_serialport->Is_gwsol==0){
-        receive_imusol_packet_t imuData=*ch_serialport->IMU_data;
-        displayIMUnumber(imuData, ch_serialport->Content_bits);
-    }
-    else if(ch_serialport->Is_gwsol==1){
-        receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
-        if(imusData.n>0){
-            if(current_gwnodeIndex<0)
-                displayIMUnumber(imusData.receive_imusol[0], ch_serialport->Content_bits);
-            else{
-                displayIMUnumber(imusData.receive_imusol[current_gwnodeIndex], ch_serialport->Content_bits);
-            }
-        }
-    }
 }
 
 void BaseForm::update_BTNConnect_state()
@@ -219,6 +154,166 @@ void BaseForm::update_BTNConnect_state()
         ui->BTNConnect->setText(tr("Disconnect"));
         ui->BTNConnect->setEnabled(1);
     }
+}
+
+/**
+ * @brief BaseForm::updateListGWNode
+ * if number of nodes changes send sigUpdateListGWNode():call updateListGWNode()
+ */
+void BaseForm::updateListGWNode()
+{
+    if(ch_serialport->Is_gwsol==1){
+        ui->ListGWNode->clear();
+        ui->ListGWNode->setVisible(1);
+
+        receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
+
+        bool idexist=false;
+        for(int i = 0; i < imusData.n; i++)
+        {
+            int t_id=imusData.receive_imusol[i].id;
+
+            ui->ListGWNode->addItem(tr("Wireless Node ID : %1").arg(t_id));
+
+            qDebug()<<t_id<< "^"<<current_gwnodeID;
+            if(t_id==current_gwnodeID){
+                ui->ListGWNode->setCurrentRow(i);
+                current_gwnodeIndex=i;
+                idexist=true;
+            }
+
+        }
+        if(idexist==false)
+            current_gwnodeIndex=-1;
+    }
+    else
+        ui->ListGWNode->setVisible(0);
+}
+
+/**
+ * @brief BaseForm::on_ListGWNode_itemClicked
+ * @param current_gwnodeID:remember the chosen ID
+ */
+void BaseForm::on_ListGWNode_itemClicked(QListWidgetItem *item)
+{
+    QString id = ui->ListGWNode->currentItem()->text().split(" : ").last();
+
+    current_gwnodeID=id.toInt();
+    updateListGWNode();
+}
+
+///signal from comform ui///
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * @brief BaseForm::rec_port_chose -
+ * linking to CH device, if port can't opened, thead will be stop and pop up an error message.
+ * 1.sigOpenPort():getsigOpenPort() and start sigSendData()
+ * 2.errorOpenPort():call geterrorOpenPort()
+ */
+void BaseForm::getsigPortChose(QString port_name, int baudrate)
+{
+
+    comform->hide();
+    ch_serialport->linkCHdevices(port_name,baudrate);
+
+    statusbar_msg.baudrate=QString::number(baudrate);
+    statusbar_msg.port=port_name;
+    statusbar_msg.current_status=tr("Connecting...");
+    statusbar_msg.sw_version="";
+    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+}
+
+void BaseForm::getsigPortCancle()
+{
+    comform->close();
+    update_BTNConnect_state();
+}
+
+
+///signal from chserial class///
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
+void BaseForm::geterrorOpenPort()
+{
+    showMessageBox(tr("Cannot build connection"),tr("Error"));
+
+    comform->show();
+
+    statusbar_msg.current_status=tr("Cannot build connection. Please check the selected port again");
+    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+}
+void BaseForm::getsigOpenPort()
+{
+    comform->hide();
+    connect(ch_serialport, SIGNAL(sigSendData()),
+            this, SLOT(getsigData()), Qt::QueuedConnection);
+
+    update_BTNConnect_state();
+
+    statusbar_msg.current_status=tr("Streaming...");
+    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+
+    m_ADI->adiInit();
+    m_Compass->compassInit();
+}
+
+void BaseForm::getsigPortClosed()
+{
+    m_ADI->adiStop();
+    m_Compass->compassStop();
+
+    statusbar_msg.baudrate="";
+    statusbar_msg.port="";
+    statusbar_msg.current_status=tr("Unconnected");
+    statusbar_msg.sw_version=tr("Software Version: ")+QString::number(0.1);
+    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+
+    update_BTNConnect_state();
+}
+
+
+/**
+ * @brief BaseForm::getsigData
+ * process 2 kinds of data: hi226/hi229/ch110/hi221 vs hi221gw
+ * @param Is_gwsol:check if it is hi221gw.
+ * @param current_gwnodeIndex: while streaming hi221gw, it will remember the chose node(by ID) until it's offine
+ */
+void BaseForm::getsigData()
+{
+    if(ch_serialport->Is_gwsol==0){
+        receive_imusol_packet_t imuData=*ch_serialport->IMU_data;
+        displayIMUnumber(imuData, ch_serialport->Content_bits);
+        m_ADI->setData(imuData.eul[0],imuData.eul[1]);
+        m_Compass->setYaw(imuData.eul[2]);
+    }
+    else if(ch_serialport->Is_gwsol==1){
+        receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
+        if(imusData.n>0){
+            if(current_gwnodeIndex<0)
+                displayIMUnumber(imusData.receive_imusol[0], ch_serialport->Content_bits);
+            else{
+                displayIMUnumber(imusData.receive_imusol[current_gwnodeIndex], ch_serialport->Content_bits);
+            }
+        }
+    }
+
+}
+
+///stackwidget page1 content:data, chart and attitude indicator///
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
+void BaseForm::addADI()
+{
+    m_ADI      = new QADI();
+    m_Compass  = new QCompass();
+
+    ui->DataTopBar->addWidget(m_ADI);
+    ui->DataTopBar->addWidget(m_Compass);
 }
 
 /**
@@ -301,6 +396,10 @@ void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int C
     }
 }
 
+///MenuBar signals of actions///
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
 void BaseForm::on_actionExit_triggered()
 {
     this->close();
@@ -364,6 +463,11 @@ void BaseForm::on_actionEnglish_triggered()
 
 }
 
+
+///StatusBar information///
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
 void BaseForm::showMessageBox(QString msg, QString title)
 {
     QMessageBox msgBox;
@@ -372,48 +476,4 @@ void BaseForm::showMessageBox(QString msg, QString title)
     msgBox.exec();
 }
 
-/**
- * @brief BaseForm::updateListGWNode
- * if number of nodes changes send sigUpdateListGWNode():call updateListGWNode()
- */
-void BaseForm::updateListGWNode()
-{
-    if(ch_serialport->Is_gwsol==1){
-        ui->ListGWNode->clear();
-        ui->ListGWNode->setVisible(1);
 
-        receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
-
-        bool idexist=false;
-        for(int i = 0; i < imusData.n; i++)
-        {
-            int t_id=imusData.receive_imusol[i].id;
-
-            ui->ListGWNode->addItem(tr("Wireless Node ID : %1").arg(t_id));
-
-            qDebug()<<t_id<< "^"<<current_gwnodeID;
-            if(t_id==current_gwnodeID){
-                ui->ListGWNode->setCurrentRow(i);
-                current_gwnodeIndex=i;
-                idexist=true;
-            }
-
-        }
-        if(idexist==false)
-            current_gwnodeIndex=-1;
-    }
-    else
-        ui->ListGWNode->setVisible(0);
-}
-
-/**
- * @brief BaseForm::on_ListGWNode_itemClicked
- * @param current_gwnodeID:remember the chosen ID
- */
-void BaseForm::on_ListGWNode_itemClicked(QListWidgetItem *item)
-{
-    QString id = ui->ListGWNode->currentItem()->text().split(" : ").last();
-
-    current_gwnodeID=id.toInt();
-    updateListGWNode();
-}

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>812</width>
-    <height>627</height>
+    <width>1200</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,7 +21,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>600</height>
    </size>
   </property>
@@ -114,7 +114,7 @@
            </property>
            <property name="font">
             <font>
-             <family>微軟正黑體</family>
+             <family>Times New Roman</family>
              <pointsize>-1</pointsize>
              <weight>75</weight>
              <bold>true</bold>
@@ -176,6 +176,12 @@ color:balck;
              <height>60</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
 font-size:20px;
@@ -216,6 +222,12 @@ color: black;
              <width>150</width>
              <height>60</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>-1</pointsize>
+            </font>
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
@@ -258,6 +270,12 @@ color: black;
              <height>60</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>-1</pointsize>
+            </font>
+           </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
 font-size:20px;
@@ -298,6 +316,12 @@ color: black;
              <width>150</width>
              <height>60</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>-1</pointsize>
+            </font>
            </property>
            <property name="cursor">
             <cursorShape>ArrowCursor</cursorShape>
@@ -341,22 +365,22 @@ color: black;
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="PageData">
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QScrollArea" name="scrollArea">
+           <widget class="QScrollArea" name="PageDataScroll">
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
+            <widget class="QWidget" name="PageDataScrollContents">
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
-               <width>449</width>
-               <height>662</height>
+               <y>-225</y>
+               <width>837</width>
+               <height>776</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -370,7 +394,7 @@ color: black;
                <number>10</number>
               </property>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <layout class="QHBoxLayout" name="DataTopBar">
                 <property name="topMargin">
                  <number>10</number>
                 </property>
@@ -378,46 +402,94 @@ color: black;
                  <number>10</number>
                 </property>
                 <item>
-                 <widget class="QLabel" name="label_10">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Frame Rate : </string>
-                  </property>
-                 </widget>
+                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_2">
+                    <item>
+                     <widget class="QLabel" name="label_10">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <family>Times New Roman</family>
+                        <pointsize>12</pointsize>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Frame Rate : </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="LabelFrameRate">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <family>Times New Roman</family>
+                        <pointsize>12</pointsize>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>0 Hz</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="LabelID">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Times New Roman</family>
+                      <pointsize>12</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>ID = 0</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QLabel" name="LabelFrameRate">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
                   </property>
-                  <property name="text">
-                   <string>0 Hz</string>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Minimum</enum>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
                   </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="LabelID">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>ID = 0</string>
-                  </property>
-                 </widget>
+                 </spacer>
                 </item>
                </layout>
               </item>
@@ -428,6 +500,12 @@ color: black;
                   <width>100</width>
                   <height>0</height>
                  </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>10</pointsize>
+                 </font>
                 </property>
                 <property name="styleSheet">
                  <string notr="true"/>
@@ -582,6 +660,12 @@ color: black;
               </item>
               <item>
                <widget class="QGroupBox" name="LabelGPGyro">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="title">
                  <string>Gyroscope (°/s)</string>
                 </property>
@@ -726,6 +810,12 @@ color: black;
               </item>
               <item>
                <widget class="QGroupBox" name="LabelGPMag">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="title">
                  <string>Magnetometer (μT)</string>
                 </property>
@@ -870,6 +960,12 @@ color: black;
               </item>
               <item>
                <widget class="QGroupBox" name="LabelGPEuler">
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="title">
                  <string>Euler Angle (°)</string>
                 </property>
@@ -1016,6 +1112,12 @@ color: black;
                <widget class="QGroupBox" name="LabelGPQuat">
                 <property name="enabled">
                  <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Times New Roman</family>
+                  <pointsize>10</pointsize>
+                 </font>
                 </property>
                 <property name="title">
                  <string>Quaterinion</string>
@@ -1294,6 +1396,12 @@ color: black;
           <height>0</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -1311,8 +1419,8 @@ color: black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>812</width>
-     <height>25</height>
+     <width>1200</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWindow">

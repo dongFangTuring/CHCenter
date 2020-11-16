@@ -11,6 +11,7 @@ CONFIG += c++11 x86
 
 
 SOURCES += \
+    attitudeindicator.cpp \
     baseform.cpp \
     chserialport.cpp \
     comform.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     packet/packet.cpp
 
 HEADERS += \
+    attitudeindicator.h \
     baseform.h\
     chserialport.h \
     comform.h \

@@ -8,6 +8,7 @@
 #include "packet/packet.h"
 #include "comform.h"
 #include "chserialport.h"
+#include "attitudeindicator.h"
 
 
 
@@ -24,33 +25,47 @@ public:
     ~BaseForm();
 
 private slots:
+
+    ///In SideBar///
     void on_SideBarBTN1_clicked();
     void on_SideBarBTN2_clicked();
     void on_SideBarBTN3_clicked();
     void on_SideBarBTN4_clicked();
     void SideBar_toggled(int index);
     void on_BTNConnect_clicked();
+    void update_BTNConnect_state();
 
+    //this will be show if device is HI221GW
+    void updateListGWNode();
+    void on_ListGWNode_itemClicked(QListWidgetItem *item);
+
+    ///signal from comform ui///
     void getsigPortChose(QString port_name,int baudrate);
     void getsigPortCancle();
-    void getsigData();
 
+    ///signal from chserial class///
     void geterrorOpenPort();
     void getsigOpenPort();
+    void getsigPortClosed();
+    void getsigData();
 
-    void update_BTNConnect_state();
+    ///stackwidget page1 content:data, chart and attitude indicator///
+    void addADI();
     void displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int m_bitmap);
 
+    ///stackwidget page2 content:///
+    ///stackwidget page3 content:///
+    ///stackwidget page4 content:///
+
+
+    ///MenuBar signals of actions///
     void on_actionExit_triggered();
     void on_actionTraditional_Chinese_triggered();
     void on_actionSimplified_Chinese_triggered();
     void on_actionEnglish_triggered();
 
+    ///StatusBar///
     void showMessageBox(QString msg, QString title);
-
-    void updateListGWNode();
-
-    void on_ListGWNode_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::BaseForm *ui;
@@ -59,6 +74,9 @@ private:
 
     int current_gwnodeID=0;
     int current_gwnodeIndex;
+
+    QADI                *m_ADI;
+    QCompass            *m_Compass;
 
     struct StatusbarMsg{
         QString sw_version="";
@@ -81,6 +99,7 @@ private:
             return full_msg;
         }
     };
+
     StatusbarMsg statusbar_msg;
 
 

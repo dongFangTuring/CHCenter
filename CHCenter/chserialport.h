@@ -44,6 +44,7 @@ signals:
   void sigSendData();
   void errorOpenPort();
   void sigOpenPort();
+  void sigPortClosed();
   void sigUpdateListGWNode();
 
 private:
