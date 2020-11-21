@@ -299,7 +299,7 @@ color: black;
 </string>
            </property>
            <property name="text">
-            <string>Device Setting</string>
+            <string>CSV Logger</string>
            </property>
           </widget>
          </item>
@@ -352,7 +352,7 @@ color: black;
 </string>
            </property>
            <property name="text">
-            <string>CSV Logger</string>
+            <string>Device Setting</string>
            </property>
            <property name="flat">
             <bool>false</bool>
@@ -378,9 +378,9 @@ color: black;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-225</y>
+               <y>-284</y>
                <width>837</width>
-               <height>776</height>
+               <height>786</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -1012,13 +1012,13 @@ color: black;
                     <widget class="QLabel" name="LabelEulerX">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>16777215</height>
                       </size>
                      </property>
@@ -1034,13 +1034,13 @@ color: black;
                     <widget class="QLabel" name="LabelEulerY">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>16777215</height>
                       </size>
                      </property>
@@ -1056,13 +1056,13 @@ color: black;
                     <widget class="QLabel" name="LabelEulerZ">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>16777215</height>
                       </size>
                      </property>
@@ -1327,34 +1327,6 @@ color: black;
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="PageSetting">
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <widget class="QCheckBox" name="checkBox_3">
-            <property name="text">
-             <string>setting</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBox_2">
-            <property name="text">
-             <string>setting</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBox">
-            <property name="text">
-             <string>setting</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTextBrowser" name="textBrowser"/>
-          </item>
-         </layout>
-        </widget>
         <widget class="QWidget" name="PageLogger">
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
@@ -1375,6 +1347,32 @@ color: black;
             <property name="text">
              <string>RadioButton</string>
             </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="PageSetting">
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QScrollArea" name="PageSettingScroll">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="PageSettingScrollContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>858</width>
+               <height>502</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_7">
+              <item>
+               <layout class="QVBoxLayout" name="PageSettingWidget"/>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>

@@ -21,11 +21,11 @@ public:
         if( m_pitch > 90  ) m_pitch =  90;
     }
 
-    void adiInit();
+    void adiStart();
     void adiStop();
 
 signals:
-    void sigAdiInit(void);
+    void sigadiStart(void);
     void sigAdiStop(void);
 
 protected slots:

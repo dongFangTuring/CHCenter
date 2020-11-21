@@ -9,6 +9,12 @@
 #include "comform.h"
 #include "chserialport.h"
 #include "attitudeindicator.h"
+#include "chsettingform.h"
+
+#define PAGE_DATA           0
+#define PAGE_THREED         1
+#define PAGE_CSV_LOGGER     2
+#define PAGE_CH_SETTING     3
 
 
 
@@ -36,7 +42,7 @@ private slots:
     void update_BTNConnect_state();
 
     //this will be show if device is HI221GW
-    void updateListGWNode();
+    void updateListGWNode(bool);
     void on_ListGWNode_itemClicked(QListWidgetItem *item);
 
     ///signal from comform ui///
@@ -47,13 +53,18 @@ private slots:
     void geterrorOpenPort();
     void getsigOpenPort();
     void getsigPortClosed();
-    void getsigData();
+    void getIMUData(receive_imusol_packet_t);
+    void getGWIMUData(receive_gwsol_packet_t);
+    void getIMUmsg(QString);
 
     ///stackwidget page1 content:data, chart and attitude indicator///
     void addADI();
     void displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int m_bitmap);
 
     ///stackwidget page2 content:///
+    void getsigSendATcmd(QString ATcmd);
+
+
     ///stackwidget page3 content:///
     ///stackwidget page4 content:///
 
@@ -75,8 +86,9 @@ private:
     int current_gwnodeID=0;
     int current_gwnodeIndex;
 
-    QADI                *m_ADI;
-    QCompass            *m_Compass;
+    QADI *m_ADI;
+    QCompass *m_Compass;
+    CHSettingForm *ch_settingform;
 
     struct StatusbarMsg{
         QString sw_version="";

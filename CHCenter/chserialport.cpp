@@ -12,9 +12,9 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     timer_framerate->moveToThread(m_thread);
     connect(m_thread, SIGNAL(started()), this, SLOT(on_thread_started()),Qt::QueuedConnection);
     connect(m_thread, SIGNAL(finished()), this, SLOT(on_thread_stopped()),Qt::QueuedConnection);
+    connect(this, SIGNAL(sigWriteData(QString)), this, SLOT(getsigWriteData(QString)));
 
     timer_framerate->setInterval(1000);
-
 
 }
 
@@ -65,7 +65,7 @@ void CHSerialport::closeSerialport()
 
     m_thread->quit();
     m_thread->wait();
-    //m_thread->deleteLater();
+
     qDebug()<<"Port and thread are closed";
 }
 
@@ -86,7 +86,6 @@ void CHSerialport::countFrameRate()
     Frame_rate=frame_count;
     mutex_writing.unlock();
     frame_count=0;
-
 }
 
 void CHSerialport::on_thread_started()
@@ -115,10 +114,17 @@ void CHSerialport::on_thread_stopped()
     receive_gwsol.n=0;
 }
 
+void CHSerialport::getsigWriteData(QString str)
+{
+    QByteArray ba = str.toLocal8Bit();
+    const char *c_str2 = ba.data();
+    CH_serial->write(c_str2,100);
+    //qDebug()<<str;
+}
+
 
 void CHSerialport::handleData()
 {
-    //qDebug() << "started thread is:" << QThread::currentThreadId();
 
     if(CH_serial->bytesAvailable() > 0 && CH_serial->isReadable())
     {
@@ -126,53 +132,83 @@ void CHSerialport::handleData()
 
         QByteArray arr = CH_serial->readAll();
 
+
         for (int i=0;i<NumberOfBytesToRead;i++) {
             uint8_t c=arr[i];
             packet_decode(c);
         }
 
         mutex_writing.lock();
+
+        if(Is_msgMode){
+            bool is_hexdata=0;
+
+            for (int i=0;i<NumberOfBytesToRead;i++) {
+                uint8_t c=arr[i];
+                if(c == 0x5A){
+                    is_hexdata=1;
+                }
+            }
+            if(is_hexdata==1){
+                m_IMUmsg=QString(arr.toHex()).toUpper();
+                emit sigSendIMUmsg(m_IMUmsg);
+                m_IMUmsg="";
+            }
+            else{
+                m_IMUmsg=m_IMUmsg+arr;
+                QStringList list1 = m_IMUmsg.split("\r\n");
+                //qDebug()<<list1.lastIndexOf("OK");
+                if(list1.lastIndexOf("OK")>=0){
+                    qDebug()<<list1;
+                    emit sigSendIMUmsg(m_IMUmsg);
+                    m_IMUmsg="";
+                }
+                if(list1.lastIndexOf("ERR")>=0){
+                    emit sigSendIMUmsg(m_IMUmsg);
+                    m_IMUmsg="";
+                }
+                if(m_IMUmsg.size()>100){
+                    emit sigSendIMUmsg(m_IMUmsg);
+                    m_IMUmsg="";
+                }
+            }
+        }
+
+
         if(receive_gwsol.tag != KItemGWSOL)
         {
-            if(Is_gwsol==1){
-                Is_gwsol=0;
-                emit sigUpdateListGWNode();
+            if(m_is_gwsol==1){
+                m_is_gwsol=0;
+                emit sigUpdateListGWNode(0);
             }
-            else
-                Is_gwsol=0;
 
-            IMU_data=&receive_imusol;
+            emit sigSendIMU(receive_imusol);
         }
         else
         {
-            if(Is_gwsol==0){
-                Is_gwsol=1;
-                emit sigUpdateListGWNode();
+            if(m_is_gwsol==0){
+                m_is_gwsol=1;
+                emit sigUpdateListGWNode(1);
             }
-
-
             if(!(m_number_of_node==receive_gwsol.n)){
                 m_number_of_node=receive_gwsol.n;
-                emit sigUpdateListGWNode();
-                qDebug()<<"updated";
+                emit sigUpdateListGWNode(1);
             }
 
-            IMUs_data=&receive_gwsol;
+            emit sigSendGWIMU(receive_gwsol);
+            //IMUs_data=&receive_gwsol;
 
         }
         if(Content_bits!=bitmap)
             Content_bits=bitmap;
         mutex_writing.unlock();
 
-
-        emit sigSendData();
     }
 
 
 }
 
-void CHSerialport::write_data()
+void CHSerialport::writeData(QString ATcmd)
 {
-    qDebug() << "write_id is:" << QThread::currentThreadId();
-    CH_serial->write("data", 4);
+    emit sigWriteData(ATcmd);
 }

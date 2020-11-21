@@ -14,6 +14,7 @@ SOURCES += \
     attitudeindicator.cpp \
     baseform.cpp \
     chserialport.cpp \
+    chsettingform.cpp \
     comform.cpp \
     main.cpp \
     packet/imu_data_decode.cpp \
@@ -24,12 +25,14 @@ HEADERS += \
     attitudeindicator.h \
     baseform.h\
     chserialport.h \
+    chsettingform.h \
     comform.h \
     packet/imu_data_decode.h \
     packet/packet.h
 
 FORMS += \
     baseform.ui \
+    chsettingform.ui \
     comform.ui
 
 TRANSLATIONS += \

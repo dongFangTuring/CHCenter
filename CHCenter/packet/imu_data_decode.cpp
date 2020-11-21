@@ -51,10 +51,10 @@ static void on_data_received(packet_t *pkt)
 		case kItemAccRaw:
             receive_gwsol.tag = 0;
 			bitmap |= BIT_VALID_ACC;
-			stream2int16(temp, p + offset + 1);
-			receive_imusol.acc[0] = (float)temp[0] / 1000;
-			receive_imusol.acc[1] = (float)temp[1] / 1000;
-			receive_imusol.acc[2] = (float)temp[2] / 1000;
+            stream2int16(temp, p + offset + 1);
+            receive_imusol.acc[0] = (float)temp[0] / 1000;
+            receive_imusol.acc[1] = (float)temp[1] / 1000;
+            receive_imusol.acc[2] = (float)temp[2] / 1000;
 			offset += 7;
 			break;
 
@@ -62,30 +62,30 @@ static void on_data_received(packet_t *pkt)
 		case kItemGyrRaw_yunjing:
             receive_gwsol.tag = 0;
 			bitmap |= BIT_VALID_GYR;
-			stream2int16(temp, p + offset + 1);
-			receive_imusol.gyr[0] = (float)temp[0] / 10;
-			receive_imusol.gyr[1] = (float)temp[1] / 10;
-			receive_imusol.gyr[2] = (float)temp[2] / 10;
+            stream2int16(temp, p + offset + 1);
+            receive_imusol.gyr[0] = (float)temp[0] / 10;
+            receive_imusol.gyr[1] = (float)temp[1] / 10;
+            receive_imusol.gyr[2] = (float)temp[2] / 10;
 			offset += 7;
 			break;
 
 		case kItemMagRaw:
             receive_gwsol.tag = 0;
 			bitmap |= BIT_VALID_MAG;
-			stream2int16(temp, p + offset + 1);
-			receive_imusol.mag[0] = (float)temp[0] / 10;
-			receive_imusol.mag[1] = (float)temp[1] / 10;
-			receive_imusol.mag[2] = (float)temp[2] / 10;
+            stream2int16(temp, p + offset + 1);
+            receive_imusol.mag[0] = (float)temp[0] / 10;
+            receive_imusol.mag[1] = (float)temp[1] / 10;
+            receive_imusol.mag[2] = (float)temp[2] / 10;
 			offset += 7;
 			break;
 
 		case kItemRotationEul:
             receive_gwsol.tag = 0;
 			bitmap |= BIT_VALID_EUL;
-			stream2int16(temp, p + offset + 1);
-			receive_imusol.eul[1] = (float)temp[0] / 100;
-			receive_imusol.eul[0] = (float)temp[1] / 100;
-			receive_imusol.eul[2] = (float)temp[2] / 10; 
+            stream2int16(temp, p + offset + 1);
+            receive_imusol.eul[1] = (float)temp[0] / 100;
+            receive_imusol.eul[0] = (float)temp[1] / 100;
+            receive_imusol.eul[2] = (float)temp[2] / 10;
 			offset += 7;
 			break;
 

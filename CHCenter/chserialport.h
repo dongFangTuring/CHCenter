@@ -15,50 +15,59 @@
 
 class CHSerialport : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 
 public:
-  explicit CHSerialport(QObject *parent = nullptr);
-  ~CHSerialport();
+    explicit CHSerialport(QObject *parent = nullptr);
+    ~CHSerialport();
 
 
-  QSerialPort *CH_serial = nullptr;
-  int openSerialport(QString, int);
+    QSerialPort *CH_serial = nullptr;
+    int openSerialport(QString, int);
 
 
-  receive_imusol_packet_t *IMU_data=&receive_imusol;
-  receive_gwsol_packet_t *IMUs_data=&receive_gwsol;
-  unsigned int Frame_rate=0;
-  unsigned int Content_bits;
-  bool Is_gwsol=0;
+    receive_imusol_packet_t *IMU_data=&receive_imusol;
+    receive_gwsol_packet_t *IMUs_data=&receive_gwsol;
+    unsigned int Frame_rate=0;
+    unsigned int Content_bits;
+
+    QByteArray CH_rawmsg="";
+    bool Is_msgMode=0;
 
 public slots:
-  void handleData();
-  void write_data();
-  void initThreadReading();
-  void closeSerialport();
-  void linkCHdevices(QString, int);
+    void writeData(QString);
+    void closeSerialport();
+    void linkCHdevices(QString, int);
 
 signals:
-  void sigSendData();
-  void errorOpenPort();
-  void sigOpenPort();
-  void sigPortClosed();
-  void sigUpdateListGWNode();
+    void sigSendGWIMU(receive_gwsol_packet_t);
+    void sigSendIMU(receive_imusol_packet_t);
+    void sigSendIMUmsg(QString);
+
+    void errorOpenPort();
+    void sigOpenPort();
+    void sigPortClosed();
+    void sigUpdateListGWNode(bool);
+    void sigWriteData(QString);
 
 private:
-  QTimer *timer_framerate;
-  QMutex mutex_writing;
-  QString m_port_name;
-  QThread *m_thread;
-  int m_baudrate;
-  int m_number_of_node;
+    QTimer *timer_framerate;
+    QMutex mutex_writing;
+    QString m_port_name;
+    QThread *m_thread;
+    int m_baudrate;
+    int m_number_of_node;
+    bool m_is_gwsol=0;
+    QString m_IMUmsg="";
 
 private slots:
-  void countFrameRate();
-  void on_thread_started();
-  void on_thread_stopped();
+    void countFrameRate();
+    void on_thread_started();
+    void on_thread_stopped();
+    void initThreadReading();
+    void handleData();
+    void getsigWriteData(QString);
 
 
 };

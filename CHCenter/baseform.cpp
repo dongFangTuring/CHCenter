@@ -39,9 +39,19 @@ BaseForm::BaseForm(QWidget *parent)
     connect(ch_serialport, SIGNAL(errorOpenPort()), this, SLOT(geterrorOpenPort()));
     connect(ch_serialport, SIGNAL(sigOpenPort()), this, SLOT(getsigOpenPort()));
     connect(ch_serialport, SIGNAL(sigPortClosed()), this, SLOT(getsigPortClosed()));
-    connect(ch_serialport, SIGNAL(sigUpdateListGWNode()), this, SLOT(updateListGWNode()));
+    connect(ch_serialport, SIGNAL(sigUpdateListGWNode(bool)), this, SLOT(updateListGWNode(bool)));
+    connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
+            this, SLOT(getIMUData(receive_imusol_packet_t)), Qt::QueuedConnection);
+    connect(ch_serialport, SIGNAL(sigSendGWIMU(receive_gwsol_packet_t)),
+            this, SLOT(getGWIMUData(receive_gwsol_packet_t)), Qt::QueuedConnection);
+    connect(ch_serialport,SIGNAL(sigSendIMUmsg(QString)), this, SLOT(getIMUmsg(QString)));
 
-
+    //page 1 widget initialize;
+    addADI();
+    //page 2
+    ch_settingform=new CHSettingForm(this);
+    ui->PageSettingWidget->addWidget(ch_settingform);
+    connect(ch_settingform,SIGNAL(sigSendATcmd(QString)), this, SLOT(getsigSendATcmd(QString)));
 
     //Welcome message
     statusbar_msg.baudrate="";
@@ -53,9 +63,6 @@ BaseForm::BaseForm(QWidget *parent)
 
     //page 1 is the default page
     on_SideBarBTN1_clicked();
-
-    //page 1 widget initialize;
-    addADI();
 }
 
 BaseForm::~BaseForm()
@@ -104,14 +111,31 @@ void BaseForm::SideBar_toggled(int index)
     ui->SideBarBTN4->setEnabled(1);
 
     switch (index) {
-    case 1: ui->SideBarBTN1->setEnabled(0);
+    case 1: {
+        ch_serialport->Is_msgMode=0;
+        ui->SideBarBTN1->setEnabled(0);
+
         break;
-    case 2: ui->SideBarBTN2->setEnabled(0);
+    }
+    case 2: {
+        ch_serialport->Is_msgMode=0;
+        ui->SideBarBTN2->setEnabled(0);
+
         break;
-    case 3: ui->SideBarBTN3->setEnabled(0);
+    }
+    case 3: {
+        ch_serialport->Is_msgMode=0;
+        ui->SideBarBTN3->setEnabled(0);
+
         break;
-    case 4: ui->SideBarBTN4->setEnabled(0);
+    }
+    case 4: {
+        ch_settingform->on_StopStreamBTN_clicked();
+        ch_serialport->Is_msgMode=1;
+        ui->SideBarBTN4->setEnabled(0);
+
         break;
+    }
     default:
         break;
     }
@@ -126,11 +150,11 @@ void BaseForm::SideBar_toggled(int index)
 
 void BaseForm::on_BTNConnect_clicked()
 {
-    if(!ch_serialport->CH_serial->isOpen()){  
+    if(!ch_serialport->CH_serial->isOpen()){
         comform->show();
     }
     else{
-        ch_serialport->closeSerialport();    
+        ch_serialport->closeSerialport();
     }
 
     update_BTNConnect_state();
@@ -160,9 +184,9 @@ void BaseForm::update_BTNConnect_state()
  * @brief BaseForm::updateListGWNode
  * if number of nodes changes send sigUpdateListGWNode():call updateListGWNode()
  */
-void BaseForm::updateListGWNode()
+void BaseForm::updateListGWNode(bool m_is_gwsol)
 {
-    if(ch_serialport->Is_gwsol==1){
+    if(m_is_gwsol==1){
         ui->ListGWNode->clear();
         ui->ListGWNode->setVisible(1);
 
@@ -175,7 +199,6 @@ void BaseForm::updateListGWNode()
 
             ui->ListGWNode->addItem(tr("Wireless Node ID : %1").arg(t_id));
 
-            qDebug()<<t_id<< "^"<<current_gwnodeID;
             if(t_id==current_gwnodeID){
                 ui->ListGWNode->setCurrentRow(i);
                 current_gwnodeIndex=i;
@@ -199,7 +222,7 @@ void BaseForm::on_ListGWNode_itemClicked(QListWidgetItem *item)
     QString id = ui->ListGWNode->currentItem()->text().split(" : ").last();
 
     current_gwnodeID=id.toInt();
-    updateListGWNode();
+    updateListGWNode(1);
 }
 
 ///signal from comform ui///
@@ -249,15 +272,16 @@ void BaseForm::geterrorOpenPort()
 void BaseForm::getsigOpenPort()
 {
     comform->hide();
-    connect(ch_serialport, SIGNAL(sigSendData()),
-            this, SLOT(getsigData()), Qt::QueuedConnection);
+
 
     update_BTNConnect_state();
 
     statusbar_msg.current_status=tr("Streaming...");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
-    m_ADI->adiInit();
+    ch_settingform->on_StreamBTN_clicked();
+
+    m_ADI->adiStart();
     m_Compass->compassInit();
 }
 
@@ -275,34 +299,49 @@ void BaseForm::getsigPortClosed()
     update_BTNConnect_state();
 }
 
-
 /**
- * @brief BaseForm::getsigData
+ * @brief BaseForm::getIMUData, BaseForm::getGWIMUData
  * process 2 kinds of data: hi226/hi229/ch110/hi221 vs hi221gw
- * @param Is_gwsol:check if it is hi221gw.
  * @param current_gwnodeIndex: while streaming hi221gw, it will remember the chose node(by ID) until it's offine
  */
-void BaseForm::getsigData()
+void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 {
-    if(ch_serialport->Is_gwsol==0){
-        receive_imusol_packet_t imuData=*ch_serialport->IMU_data;
-        displayIMUnumber(imuData, ch_serialport->Content_bits);
-        m_ADI->setData(imuData.eul[0],imuData.eul[1]);
-        m_Compass->setYaw(imuData.eul[2]);
-    }
-    else if(ch_serialport->Is_gwsol==1){
-        receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
-        if(imusData.n>0){
-            if(current_gwnodeIndex<0)
-                displayIMUnumber(imusData.receive_imusol[0], ch_serialport->Content_bits);
-            else{
-                displayIMUnumber(imusData.receive_imusol[current_gwnodeIndex], ch_serialport->Content_bits);
-            }
+    displayIMUnumber(imu_data, ch_serialport->Content_bits);
+    m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
+    m_Compass->setYaw(imu_data.eul[2]);
+
+}
+void BaseForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
+{
+    if(gwimu_data.n>0){
+        if(current_gwnodeIndex<0){
+            auto imu_data=gwimu_data.receive_imusol[0];
+            displayIMUnumber(imu_data, ch_serialport->Content_bits);
+            m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
+            m_Compass->setYaw(imu_data.eul[2]);
+        }
+        else{
+            auto imu_data=gwimu_data.receive_imusol[current_gwnodeIndex];
+            displayIMUnumber(gwimu_data.receive_imusol[current_gwnodeIndex], ch_serialport->Content_bits);
+            m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
+            m_Compass->setYaw(imu_data.eul[2]);
         }
     }
 
 }
-
+/**
+ * @brief BaseForm::getIMUmsg
+ * when go into setting mode, node will transmit ACHii instead of HEX data.
+ * @param str:message from node, BAUD is a special case because user need to re-connect manually.
+ */
+void BaseForm::getIMUmsg(QString str)
+{
+    ch_settingform->setTerminalBoxText(str);
+    if(str.indexOf("BAUD")>=0){
+        statusbar_msg.current_status=tr("Please connect the device with new Baudrate.");
+        ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+    }
+}
 ///stackwidget page1 content:data, chart and attitude indicator///
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
@@ -374,9 +413,9 @@ void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int C
     if(Content_bits & BIT_VALID_EUL){
         if(!ui->LabelGPEuler->isVisible())
             ui->LabelGPEuler->setVisible(1);
-        ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',1));
-        ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',1));
-        ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',1));
+        ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',2));
+        ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',2));
+        ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',2));
     }
     else{
         if(ui->LabelGPEuler->isVisible())
@@ -477,3 +516,8 @@ void BaseForm::showMessageBox(QString msg, QString title)
 }
 
 
+void BaseForm::getsigSendATcmd(QString ATcmd)
+{
+    ATcmd+="\r\n";
+    ch_serialport->writeData(ATcmd);
+}

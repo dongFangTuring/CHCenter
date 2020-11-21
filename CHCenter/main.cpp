@@ -2,7 +2,7 @@
 
 #include <QApplication>
 #include <QTranslator>
-
+#include <QMetaType>
 
 QStringList loadsetting(QString setting){
     QStringList parameter = setting.split('=');
@@ -18,17 +18,28 @@ QStringList loadsetting(QString setting){
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    //register type for passing value between signal/slot
+    qRegisterMetaType<receive_imusol_packet_t>("receive_imusol_packet_t");
+    qRegisterMetaType<receive_gwsol_packet_t>("receive_gwsol_packet_t");
+
+
     a.setWindowIcon(QIcon(":/images/mainicon.png"));
+
+    //load language setting
     QString lang="";
     QStringList setting={""};
 
     QFile file("CHCenter.ini");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        QMessageBox msgBox;
-        msgBox.setText("No CHCenter.ini was found.");
-        msgBox.setWindowTitle("Error");
-        msgBox.exec();
 
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream stream(&file);
+        file.close();
+        if(file.open(QIODevice::ReadWrite | QIODevice::Text)){
+            QTextStream stream(&file);
+            stream << "Language=cn" <<"\n";
+            file.close();
+        }
     }
     else{
         QTextStream stream(&file);
@@ -38,6 +49,7 @@ int main(int argc, char *argv[])
             if(setting.first()=="Language")
                 lang=setting.last();
         }
+        file.close();
     }
 
     QTranslator t;

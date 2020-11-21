@@ -36,7 +36,7 @@ QADI::~QADI()
 {
 }
 
-void QADI::adiInit()
+void QADI::adiStart()
 {
     timer->start();
 }
