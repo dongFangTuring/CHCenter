@@ -15,6 +15,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
@@ -60,11 +61,14 @@ public:
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *DataTopBar;
     QVBoxLayout *verticalLayout_6;
+    QLabel *LabelDataProtocol;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_10;
     QLabel *LabelFrameRate;
+    QSpacerItem *horizontalSpacer_7;
     QLabel *LabelID;
     QSpacerItem *horizontalSpacer_6;
+    QFrame *line;
     QGroupBox *LabelGPAcc;
     QHBoxLayout *horizontalLayout_4;
     QFormLayout *formLayout;
@@ -151,13 +155,13 @@ public:
         if (BaseForm->objectName().isEmpty())
             BaseForm->setObjectName(QString::fromUtf8("BaseForm"));
         BaseForm->setWindowModality(Qt::NonModal);
-        BaseForm->resize(1200, 600);
+        BaseForm->resize(1100, 800);
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(BaseForm->sizePolicy().hasHeightForWidth());
         BaseForm->setSizePolicy(sizePolicy);
-        BaseForm->setMinimumSize(QSize(1000, 600));
+        BaseForm->setMinimumSize(QSize(800, 500));
         BaseForm->setMouseTracking(true);
         BaseForm->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         BaseForm->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -188,7 +192,7 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(SideBar->sizePolicy().hasHeightForWidth());
         SideBar->setSizePolicy(sizePolicy1);
-        SideBar->setMinimumSize(QSize(300, 300));
+        SideBar->setMinimumSize(QSize(250, 300));
         verticalLayout_3 = new QVBoxLayout(SideBar);
         verticalLayout_3->setSpacing(20);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
@@ -369,10 +373,14 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         PageDataScroll = new QScrollArea(PageData);
         PageDataScroll->setObjectName(QString::fromUtf8("PageDataScroll"));
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("Times New Roman"));
+        font2.setPointSize(10);
+        PageDataScroll->setFont(font2);
         PageDataScroll->setWidgetResizable(true);
         PageDataScrollContents = new QWidget();
         PageDataScrollContents->setObjectName(QString::fromUtf8("PageDataScrollContents"));
-        PageDataScrollContents->setGeometry(QRect(0, -284, 837, 786));
+        PageDataScrollContents->setGeometry(QRect(0, 0, 737, 797));
         QSizePolicy sizePolicy3(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
@@ -386,18 +394,24 @@ public:
         DataTopBar->setContentsMargins(-1, 10, -1, 10);
         verticalLayout_6 = new QVBoxLayout();
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_10 = new QLabel(PageDataScrollContents);
-        label_10->setObjectName(QString::fromUtf8("label_10"));
+        LabelDataProtocol = new QLabel(PageDataScrollContents);
+        LabelDataProtocol->setObjectName(QString::fromUtf8("LabelDataProtocol"));
         QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy4.setHorizontalStretch(0);
         sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(LabelDataProtocol->sizePolicy().hasHeightForWidth());
+        LabelDataProtocol->setSizePolicy(sizePolicy4);
+        LabelDataProtocol->setMinimumSize(QSize(300, 0));
+
+        verticalLayout_6->addWidget(LabelDataProtocol);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(0);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label_10 = new QLabel(PageDataScrollContents);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
         sizePolicy4.setHeightForWidth(label_10->sizePolicy().hasHeightForWidth());
         label_10->setSizePolicy(sizePolicy4);
-        QFont font2;
-        font2.setFamily(QString::fromUtf8("Times New Roman"));
-        font2.setPointSize(12);
         label_10->setFont(font2);
 
         horizontalLayout_2->addWidget(label_10);
@@ -406,11 +420,15 @@ public:
         LabelFrameRate->setObjectName(QString::fromUtf8("LabelFrameRate"));
         sizePolicy4.setHeightForWidth(LabelFrameRate->sizePolicy().hasHeightForWidth());
         LabelFrameRate->setSizePolicy(sizePolicy4);
-        LabelFrameRate->setMinimumSize(QSize(0, 0));
+        LabelFrameRate->setMinimumSize(QSize(100, 0));
         LabelFrameRate->setFont(font2);
         LabelFrameRate->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
         horizontalLayout_2->addWidget(LabelFrameRate);
+
+        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_7);
 
 
         verticalLayout_6->addLayout(horizontalLayout_2);
@@ -430,16 +448,20 @@ public:
 
         DataTopBar->addItem(horizontalSpacer_6);
 
+        line = new QFrame(PageDataScrollContents);
+        line->setObjectName(QString::fromUtf8("line"));
+        line->setFrameShape(QFrame::VLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        DataTopBar->addWidget(line);
+
 
         verticalLayout_2->addLayout(DataTopBar);
 
         LabelGPAcc = new QGroupBox(PageDataScrollContents);
         LabelGPAcc->setObjectName(QString::fromUtf8("LabelGPAcc"));
         LabelGPAcc->setMinimumSize(QSize(100, 0));
-        QFont font3;
-        font3.setFamily(QString::fromUtf8("Times New Roman"));
-        font3.setPointSize(10);
-        LabelGPAcc->setFont(font3);
+        LabelGPAcc->setFont(font2);
         LabelGPAcc->setStyleSheet(QString::fromUtf8(""));
         LabelGPAcc->setFlat(true);
         horizontalLayout_4 = new QHBoxLayout(LabelGPAcc);
@@ -519,7 +541,7 @@ public:
 
         LabelGPGyro = new QGroupBox(PageDataScrollContents);
         LabelGPGyro->setObjectName(QString::fromUtf8("LabelGPGyro"));
-        LabelGPGyro->setFont(font3);
+        LabelGPGyro->setFont(font2);
         LabelGPGyro->setFlat(true);
         horizontalLayout_5 = new QHBoxLayout(LabelGPGyro);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
@@ -587,7 +609,7 @@ public:
 
         LabelGPMag = new QGroupBox(PageDataScrollContents);
         LabelGPMag->setObjectName(QString::fromUtf8("LabelGPMag"));
-        LabelGPMag->setFont(font3);
+        LabelGPMag->setFont(font2);
         LabelGPMag->setFlat(true);
         horizontalLayout_6 = new QHBoxLayout(LabelGPMag);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
@@ -655,7 +677,7 @@ public:
 
         LabelGPEuler = new QGroupBox(PageDataScrollContents);
         LabelGPEuler->setObjectName(QString::fromUtf8("LabelGPEuler"));
-        LabelGPEuler->setFont(font3);
+        LabelGPEuler->setFont(font2);
         LabelGPEuler->setFlat(true);
         horizontalLayout_7 = new QHBoxLayout(LabelGPEuler);
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
@@ -724,7 +746,7 @@ public:
         LabelGPQuat = new QGroupBox(PageDataScrollContents);
         LabelGPQuat->setObjectName(QString::fromUtf8("LabelGPQuat"));
         LabelGPQuat->setEnabled(true);
-        LabelGPQuat->setFont(font3);
+        LabelGPQuat->setFont(font2);
         LabelGPQuat->setFlat(true);
         gridLayout_5 = new QGridLayout(LabelGPQuat);
         gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
@@ -864,7 +886,7 @@ public:
         PageSettingScroll->setWidgetResizable(true);
         PageSettingScrollContents = new QWidget();
         PageSettingScrollContents->setObjectName(QString::fromUtf8("PageSettingScrollContents"));
-        PageSettingScrollContents->setGeometry(QRect(0, 0, 858, 502));
+        PageSettingScrollContents->setGeometry(QRect(0, 0, 55, 24));
         verticalLayout_7 = new QVBoxLayout(PageSettingScrollContents);
         verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
         PageSettingWidget = new QVBoxLayout();
@@ -889,7 +911,7 @@ public:
         LabelStatusMsg = new QLabel(centralwidget);
         LabelStatusMsg->setObjectName(QString::fromUtf8("LabelStatusMsg"));
         LabelStatusMsg->setMinimumSize(QSize(200, 0));
-        LabelStatusMsg->setFont(font3);
+        LabelStatusMsg->setFont(font2);
         LabelStatusMsg->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
         horizontalLayout->addWidget(LabelStatusMsg);
@@ -900,7 +922,7 @@ public:
         BaseForm->setCentralWidget(centralwidget);
         menubar = new QMenuBar(BaseForm);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1200, 26));
+        menubar->setGeometry(QRect(0, 0, 1100, 26));
         menuWindow = new QMenu(menubar);
         menuWindow->setObjectName(QString::fromUtf8("menuWindow"));
         menuLanguage = new QMenu(menuWindow);
@@ -942,6 +964,7 @@ public:
         SideBarBTN2->setText(QCoreApplication::translate("BaseForm", "3D View", nullptr));
         SideBarBTN3->setText(QCoreApplication::translate("BaseForm", "CSV Logger", nullptr));
         SideBarBTN4->setText(QCoreApplication::translate("BaseForm", "Device Setting", nullptr));
+        LabelDataProtocol->setText(QCoreApplication::translate("BaseForm", "Data Protocol = ", nullptr));
         label_10->setText(QCoreApplication::translate("BaseForm", "Frame Rate : ", nullptr));
         LabelFrameRate->setText(QCoreApplication::translate("BaseForm", "0 Hz", nullptr));
         LabelID->setText(QCoreApplication::translate("BaseForm", "ID = 0", nullptr));

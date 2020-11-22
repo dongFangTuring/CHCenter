@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>600</height>
+    <width>1100</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,8 +21,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1000</width>
-    <height>600</height>
+    <width>800</width>
+    <height>500</height>
    </size>
   </property>
   <property name="mouseTracking">
@@ -78,7 +78,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>300</width>
+          <width>250</width>
           <height>300</height>
          </size>
         </property>
@@ -371,6 +371,12 @@ color: black;
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QScrollArea" name="PageDataScroll">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
@@ -378,9 +384,9 @@ color: black;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-284</y>
-               <width>837</width>
-               <height>786</height>
+               <y>0</y>
+               <width>737</width>
+               <height>797</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -404,7 +410,29 @@ color: black;
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_6">
                   <item>
+                   <widget class="QLabel" name="LabelDataProtocol">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>300</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Data Protocol = </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_2">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
                     <item>
                      <widget class="QLabel" name="label_10">
                       <property name="sizePolicy">
@@ -416,7 +444,7 @@ color: black;
                       <property name="font">
                        <font>
                         <family>Times New Roman</family>
-                        <pointsize>12</pointsize>
+                        <pointsize>10</pointsize>
                        </font>
                       </property>
                       <property name="text">
@@ -434,14 +462,14 @@ color: black;
                       </property>
                       <property name="minimumSize">
                        <size>
-                        <width>0</width>
+                        <width>100</width>
                         <height>0</height>
                        </size>
                       </property>
                       <property name="font">
                        <font>
                         <family>Times New Roman</family>
-                        <pointsize>12</pointsize>
+                        <pointsize>10</pointsize>
                        </font>
                       </property>
                       <property name="text">
@@ -451,6 +479,19 @@ color: black;
                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                       </property>
                      </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_7">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                    </layout>
                   </item>
@@ -465,7 +506,7 @@ color: black;
                     <property name="font">
                      <font>
                       <family>Times New Roman</family>
-                      <pointsize>12</pointsize>
+                      <pointsize>10</pointsize>
                      </font>
                     </property>
                     <property name="text">
@@ -490,6 +531,13 @@ color: black;
                    </size>
                   </property>
                  </spacer>
+                </item>
+                <item>
+                 <widget class="Line" name="line">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -1363,8 +1411,8 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>858</width>
-               <height>502</height>
+               <width>55</width>
+               <height>24</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -1417,7 +1465,7 @@ color: black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>1100</width>
      <height>26</height>
     </rect>
    </property>

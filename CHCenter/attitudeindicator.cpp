@@ -17,8 +17,8 @@ QADI::QADI(QWidget *parent)
     connect(timer, SIGNAL(timeout(void)), this, SLOT(canvasReplot_slot(void)));
     timer->setInterval(20);
 
-    m_sizeMin = 200;
-    m_sizeMax = 600;
+    m_sizeMin = 150;
+    m_sizeMax = 300;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
 
@@ -284,8 +284,8 @@ QCompass::QCompass(QWidget *parent)
     connect(timer, SIGNAL(timeout(void)), this, SLOT(canvasReplot_slot(void)));
     timer->setInterval(30);
 
-    m_sizeMin = 200;
-    m_sizeMax = 600;
+    m_sizeMin = 150;
+    m_sizeMax = 300;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
 

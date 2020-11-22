@@ -105,6 +105,11 @@ void BaseForm::on_SideBarBTN4_clicked()
  */
 void BaseForm::SideBar_toggled(int index)
 {
+    if(ui->SideBarBTN4->isEnabled()==0){
+        ch_settingform->settingConfig_leave();
+    }
+
+
     ui->SideBarBTN1->setEnabled(1);
     ui->SideBarBTN2->setEnabled(1);
     ui->SideBarBTN3->setEnabled(1);
@@ -112,26 +117,27 @@ void BaseForm::SideBar_toggled(int index)
 
     switch (index) {
     case 1: {
+        ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
         ui->SideBarBTN1->setEnabled(0);
-
         break;
     }
     case 2: {
+        ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
         ui->SideBarBTN2->setEnabled(0);
-
         break;
     }
     case 3: {
+        ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
         ui->SideBarBTN3->setEnabled(0);
-
         break;
     }
     case 4: {
         ch_settingform->on_StopStreamBTN_clicked();
         ch_serialport->Is_msgMode=1;
+        ch_settingform->settingConfig_init();
         ui->SideBarBTN4->setEnabled(0);
 
         break;
@@ -152,6 +158,7 @@ void BaseForm::on_BTNConnect_clicked()
 {
     if(!ch_serialport->CH_serial->isOpen()){
         comform->show();
+        comform->on_BTNPortRefresh_clicked();
     }
     else{
         ch_serialport->closePort();
@@ -273,25 +280,31 @@ void BaseForm::getsigOpenPort()
 {
     comform->hide();
 
-
+    //"connect" BTN
     update_BTNConnect_state();
 
+    //statusbar
     statusbar_msg.current_status=tr("Streaming...");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
-    ch_settingform->on_StreamBTN_clicked();
+    //send at+eout
+    ch_settingform->StreamATcmd();
 
+    //start ADI update timer
     m_ADI->adiStart();
     m_Compass->compassInit();
 }
 
 void BaseForm::getsigPortClosed()
 {
+    //stop ADI update timer
     m_ADI->adiStop();
     m_Compass->compassStop();
 
+    //close serial thread by main thread
     ch_serialport->quitmThread();
 
+    //statusbar
     statusbar_msg.baudrate="";
     statusbar_msg.port="";
     statusbar_msg.current_status=tr("Unconnected");
@@ -308,7 +321,9 @@ void BaseForm::getsigPortClosed()
  */
 void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 {
-    displayIMUnumber(imu_data, ch_serialport->Content_bits);
+    displayIMUnumber(imu_data, ch_serialport->Content_bits, 0);
+
+
     m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
     m_Compass->setYaw(imu_data.eul[2]);
 
@@ -318,13 +333,13 @@ void BaseForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
     if(gwimu_data.n>0){
         if(current_gwnodeIndex<0){
             auto imu_data=gwimu_data.receive_imusol[0];
-            displayIMUnumber(imu_data, ch_serialport->Content_bits);
+            displayIMUnumber(imu_data, ch_serialport->Content_bits, 1);
             m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
             m_Compass->setYaw(imu_data.eul[2]);
         }
         else{
             auto imu_data=gwimu_data.receive_imusol[current_gwnodeIndex];
-            displayIMUnumber(gwimu_data.receive_imusol[current_gwnodeIndex], ch_serialport->Content_bits);
+            displayIMUnumber(gwimu_data.receive_imusol[current_gwnodeIndex], ch_serialport->Content_bits, 1);
             m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
             m_Compass->setYaw(imu_data.eul[2]);
         }
@@ -363,26 +378,29 @@ void BaseForm::addADI()
  * @param Content_bits:define what kinds of data can be showed
  */
 
-void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int Content_bits)
+void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int content_bits, int gwmode)
 {
 
+    QString setptl="";
     ui->LabelFrameRate->setText(QString::number(ch_serialport->Frame_rate) + " Hz");
-    if(Content_bits & BIT_VALID_ID){
+    if(content_bits & BIT_VALID_ID){
         if(!ui->LabelID->isVisible())
             ui->LabelID->setVisible(1);
         ui->LabelID->setText("ID = " + QString::number(imu_data.id));
+        setptl+="90,";
     }
     else{
         if(ui->LabelID->isVisible())
             ui->LabelID->setVisible(0);
     }
-    if(Content_bits & BIT_VALID_ACC){
+    if(content_bits & BIT_VALID_ACC){
         if(!ui->LabelGPAcc->isVisible()){
             ui->LabelGPAcc->setVisible(1);
         }
         ui->LabelAccX->setText(QString::number(imu_data.acc[0],'f',3));
         ui->LabelAccY->setText(QString::number(imu_data.acc[1],'f',3));
         ui->LabelAccZ->setText(QString::number(imu_data.acc[2],'f',3));
+        setptl+="A0,";
     }
     else{
         if(ui->LabelGPAcc->isVisible()){
@@ -390,51 +408,67 @@ void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int C
         }
 
     }
-    if(Content_bits & BIT_VALID_GYR){
+    if(content_bits & BIT_VALID_GYR){
         if(!ui->LabelGPGyro->isVisible())
             ui->LabelGPGyro->setVisible(1);
         ui->LabelGyroX->setText(QString::number(imu_data.gyr[0],'f',3));
         ui->LabelGyroY->setText(QString::number(imu_data.gyr[1],'f',3));
         ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2],'f',3));
+        setptl+="B0,";
     }
     else{
         if(ui->LabelGPGyro->isVisible())
             ui->LabelGPGyro->setVisible(0);
     }
-    if(Content_bits & BIT_VALID_MAG){
+    if(content_bits & BIT_VALID_MAG){
         if(!ui->LabelGPMag->isVisible())
             ui->LabelGPMag->setVisible(1);
         ui->LabelMagX->setText(QString::number(imu_data.mag[0],'f',0));
         ui->LabelMagY->setText(QString::number(imu_data.mag[1],'f',0));
         ui->LabelMagZ->setText(QString::number(imu_data.mag[2],'f',0));
+        setptl+="C0,";
     }
     else{
         if(ui->LabelGPMag->isVisible())
             ui->LabelGPMag->setVisible(0);
     }
-    if(Content_bits & BIT_VALID_EUL){
+    if(content_bits & BIT_VALID_EUL){
         if(!ui->LabelGPEuler->isVisible())
             ui->LabelGPEuler->setVisible(1);
         ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',2));
         ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',2));
         ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',2));
+        setptl+="D0,";
     }
     else{
         if(ui->LabelGPEuler->isVisible())
             ui->LabelGPEuler->setVisible(0);
     }
-    if(Content_bits & BIT_VALID_QUAT){
+    if(content_bits & BIT_VALID_QUAT){
         if(!ui->LabelGPQuat->isVisible())
             ui->LabelGPQuat->setVisible(1);
         ui->LabelQuatW->setText(QString::number(imu_data.quat[0],'f',3));
         ui->LabelQuatX->setText(QString::number(imu_data.quat[1],'f',3));
         ui->LabelQuatY->setText(QString::number(imu_data.quat[2],'f',3));
         ui->LabelQuatZ->setText(QString::number(imu_data.quat[3],'f',3));
+        setptl+="D1,";
     }
     else{
         if(ui->LabelGPQuat->isVisible())
             ui->LabelGPQuat->setVisible(0);
     }
+    if(content_bits==BIT_VALID_ALL){
+        setptl="91";
+    }
+    if(gwmode==1){
+        setptl="62";
+    }
+    int ret=setptl.lastIndexOf(',');
+    if(ret!=-1)
+        setptl.remove(ret,1);
+    ui->LabelDataProtocol->setText(tr("Data Protocol = %1").arg(setptl));
+
+
 }
 
 ///MenuBar signals of actions///

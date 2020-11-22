@@ -59,7 +59,7 @@ private slots:
 
     ///stackwidget page1 content:data, chart and attitude indicator///
     void addADI();
-    void displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int m_bitmap);
+    void displayIMUnumber(receive_imusol_packet_t, unsigned int, int);
 
     ///stackwidget page2 content:///
     void getsigSendATcmd(QString ATcmd);

@@ -19,12 +19,14 @@ public:
     explicit ComForm(QWidget *parent = nullptr);
     ~ComForm();
 
+public slots:
+    void on_BTNPortRefresh_clicked();
 
 private slots:
     void on_BTNCancle_clicked();
     void on_BTNOK_clicked();
     void on_ListPort_itemClicked(QListWidgetItem *);
-    void on_BTNPortRefresh_clicked();
+
 
 
 signals:

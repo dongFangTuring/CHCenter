@@ -83,7 +83,6 @@ void CHSerialport::linkCHdevices(QString port_name, int baudrate)
     m_port_name=port_name;
     m_baudrate=baudrate;
     initThreadReading();
-
 }
 
 void CHSerialport::countFrameRate()
@@ -162,11 +161,10 @@ void CHSerialport::handleData()
                 m_IMUmsg="";
             }
             else{
-                m_IMUmsg=m_IMUmsg+arr;
+
+                m_IMUmsg+=arr;
                 QStringList list1 = m_IMUmsg.split("\r\n");
-                //qDebug()<<list1.lastIndexOf("OK");
                 if(list1.lastIndexOf("OK")>=0){
-                    qDebug()<<list1;
                     emit sigSendIMUmsg(m_IMUmsg);
                     m_IMUmsg="";
                 }
@@ -174,7 +172,7 @@ void CHSerialport::handleData()
                     emit sigSendIMUmsg(m_IMUmsg);
                     m_IMUmsg="";
                 }
-                if(m_IMUmsg.size()>100){
+                if(m_IMUmsg.size()>300){
                     emit sigSendIMUmsg(m_IMUmsg);
                     m_IMUmsg="";
                 }
