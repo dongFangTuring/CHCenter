@@ -13,6 +13,7 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     connect(m_thread, SIGNAL(started()), this, SLOT(on_thread_started()),Qt::QueuedConnection);
     connect(m_thread, SIGNAL(finished()), this, SLOT(on_thread_stopped()),Qt::QueuedConnection);
     connect(this, SIGNAL(sigWriteData(QString)), this, SLOT(getsigWriteData(QString)));
+    connect(this, SIGNAL(sigCloseThreadAndPort()), this, SLOT(closeThreadAndPort()));
 
     timer_framerate->setInterval(1000);
 
@@ -20,7 +21,7 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
 
 CHSerialport::~CHSerialport()
 {
-    closeSerialport();
+    sigCloseThreadAndPort();
 }
 
 
@@ -50,7 +51,11 @@ int CHSerialport::openSerialport(QString port_name, int baudrate)
     return 0;
 }
 
-void CHSerialport::closeSerialport()
+void CHSerialport::closePort(){
+    emit sigCloseThreadAndPort();
+}
+
+void CHSerialport::closeThreadAndPort()
 {
     while(1){
         if(CH_serial->isOpen()) {
@@ -58,16 +63,18 @@ void CHSerialport::closeSerialport()
             CH_serial->close();
         }
         else {
-            sigPortClosed();
+            emit sigPortClosed();
             break;
         }
     }
-
+}
+void CHSerialport::quitmThread(){
     m_thread->quit();
     m_thread->wait();
-
     qDebug()<<"Port and thread are closed";
 }
+
+
 
 void CHSerialport::linkCHdevices(QString port_name, int baudrate)
 {
@@ -97,7 +104,7 @@ void CHSerialport::on_thread_started()
     timer_framerate->start();
     int ret=openSerialport(m_port_name, m_baudrate);
     if(ret==-1){
-        closeSerialport();
+        closePort();
         emit errorOpenPort();
     }
     else{

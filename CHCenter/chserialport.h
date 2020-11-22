@@ -37,8 +37,9 @@ public:
 
 public slots:
     void writeData(QString);
-    void closeSerialport();
+    void closePort();
     void linkCHdevices(QString, int);
+    void quitmThread();
 
 signals:
     void sigSendGWIMU(receive_gwsol_packet_t);
@@ -48,8 +49,9 @@ signals:
     void errorOpenPort();
     void sigOpenPort();
     void sigPortClosed();
+    void sigCloseThreadAndPort();
     void sigUpdateListGWNode(bool);
-    void sigWriteData(QString);
+    void sigWriteData(QString);   
 
 private:
     QTimer *timer_framerate;
@@ -66,6 +68,7 @@ private slots:
     void on_thread_started();
     void on_thread_stopped();
     void initThreadReading();
+    void closeThreadAndPort();
     void handleData();
     void getsigWriteData(QString);
 

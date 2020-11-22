@@ -154,7 +154,7 @@ void BaseForm::on_BTNConnect_clicked()
         comform->show();
     }
     else{
-        ch_serialport->closeSerialport();
+        ch_serialport->closePort();
     }
 
     update_BTNConnect_state();
@@ -289,6 +289,8 @@ void BaseForm::getsigPortClosed()
 {
     m_ADI->adiStop();
     m_Compass->compassStop();
+
+    ch_serialport->quitmThread();
 
     statusbar_msg.baudrate="";
     statusbar_msg.port="";
