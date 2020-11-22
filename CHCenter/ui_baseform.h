@@ -13,7 +13,6 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGridLayout>
@@ -30,7 +29,6 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -129,18 +127,18 @@ public:
     QRadioButton *radioButton_2;
     QRadioButton *radioButton_3;
     QRadioButton *radioButton;
-    QWidget *PageSetting;
-    QVBoxLayout *verticalLayout_5;
-    QCheckBox *checkBox_3;
-    QCheckBox *checkBox_2;
-    QCheckBox *checkBox;
-    QTextBrowser *textBrowser;
     QWidget *PageLogger;
     QHBoxLayout *horizontalLayout_8;
     QComboBox *comboBox_2;
     QComboBox *comboBox;
     QRadioButton *radioButton_4;
     QRadioButton *radioButton_5;
+    QWidget *PageSetting;
+    QVBoxLayout *verticalLayout_5;
+    QScrollArea *PageSettingScroll;
+    QWidget *PageSettingScrollContents;
+    QVBoxLayout *verticalLayout_7;
+    QVBoxLayout *PageSettingWidget;
     QHBoxLayout *horizontalLayout;
     QLabel *LabelStatusMsg;
     QMenuBar *menubar;
@@ -374,7 +372,7 @@ public:
         PageDataScroll->setWidgetResizable(true);
         PageDataScrollContents = new QWidget();
         PageDataScrollContents->setObjectName(QString::fromUtf8("PageDataScrollContents"));
-        PageDataScrollContents->setGeometry(QRect(0, -225, 837, 776));
+        PageDataScrollContents->setGeometry(QRect(0, -284, 837, 786));
         QSizePolicy sizePolicy3(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
@@ -684,24 +682,24 @@ public:
 
         LabelEulerX = new QLabel(LabelGPEuler);
         LabelEulerX->setObjectName(QString::fromUtf8("LabelEulerX"));
-        LabelEulerX->setMinimumSize(QSize(50, 0));
-        LabelEulerX->setMaximumSize(QSize(50, 16777215));
+        LabelEulerX->setMinimumSize(QSize(60, 0));
+        LabelEulerX->setMaximumSize(QSize(60, 16777215));
         LabelEulerX->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         formLayout_4->setWidget(0, QFormLayout::FieldRole, LabelEulerX);
 
         LabelEulerY = new QLabel(LabelGPEuler);
         LabelEulerY->setObjectName(QString::fromUtf8("LabelEulerY"));
-        LabelEulerY->setMinimumSize(QSize(50, 0));
-        LabelEulerY->setMaximumSize(QSize(50, 16777215));
+        LabelEulerY->setMinimumSize(QSize(60, 0));
+        LabelEulerY->setMaximumSize(QSize(60, 16777215));
         LabelEulerY->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         formLayout_4->setWidget(1, QFormLayout::FieldRole, LabelEulerY);
 
         LabelEulerZ = new QLabel(LabelGPEuler);
         LabelEulerZ->setObjectName(QString::fromUtf8("LabelEulerZ"));
-        LabelEulerZ->setMinimumSize(QSize(50, 0));
-        LabelEulerZ->setMaximumSize(QSize(50, 16777215));
+        LabelEulerZ->setMinimumSize(QSize(60, 0));
+        LabelEulerZ->setMaximumSize(QSize(60, 16777215));
         LabelEulerZ->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         formLayout_4->setWidget(2, QFormLayout::FieldRole, LabelEulerZ);
@@ -832,31 +830,6 @@ public:
         horizontalLayout_3->addWidget(radioButton);
 
         stackedWidget->addWidget(PageThreeDView);
-        PageSetting = new QWidget();
-        PageSetting->setObjectName(QString::fromUtf8("PageSetting"));
-        verticalLayout_5 = new QVBoxLayout(PageSetting);
-        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
-        checkBox_3 = new QCheckBox(PageSetting);
-        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
-
-        verticalLayout_5->addWidget(checkBox_3);
-
-        checkBox_2 = new QCheckBox(PageSetting);
-        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
-
-        verticalLayout_5->addWidget(checkBox_2);
-
-        checkBox = new QCheckBox(PageSetting);
-        checkBox->setObjectName(QString::fromUtf8("checkBox"));
-
-        verticalLayout_5->addWidget(checkBox);
-
-        textBrowser = new QTextBrowser(PageSetting);
-        textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
-
-        verticalLayout_5->addWidget(textBrowser);
-
-        stackedWidget->addWidget(PageSetting);
         PageLogger = new QWidget();
         PageLogger->setObjectName(QString::fromUtf8("PageLogger"));
         horizontalLayout_8 = new QHBoxLayout(PageLogger);
@@ -882,6 +855,28 @@ public:
         horizontalLayout_8->addWidget(radioButton_5);
 
         stackedWidget->addWidget(PageLogger);
+        PageSetting = new QWidget();
+        PageSetting->setObjectName(QString::fromUtf8("PageSetting"));
+        verticalLayout_5 = new QVBoxLayout(PageSetting);
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        PageSettingScroll = new QScrollArea(PageSetting);
+        PageSettingScroll->setObjectName(QString::fromUtf8("PageSettingScroll"));
+        PageSettingScroll->setWidgetResizable(true);
+        PageSettingScrollContents = new QWidget();
+        PageSettingScrollContents->setObjectName(QString::fromUtf8("PageSettingScrollContents"));
+        PageSettingScrollContents->setGeometry(QRect(0, 0, 858, 502));
+        verticalLayout_7 = new QVBoxLayout(PageSettingScrollContents);
+        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        PageSettingWidget = new QVBoxLayout();
+        PageSettingWidget->setObjectName(QString::fromUtf8("PageSettingWidget"));
+
+        verticalLayout_7->addLayout(PageSettingWidget);
+
+        PageSettingScroll->setWidget(PageSettingScrollContents);
+
+        verticalLayout_5->addWidget(PageSettingScroll);
+
+        stackedWidget->addWidget(PageSetting);
 
         horizontalLayout_10->addWidget(stackedWidget);
 
@@ -945,8 +940,8 @@ public:
         BTNConnect->setText(QCoreApplication::translate("BaseForm", "Connect", nullptr));
         SideBarBTN1->setText(QCoreApplication::translate("BaseForm", "Data/Dashboard", nullptr));
         SideBarBTN2->setText(QCoreApplication::translate("BaseForm", "3D View", nullptr));
-        SideBarBTN3->setText(QCoreApplication::translate("BaseForm", "Device Setting", nullptr));
-        SideBarBTN4->setText(QCoreApplication::translate("BaseForm", "CSV Logger", nullptr));
+        SideBarBTN3->setText(QCoreApplication::translate("BaseForm", "CSV Logger", nullptr));
+        SideBarBTN4->setText(QCoreApplication::translate("BaseForm", "Device Setting", nullptr));
         label_10->setText(QCoreApplication::translate("BaseForm", "Frame Rate : ", nullptr));
         LabelFrameRate->setText(QCoreApplication::translate("BaseForm", "0 Hz", nullptr));
         LabelID->setText(QCoreApplication::translate("BaseForm", "ID = 0", nullptr));
@@ -995,9 +990,6 @@ public:
         radioButton_2->setText(QCoreApplication::translate("BaseForm", "3D view", nullptr));
         radioButton_3->setText(QCoreApplication::translate("BaseForm", "3D view", nullptr));
         radioButton->setText(QCoreApplication::translate("BaseForm", "3D view", nullptr));
-        checkBox_3->setText(QCoreApplication::translate("BaseForm", "setting", nullptr));
-        checkBox_2->setText(QCoreApplication::translate("BaseForm", "setting", nullptr));
-        checkBox->setText(QCoreApplication::translate("BaseForm", "setting", nullptr));
         radioButton_4->setText(QCoreApplication::translate("BaseForm", "RadioButton", nullptr));
         radioButton_5->setText(QCoreApplication::translate("BaseForm", "RadioButton", nullptr));
         LabelStatusMsg->setText(QCoreApplication::translate("BaseForm", "TextLabel", nullptr));
