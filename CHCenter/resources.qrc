@@ -9,5 +9,8 @@
         <file>images/mainicon.png</file>
         <file>images/clear_text.png</file>
         <file>images/send.png</file>
+        <file>images/bluesquare.png</file>
+        <file>images/greensquare.png</file>
+        <file>images/redsquare.png</file>
     </qresource>
 </RCC>

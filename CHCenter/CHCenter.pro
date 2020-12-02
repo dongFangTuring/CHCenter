@@ -19,7 +19,8 @@ SOURCES += \
     main.cpp \
     packet/imu_data_decode.cpp \
     packet/packet.cpp \
-    packet/packet.cpp
+    packet/packet.cpp \
+    threedform.cpp
 
 HEADERS += \
     attitudeindicator.h \
@@ -28,12 +29,14 @@ HEADERS += \
     chsettingform.h \
     comform.h \
     packet/imu_data_decode.h \
-    packet/packet.h
+    packet/packet.h \
+    threedform.h
 
 FORMS += \
     baseform.ui \
     chsettingform.ui \
-    comform.ui
+    comform.ui \
+    threedform.ui
 
 TRANSLATIONS += \
     CHCenter_en_US.ts

@@ -10,6 +10,7 @@
 #include "chserialport.h"
 #include "attitudeindicator.h"
 #include "chsettingform.h"
+#include "threedform.h"
 
 #define PAGE_DATA           0
 #define PAGE_THREED         1
@@ -29,6 +30,11 @@ class BaseForm : public QMainWindow
 public:
     BaseForm(QWidget *parent = nullptr);
     ~BaseForm();
+
+signals:
+    void sigPage1Display(receive_imusol_packet_t, int);
+    void sigSendIMUtoThreeD(receive_imusol_packet_t);
+
 
 private slots:
 
@@ -58,6 +64,7 @@ private slots:
     void getIMUmsg(QString);
 
     ///stackwidget page1 content:data, chart and attitude indicator///
+    void getsigPage1Display(receive_imusol_packet_t, int);
     void addADI();
     void displayIMUnumber(receive_imusol_packet_t, unsigned int, int);
 
@@ -78,6 +85,9 @@ private slots:
     ///StatusBar///
     void showMessageBox(QString msg, QString title);
 
+
+
+
 private:
     Ui::BaseForm *ui;
     ComForm *comform;
@@ -89,6 +99,8 @@ private:
     QADI *m_ADI;
     QCompass *m_Compass;
     CHSettingForm *ch_settingform;
+
+    ThreeDForm *ch_threeDform;
 
     struct StatusbarMsg{
         QString sw_version="";

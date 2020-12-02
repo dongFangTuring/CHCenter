@@ -44,11 +44,16 @@ BaseForm::BaseForm(QWidget *parent)
             this, SLOT(getIMUData(receive_imusol_packet_t)), Qt::QueuedConnection);
     connect(ch_serialport, SIGNAL(sigSendGWIMU(receive_gwsol_packet_t)),
             this, SLOT(getGWIMUData(receive_gwsol_packet_t)), Qt::QueuedConnection);
-    connect(ch_serialport,SIGNAL(sigSendIMUmsg(QString)), this, SLOT(getIMUmsg(QString)));
+    connect(ch_serialport, SIGNAL(sigSendIMUmsg(QString)), this, SLOT(getIMUmsg(QString)));
 
     //page 1 widget initialize;
     addADI();
-    //page 2
+    //page 2 widget initialize;
+    ch_threeDform=new ThreeDForm(this);
+    ui->PageThreeDViewLayout->addWidget(ch_threeDform);
+
+
+    //page 4
     ch_settingform=new CHSettingForm(this);
     ui->PageSettingWidget->addWidget(ch_settingform);
     connect(ch_settingform,SIGNAL(sigSendATcmd(QString)), this, SLOT(getsigSendATcmd(QString)));
@@ -114,6 +119,28 @@ void BaseForm::SideBar_toggled(int index)
     ui->SideBarBTN2->setEnabled(1);
     ui->SideBarBTN3->setEnabled(1);
     ui->SideBarBTN4->setEnabled(1);
+
+
+    if(index==1){
+        connect(this, SIGNAL(sigPage1Display(receive_imusol_packet_t, int)),
+                this, SLOT(getsigPage1Display(receive_imusol_packet_t, int)));
+    }
+    else{
+        disconnect(this, SIGNAL(sigPage1Display(receive_imusol_packet_t, int)),
+                this, SLOT(getsigPage1Display(receive_imusol_packet_t, int)));
+    }
+
+    if(index==2){
+        ch_threeDform->startThreeDPlot();
+        connect(this, SIGNAL(sigSendIMUtoThreeD(receive_imusol_packet_t)),
+                ch_threeDform, SLOT(getIMUData(receive_imusol_packet_t)));
+    }
+    else{
+        ch_threeDform->stopThreeDPlot();
+        disconnect(this, SIGNAL(sigSendIMUtoThreeD(receive_imusol_packet_t)),
+                   ch_threeDform, SLOT(getIMUData(receive_imusol_packet_t)));
+    }
+
 
     switch (index) {
     case 1: {
@@ -321,11 +348,8 @@ void BaseForm::getsigPortClosed()
  */
 void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 {
-    displayIMUnumber(imu_data, ch_serialport->Content_bits, 0);
-
-
-    m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
-    m_Compass->setYaw(imu_data.eul[2]);
+    emit sigPage1Display(imu_data, 0);
+    emit sigSendIMUtoThreeD(imu_data);
 
 }
 void BaseForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
@@ -333,19 +357,24 @@ void BaseForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
     if(gwimu_data.n>0){
         if(current_gwnodeIndex<0){
             auto imu_data=gwimu_data.receive_imusol[0];
-            displayIMUnumber(imu_data, ch_serialport->Content_bits, 1);
-            m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
-            m_Compass->setYaw(imu_data.eul[2]);
+            emit sigPage1Display(imu_data,1);
         }
         else{
             auto imu_data=gwimu_data.receive_imusol[current_gwnodeIndex];
-            displayIMUnumber(gwimu_data.receive_imusol[current_gwnodeIndex], ch_serialport->Content_bits, 1);
-            m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
-            m_Compass->setYaw(imu_data.eul[2]);
+            emit sigPage1Display(imu_data,1);
         }
     }
 
 }
+
+void BaseForm::getsigPage1Display(receive_imusol_packet_t imu_data, int is_gw)
+{
+    displayIMUnumber(imu_data, ch_serialport->Content_bits, is_gw);
+    m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
+    m_Compass->setYaw(imu_data.eul[2]);
+}
+
+
 /**
  * @brief BaseForm::getIMUmsg
  * when go into setting mode, node will transmit ACHii instead of HEX data.
@@ -359,6 +388,8 @@ void BaseForm::getIMUmsg(QString str)
         ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
     }
 }
+
+
 ///stackwidget page1 content:data, chart and attitude indicator///
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
