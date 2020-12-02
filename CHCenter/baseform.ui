@@ -112,6 +112,12 @@
              <height>80</height>
             </size>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
+             <height>80</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>Times New Roman</family>
@@ -148,6 +154,24 @@ background-color:#dedede;
          </item>
          <item>
           <widget class="QListWidget" name="ListGWNode">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>200</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">QListWidget::item:selected{
 background: white;
@@ -172,7 +196,13 @@ color:balck;
            </property>
            <property name="minimumSize">
             <size>
-             <width>150</width>
+             <width>200</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
              <height>60</height>
             </size>
            </property>
@@ -219,7 +249,13 @@ color: black;
            </property>
            <property name="minimumSize">
             <size>
-             <width>150</width>
+             <width>200</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
              <height>60</height>
             </size>
            </property>
@@ -266,7 +302,13 @@ color: black;
            </property>
            <property name="minimumSize">
             <size>
-             <width>150</width>
+             <width>200</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
              <height>60</height>
             </size>
            </property>
@@ -313,7 +355,13 @@ color: black;
            </property>
            <property name="minimumSize">
             <size>
-             <width>150</width>
+             <width>200</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
              <height>60</height>
             </size>
            </property>
@@ -385,7 +433,7 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>737</width>
+               <width>383</width>
                <height>807</height>
               </rect>
              </property>

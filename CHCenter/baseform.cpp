@@ -192,6 +192,7 @@ void BaseForm::on_BTNConnect_clicked()
     }
 
     update_BTNConnect_state();
+    updateListGWNode(0);
 }
 
 void BaseForm::update_BTNConnect_state()
@@ -358,10 +359,12 @@ void BaseForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
         if(current_gwnodeIndex<0){
             auto imu_data=gwimu_data.receive_imusol[0];
             emit sigPage1Display(imu_data,1);
+            emit sigSendIMUtoThreeD(imu_data);
         }
         else{
             auto imu_data=gwimu_data.receive_imusol[current_gwnodeIndex];
             emit sigPage1Display(imu_data,1);
+            emit sigSendIMUtoThreeD(imu_data);
         }
     }
 
