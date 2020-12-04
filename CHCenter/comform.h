@@ -27,9 +27,9 @@ private slots:
     void on_BTNOK_clicked();
     void on_ListPort_itemClicked(QListWidgetItem *);
 
-
-
 signals:
+
+    //send to baseform
     void sigPortChose(QString,int);
     void sigPortCancle();
 

@@ -18,7 +18,7 @@ QADI::QADI(QWidget *parent)
     timer->setInterval(20);
 
     m_sizeMin = 150;
-    m_sizeMax = 300;
+    m_sizeMax = 150;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
 
@@ -285,7 +285,7 @@ QCompass::QCompass(QWidget *parent)
     timer->setInterval(30);
 
     m_sizeMin = 150;
-    m_sizeMax = 300;
+    m_sizeMax = 150;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
 

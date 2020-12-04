@@ -48,6 +48,7 @@ BaseForm::BaseForm(QWidget *parent)
 
     //page 1 widget initialize;
     addADI();
+
     //page 2 widget initialize;
     ch_threeDform=new ThreeDForm(this);
     ui->PageThreeDViewLayout->addWidget(ch_threeDform);

@@ -156,7 +156,7 @@
         <widget class="QLabel" name="LabelXnumber">
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>60</width>
            <height>0</height>
           </size>
          </property>
@@ -202,6 +202,12 @@
        </item>
        <item>
         <widget class="QLabel" name="LabelYnumber">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>?</string>
          </property>
@@ -238,10 +244,29 @@
        </item>
        <item>
         <widget class="QLabel" name="LabelZnumber">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>?</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>

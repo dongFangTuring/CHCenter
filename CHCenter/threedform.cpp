@@ -17,6 +17,7 @@ ThreeDForm::ThreeDForm(QWidget *parent) :
     ui->SliderUpDown->setValue(45);
     ui->SliderLeftRight->setValue(225);
 
+    //timer to update a new rotation
     timer=new QTimer(this);
     connect(timer, SIGNAL(timeout(void)), this, SLOT(objectReplot(void)));
     timer->setInterval(30);
@@ -41,44 +42,25 @@ void ThreeDForm::initView()
 
     view->defaultFrameGraph()->setClearColor(QColor(30,30,30));
 
-    // check if path exists and if yes: Is it a file and no directory?
-    bool fileExists = QFileInfo::exists("jet.obj") && QFileInfo("jet.obj").isFile();
-    qDebug() << fileExists;
-
-    QUrl url =QUrl::fromLocalFile("jet.obj");
-
-
-    objTransform = new Qt3DCore::QTransform();
-    objTransform->setScale(5.0f);
-    objTransform->setTranslation(QVector3D(0.0f, 0.0f, 0.0f));
-
-
-    Qt3DExtras::QPhongMaterial *objMaterial = new Qt3DExtras::QPhongMaterial();
-    objMaterial->setDiffuse(QColor(100, 100, 100));
-    objMaterial->setAmbient(QColor(255, 255,255));
-    objMaterial->setSpecular(QColor(255,255,255));
-    objMaterial->setShininess(150.0f);
-
+    //build rootEntity first
     rootEntity = new Qt3DCore::QEntity;
-
-
-    Qt3DRender::QMesh *customObjMesh = new Qt3DRender::QMesh();
-    customObjMesh->setMeshName("myPlane");
-    customObjMesh->setSource(url);
-
     customObj = new Qt3DCore::QEntity(rootEntity);
-    customObj->addComponent(customObjMesh);
-    customObj->addComponent(objMaterial);
-    customObj->addComponent(objTransform);
 
-
+    //add obj component
+    int rst=loadobj("jet.obj");
+    if(rst==-1){
+        QMessageBox msgBox;
+        msgBox.setText(tr("No file exists or wrong path!"));
+        msgBox.setWindowTitle(tr("Error"));
+        msgBox.exec();
+    }
 
     camera = view->camera();
     camera->lens()->setPerspectiveProjection(60.0f, 16.0f/9.0f, 1.0f,700.0f);
     camera->setPosition(QVector3D(-70.0f, 70.0f, -70.0f));
     camera->setViewCenter(QVector3D(0, 0, 0));
 
-
+    ///draw axes///
     drawLine({ 0, 0, 0 }, { 1000, 0, 0 }, Qt::green, rootEntity); // Y
     drawLine({ 0, 0, 0 }, { 0, 1000, 0 }, QColor(30, 160, 250), rootEntity); //blue: Z
     drawLine({ 0, 0, 0 }, { 0, 0, 1000 }, Qt::red, rootEntity); // X
@@ -94,6 +76,7 @@ void ThreeDForm::initView()
     lightTransform->setTranslation(QVector3D(60, 500, 40.0f));
     lightEntity->addComponent(lightTransform);
 
+    ///this is for mouse control///
     //    Qt3DExtras::QOrbitCameraController *camController = new Qt3DExtras::QOrbitCameraController(rootEntity);
     //    camController->setCamera(camera);
     //    camController->setLinearSpeed(100.0);
@@ -106,28 +89,35 @@ void ThreeDForm::initView()
 int ThreeDForm::loadobj(QString file)
 {
     customObj->deleteLater();
+
+    // check if path exists and if yes: Is it a file and no directory?
+    bool fileExists = QFileInfo::exists(file) && QFileInfo(file).isFile();
+    if(fileExists!=1)
+        return -1;
     QUrl url =QUrl::fromLocalFile(file);
 
-
+    //load obj mesh
     Qt3DRender::QMesh *customObjMesh = new Qt3DRender::QMesh();
     customObjMesh->setMeshName("myPlane");
     customObjMesh->setSource(url);
 
+    //set obj material
     Qt3DExtras::QPhongMaterial *objMaterial = new Qt3DExtras::QPhongMaterial();
     objMaterial->setDiffuse(QColor(100, 100, 100));
     objMaterial->setAmbient(QColor(255, 255,255));
     objMaterial->setSpecular(QColor(255,255,255));
     objMaterial->setShininess(150.0f);
 
+    //set transformation
     objTransform = new Qt3DCore::QTransform();
     objTransform->setScale(5.0f);
     objTransform->setTranslation(QVector3D(0.0f, 0.0f, 0.0f));
 
+    //load to customObj
     customObj = new Qt3DCore::QEntity(rootEntity);
     customObj->addComponent(customObjMesh);
     customObj->addComponent(objMaterial);
     customObj->addComponent(objTransform);
-
 
     return 0;
 }
@@ -204,26 +194,28 @@ void ThreeDForm::objectReplot()
 void ThreeDForm::startThreeDPlot()
 {
     timer->start();
-    //container->show();
-    //view->show();
 }
 
 void ThreeDForm::stopThreeDPlot()
 {
     timer->stop();
-    //container->close();
-    //view->close();
 }
 
 void ThreeDForm::on_BNTLoad_clicked()
 {
     QString file = QFileDialog::getOpenFileName(this,
-                                                "Open .obj model",
+                                                tr("Open .obj model"),
                                                 QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).at(0),
                                                 "*.obj");
     qDebug()<<file;
     if(QFile(file).exists()){
-        loadobj(file);
+        int rst=loadobj(file);
+        if(rst==-1){
+            QMessageBox msgBox;
+            msgBox.setText(tr("No file exists or wrong path!"));
+            msgBox.setWindowTitle(tr("Error"));
+            msgBox.exec();
+        }
     }
 }
 

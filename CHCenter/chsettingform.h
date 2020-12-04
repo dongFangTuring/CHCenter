@@ -53,41 +53,23 @@ public slots:
 
 private slots:
     void on_InfoBTN_clicked();
-
     void on_RestartBTN_clicked();
-
     void displayATcmd(QString);
-
     void on_sendATcmdBTN_clicked();
-
     void on_clearBTN_clicked();
-
     void on_BRSetBTN_clicked();
-
     void on_FRSetBTN_clicked();
-
     void on_Mode6AxisBTN_clicked();
-
     void on_Mode9AxisBTN_clicked();
-
     void on_ProtocolSetBTN_clicked();
-
     void on_IMUSOLCheckBox_clicked();
-
     void on_IDCheckBox_clicked();
-
     void on_AccCheckBox_clicked();
-
     void on_GyroCheckBox_clicked();
-
     void on_MagCheckBox_clicked();
-
     void on_EulerCheckBox_clicked();
-
     void on_QuatCheckBox_clicked();
-
     void on_IDSetBTN_clicked();
-
     void on_GWIDSetBTN_clicked();
 
 signals:

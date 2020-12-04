@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QTimer>
 #include <QMutex>
+#include <QMessageBox>
 
 #include "packet/packet.h"
 #include "packet/imu_data_decode.h"
