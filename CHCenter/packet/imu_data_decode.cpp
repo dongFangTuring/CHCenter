@@ -59,7 +59,7 @@ static void on_data_received(packet_t *pkt)
 			break;
 
 		case kItemGyrRaw:
-		case kItemGyrRaw_yunjing:
+        case 0xB1:
             receive_gwsol.tag = 0;
 			bitmap |= BIT_VALID_GYR;
             stream2int16(temp, p + offset + 1);
@@ -110,6 +110,9 @@ static void on_data_received(packet_t *pkt)
 			offset += 76;
 			break;
 
+        case 0x60:
+            offset += (4*8)+1;
+            break;
 		case KItemGWSOL:
 			receive_gwsol.tag = p[offset];
 			receive_gwsol.gw_id = p[offset + 1]; 
