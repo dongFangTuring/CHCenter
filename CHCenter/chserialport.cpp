@@ -90,8 +90,9 @@ void CHSerialport::countFrameRate()
 
     mutex_writing.lock();
     Frame_rate=frame_count;
-    mutex_writing.unlock();
     frame_count=0;
+    mutex_writing.unlock();
+
 }
 
 void CHSerialport::on_thread_started()
@@ -118,6 +119,8 @@ void CHSerialport::on_thread_stopped()
     timer_framerate->disconnect();
     receive_gwsol.tag=0;
     receive_gwsol.n=0;
+    m_number_of_node=0;
+    m_is_gwsol=0;
 }
 
 void CHSerialport::getsigWriteData(QString str)
@@ -125,7 +128,6 @@ void CHSerialport::getsigWriteData(QString str)
     QByteArray ba = str.toLocal8Bit();
     const char *c_str2 = ba.data();
     CH_serial->write(c_str2,100);
-    //qDebug()<<str;
 }
 
 
@@ -179,35 +181,42 @@ void CHSerialport::handleData()
             }
         }
 
+        if(m_frame_received!=frame_count){
 
-        if(receive_gwsol.tag != KItemGWSOL)
-        {
-            if(m_is_gwsol==1){
-                m_is_gwsol=0;
-                emit sigUpdateListGWNode(0);
+            if(receive_gwsol.tag != KItemGWSOL)
+            {
+                if(m_is_gwsol==1){
+                    m_is_gwsol=0;
+                    emit sigUpdateListGWNode(0);
+                }
+
+                emit sigSendIMU(receive_imusol);
             }
+            else
+            {
+                if(m_is_gwsol==0){
+                    m_is_gwsol=1;
+                    emit sigUpdateListGWNode(1);
+                }
+                if(!(m_number_of_node==receive_gwsol.n)){
+                    m_number_of_node=receive_gwsol.n;
+                    emit sigUpdateListGWNode(1);
+                }
 
-            emit sigSendIMU(receive_imusol);
+
+                emit sigSendGWIMU(receive_gwsol);
+
+            }
+            if(Content_bits!=bitmap){
+                Content_bits=bitmap;
+                emit sigSendBitmap(bitmap);
+
+            }
+            m_frame_received=frame_count;
+
         }
-        else
-        {
-            if(m_is_gwsol==0){
-                m_is_gwsol=1;
-                emit sigUpdateListGWNode(1);
-            }
-            if(!(m_number_of_node==receive_gwsol.n)){
-                m_number_of_node=receive_gwsol.n;
-                emit sigUpdateListGWNode(1);
-            }
 
-            emit sigSendGWIMU(receive_gwsol);
-            //IMUs_data=&receive_gwsol;
-
-        }
-        if(Content_bits!=bitmap)
-            Content_bits=bitmap;
         mutex_writing.unlock();
-
     }
 
 

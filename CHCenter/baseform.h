@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QFile>
+
 #include "packet/imu_data_decode.h"
 #include "packet/packet.h"
 #include "comform.h"
@@ -11,6 +12,7 @@
 #include "attitudeindicator.h"
 #include "chsettingform.h"
 #include "threedform.h"
+#include "csvlogform.h"
 
 #define PAGE_DATA           0
 #define PAGE_THREED         1
@@ -64,17 +66,19 @@ private slots:
     void getIMUmsg(QString);
 
     ///stackwidget page1 content:data, chart and attitude indicator///
-    void getsigPage1Display(receive_imusol_packet_t, int);
+    void getsigBaseFormDisplay(receive_imusol_packet_t, int);
     void addADI();
     void displayIMUnumber(receive_imusol_packet_t, unsigned int, int);
 
     ///stackwidget page2 content:///
-    void getsigSendATcmd(QString ATcmd);
+
 
 
     ///stackwidget page3 content:///
-    ///stackwidget page4 content:///
 
+
+    ///stackwidget page4 content:///
+    void getsigSendATcmd(QString ATcmd);
 
     ///MenuBar signals of actions///
     void on_actionExit_triggered();
@@ -98,9 +102,12 @@ private:
 
     QADI *m_ADI;
     QCompass *m_Compass;
-    CHSettingForm *ch_settingform;
 
+    CHSettingForm *ch_settingform;
     ThreeDForm *ch_threeDform;
+    CSVLogForm *ch_csvlogform;
+
+
 
     struct StatusbarMsg{
         QString sw_version="";

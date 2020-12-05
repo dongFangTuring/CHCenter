@@ -1,21 +1,11 @@
 #include "attitudeindicator.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <QtCore>
-#include <QtGui>
-#include <QDebug>
-#include <QHeaderView>
-
-
 QADI::QADI(QWidget *parent)
     : QWidget(parent)
 {
     timer=new QTimer(this);
     connect(timer, SIGNAL(timeout(void)), this, SLOT(canvasReplot_slot(void)));
-    timer->setInterval(20);
+    timer->setInterval(40);
 
     m_sizeMin = 150;
     m_sizeMax = 150;
@@ -136,7 +126,7 @@ void QADI::paintEvent(QPaintEvent *event)
 
 
         // draw lines
-        for(int i=-9; i<=9; i++) {
+        for(short i=-9; i<=9; i++) {
             p = i*10;
 
             s = QString("%1").arg(p);
@@ -221,7 +211,7 @@ void QADI::paintEvent(QPaintEvent *event)
         painter.setPen(blackPen);
         painter.setFont(font_roll);
 
-        for(int i=0; i<nRollLines; i++) {
+        for(short i=0; i<nRollLines; i++) {
             if( i < nRollLines/2 )
                 s = QString("%1").arg(-i*rotAng);
             else
@@ -282,7 +272,7 @@ QCompass::QCompass(QWidget *parent)
 
     timer=new QTimer(this);
     connect(timer, SIGNAL(timeout(void)), this, SLOT(canvasReplot_slot(void)));
-    timer->setInterval(30);
+    timer->setInterval(50);
 
     m_sizeMin = 150;
     m_sizeMax = 150;
@@ -303,7 +293,7 @@ QCompass::~QCompass()
     timer->stop();
 }
 
-void QCompass::compassInit()
+void QCompass::compassStart()
 {
     timer->start();
 }
@@ -366,7 +356,7 @@ void QCompass::paintEvent(QPaintEvent *event)
         font_yaw.setWeight(QFont::Bold);
         painter.setPen(whitePen);
 
-        for(int i=0; i<nyawLines; i++) {
+        for(short i=0; i<nyawLines; i++) {
 
             if( i == 0 ) {
                 s = "N";

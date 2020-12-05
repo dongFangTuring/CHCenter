@@ -12,7 +12,6 @@
 #include <QSizePolicy>
 #include <QFileDialog>
 #include <QTimer>
-#include <QMutex>
 #include <QMessageBox>
 
 #include "packet/packet.h"
@@ -39,15 +38,15 @@ private slots:
 
     void getIMUData(receive_imusol_packet_t);
 
-    void on_SliderZoom_valueChanged(int position);
-
-    void on_SliderUpDown_valueChanged(int value);
-
-    void on_SliderLeftRight_valueChanged(int value);
-
     void on_BTNPosReset_clicked();
 
     void objectReplot();
+
+    void on_SliderLeftRight_sliderMoved(int position);
+
+    void on_SliderUpDown_sliderMoved(int theta);
+
+    void on_SliderZoom_sliderMoved(int theta);
 
 private:
     Ui::ThreeDForm *ui;
@@ -62,10 +61,14 @@ private:
     QTimer *timer;
     QMutex mutex_writing;
 
+    QString obj_filepath;
+
     float m_euler[3]={}; //x, y, z
 
     void initView();
     void drawLine(const QVector3D& start, const QVector3D& end, const QColor& color, Qt3DCore::QEntity *_rootEntity);
+
+    int m_cam_scale[3];  //zoom, up/down, left/right
 
 
 };

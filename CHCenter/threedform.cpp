@@ -7,31 +7,27 @@ ThreeDForm::ThreeDForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    initView();
-
-    ui->SliderZoom->setRange(1,200);
-    ui->SliderUpDown->setRange(-89,89);
-    ui->SliderLeftRight->setRange(0,360);
-
-    ui->SliderZoom->setValue(100);
-    ui->SliderUpDown->setValue(45);
-    ui->SliderLeftRight->setValue(225);
-
-    //timer to update a new rotation
     timer=new QTimer(this);
     connect(timer, SIGNAL(timeout(void)), this, SLOT(objectReplot(void)));
     timer->setInterval(30);
+    obj_filepath="objModel/jet.obj";
+    m_cam_scale[0]=100;
+    m_cam_scale[1]=45;
+    m_cam_scale[2]=225;
+
 }
 
 
 
 ThreeDForm::~ThreeDForm()
 {
-    //cleanView();
+    stopThreeDPlot();
     delete ui;
 }
 void ThreeDForm::initView()
 {
+    //timer to update a new rotation
+
     view = new Qt3DExtras::Qt3DWindow();
 
     // put Qt3DWindow into a container in order to make it possible
@@ -47,7 +43,7 @@ void ThreeDForm::initView()
     customObj = new Qt3DCore::QEntity(rootEntity);
 
     //add obj component
-    int rst=loadobj("jet.obj");
+    int rst=loadobj(obj_filepath);
     if(rst==-1){
         QMessageBox msgBox;
         msgBox.setText(tr("No file exists or wrong path!"));
@@ -81,9 +77,22 @@ void ThreeDForm::initView()
     //    camController->setCamera(camera);
     //    camController->setLinearSpeed(100.0);
     //    camController->setLookSpeed(100.0);
-
     camera->viewAll();
     view->setRootEntity(rootEntity);
+
+
+    ui->SliderZoom->setRange(1,200);
+    ui->SliderUpDown->setRange(-89,89);
+    ui->SliderLeftRight->setRange(0,360);
+
+    ui->SliderZoom->setValue(m_cam_scale[0]);
+    ui->SliderUpDown->setValue(m_cam_scale[1]);
+    ui->SliderLeftRight->setValue(m_cam_scale[2]);
+
+    on_SliderZoom_sliderMoved(m_cam_scale[0]);
+    on_SliderUpDown_sliderMoved(m_cam_scale[1]);
+    on_SliderLeftRight_sliderMoved(m_cam_scale[2]);
+
 }
 
 int ThreeDForm::loadobj(QString file)
@@ -124,8 +133,6 @@ int ThreeDForm::loadobj(QString file)
 
 void ThreeDForm::drawLine(const QVector3D& start, const QVector3D& end, const QColor& color, Qt3DCore::QEntity *_rootEntity)
 {
-
-
     auto *geometry = new Qt3DRender::QGeometry(_rootEntity);
 
     // position vertices (start and end)
@@ -193,12 +200,21 @@ void ThreeDForm::objectReplot()
 
 void ThreeDForm::startThreeDPlot()
 {
+    initView();
     timer->start();
 }
 
 void ThreeDForm::stopThreeDPlot()
 {
-    timer->stop();
+    if(timer->isActive()){
+        timer->stop();
+        container->deleteLater();
+        view->deleteLater();
+        objTransform->deleteLater();
+        camera->deleteLater();
+        customObj->deleteLater();
+        rootEntity->deleteLater();
+    }
 }
 
 void ThreeDForm::on_BNTLoad_clicked()
@@ -207,9 +223,14 @@ void ThreeDForm::on_BNTLoad_clicked()
                                                 tr("Open .obj model"),
                                                 QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).at(0),
                                                 "*.obj");
+
+
     qDebug()<<file;
     if(QFile(file).exists()){
-        int rst=loadobj(file);
+
+        obj_filepath=file;
+        int rst=loadobj(obj_filepath);
+
         if(rst==-1){
             QMessageBox msgBox;
             msgBox.setText(tr("No file exists or wrong path!"));
@@ -232,18 +253,32 @@ void ThreeDForm::getIMUData(receive_imusol_packet_t imu_data)
 
 
 
-void ThreeDForm::on_SliderZoom_valueChanged(int position)
+void ThreeDForm::on_BTNPosReset_clicked()
+{
+    m_cam_scale[0]=100;
+    m_cam_scale[1]=45;
+    m_cam_scale[2]=225;
+
+    ui->SliderZoom->setValue(m_cam_scale[0]);
+    ui->SliderUpDown->setValue(m_cam_scale[1]);
+    ui->SliderLeftRight->setValue(m_cam_scale[2]);
+
+    on_SliderZoom_sliderMoved(m_cam_scale[0]);
+    on_SliderUpDown_sliderMoved(m_cam_scale[1]);
+    on_SliderLeftRight_sliderMoved(m_cam_scale[2]);
+
+}
+void ThreeDForm::on_SliderZoom_sliderMoved(int position)
 {
     float pos=float(position);
     QVector3D camPos = camera->position();
     camPos.normalize();
     camPos = camPos*pos;
     camera->setPosition(camPos);
+    m_cam_scale[0]=position;
 }
-
-void ThreeDForm::on_SliderUpDown_valueChanged(int theta)
+void ThreeDForm::on_SliderUpDown_sliderMoved(int theta)
 {
-
     QVector3D camPos = camera->position();
     float r=sqrt(pow((camPos.x()),2)+pow((camPos.y()),2)+pow((camPos.z()),2));
     camPos.setY(r*sin(theta*3.14/180));
@@ -254,9 +289,10 @@ void ThreeDForm::on_SliderUpDown_valueChanged(int theta)
     camera->setPosition(camPos);
     camera->setUpVector(QVector3D(0,1,0));
 
-}
+    m_cam_scale[1]=theta;
 
-void ThreeDForm::on_SliderLeftRight_valueChanged(int theta)
+}
+void ThreeDForm::on_SliderLeftRight_sliderMoved(int theta)
 {
     QVector3D camPos = camera->position();
     float r=sqrt((camPos.x())*(camPos.x())+(camPos.z())*(camPos.z()));
@@ -265,11 +301,10 @@ void ThreeDForm::on_SliderLeftRight_valueChanged(int theta)
 
     camera->setPosition(camPos);
     camera->setUpVector(QVector3D(0,1,0));
+
+    m_cam_scale[2]=theta;
 }
 
-void ThreeDForm::on_BTNPosReset_clicked()
-{
-    ui->SliderZoom->setValue(100);
-    ui->SliderUpDown->setValue(45);
-    ui->SliderLeftRight->setValue(225);
-}
+
+
+

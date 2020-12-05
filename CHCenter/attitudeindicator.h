@@ -3,6 +3,14 @@
 
 #include <QWidget>
 #include <QThread>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <QtCore>
+#include <QtGui>
+#include <QDebug>
+
 
 class QADI : public QWidget
 {
@@ -62,10 +70,10 @@ public:
         if( m_yaw > 360 ) m_yaw = m_yaw - 360;
     }
 
-    void compassInit();
+    void compassStart();
     void compassStop();
 signals:
-    void sigCompassInit(void);
+    void sigcompassStart(void);
     void sigCompassStop(void);
 
 protected slots:

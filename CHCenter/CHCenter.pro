@@ -16,6 +16,7 @@ SOURCES += \
     chserialport.cpp \
     chsettingform.cpp \
     comform.cpp \
+    csvlogform.cpp \
     main.cpp \
     packet/imu_data_decode.cpp \
     packet/packet.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     chserialport.h \
     chsettingform.h \
     comform.h \
+    csvlogform.h \
     packet/imu_data_decode.h \
     packet/packet.h \
     threedform.h
@@ -36,6 +38,7 @@ FORMS += \
     baseform.ui \
     chsettingform.ui \
     comform.ui \
+    csvlogform.ui \
     threedform.ui
 
 TRANSLATIONS += \

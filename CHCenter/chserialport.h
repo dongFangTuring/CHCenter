@@ -4,7 +4,6 @@
 #include <QByteArray>
 #include <QObject>
 #include <QDebug>
-#include <QObject>
 #include <QThread>
 #include <QMessageBox>
 #include <QTimer>
@@ -32,6 +31,7 @@ public:
     unsigned int Frame_rate=0;
     unsigned int Content_bits;
 
+
     QByteArray CH_rawmsg="";
     bool Is_msgMode=0;
 
@@ -52,6 +52,7 @@ signals:
     void sigCloseThreadAndPort();
     void sigUpdateListGWNode(bool);
     void sigWriteData(QString);   
+    void sigSendBitmap(unsigned int);
 
 private:
     QTimer *timer_framerate;
@@ -62,6 +63,8 @@ private:
     int m_number_of_node;
     bool m_is_gwsol=0;
     QString m_IMUmsg="";
+
+    unsigned int m_frame_received=0;
 
 private slots:
     void countFrameRate();
