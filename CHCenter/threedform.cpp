@@ -56,7 +56,7 @@ void ThreeDForm::initView()
     camera->setPosition(QVector3D(-70.0f, 70.0f, -70.0f));
     camera->setViewCenter(QVector3D(0, 0, 0));
 
-    ///draw axes///
+    //draw axes
     drawLine({ 0, 0, 0 }, { 1000, 0, 0 }, Qt::green, rootEntity); // Y
     drawLine({ 0, 0, 0 }, { 0, 1000, 0 }, QColor(30, 160, 250), rootEntity); //blue: Z
     drawLine({ 0, 0, 0 }, { 0, 0, 1000 }, Qt::red, rootEntity); // X
@@ -72,7 +72,7 @@ void ThreeDForm::initView()
     lightTransform->setTranslation(QVector3D(60, 500, 40.0f));
     lightEntity->addComponent(lightTransform);
 
-    ///this is for mouse control///
+    //this is for mouse control
     //    Qt3DExtras::QOrbitCameraController *camController = new Qt3DExtras::QOrbitCameraController(rootEntity);
     //    camController->setCamera(camera);
     //    camController->setLinearSpeed(100.0);

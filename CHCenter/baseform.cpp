@@ -62,6 +62,8 @@ BaseForm::BaseForm(QWidget *parent)
             ch_csvlogform, SLOT(getGWIMUData(receive_gwsol_packet_t)));
     connect(ch_serialport, SIGNAL(sigSendBitmap(unsigned int)),
             ch_csvlogform, SLOT(getBitmap(unsigned int)));
+    connect(ch_serialport, SIGNAL(sigPortClosed()),
+            ch_csvlogform, SLOT(stopLogging()));
 
     //page 4
     ch_settingform=new CHSettingForm(this);
@@ -78,6 +80,8 @@ BaseForm::BaseForm(QWidget *parent)
 
     //page 1 is the default page
     on_SideBarBTN1_clicked();
+    update_BTNConnect_state();
+    ui->stackedWidget->setEnabled(0);
 }
 
 BaseForm::~BaseForm()
@@ -201,31 +205,36 @@ void BaseForm::on_BTNConnect_clicked()
         comform->show();
         comform->on_BTNPortRefresh_clicked();
     }
-    else{
-        ch_serialport->closePort();
-    }
 
     update_BTNConnect_state();
     updateListGWNode(0);
 }
 
+void BaseForm::on_BTNDisconnect_clicked()
+{
+    if(ch_serialport->CH_serial->isOpen()){
+        ch_serialport->closePort();
+
+    }
+}
+
 void BaseForm::update_BTNConnect_state()
 {
     if(!ch_serialport->CH_serial->isOpen()){
-
-        ui->BTNConnect->setText(tr("Connect"));
-
+        ui->BTNConnect->setFixedWidth(200);
         if(comform->isVisible()){
             ui->BTNConnect->setEnabled(0);
         }
         else{
             ui->BTNConnect->setEnabled(1);
+            ui->BTNDisconnect->hide();
         }
 
     }
     else{
-        ui->BTNConnect->setText(tr("Disconnect"));
-        ui->BTNConnect->setEnabled(1);
+        ui->BTNConnect->setFixedWidth(150);
+        ui->BTNConnect->setEnabled(0);
+        ui->BTNDisconnect->show();
     }
 }
 
@@ -317,6 +326,8 @@ void BaseForm::geterrorOpenPort()
 
     statusbar_msg.current_status=tr("Cannot build connection. Please check the selected port again");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+    update_BTNConnect_state();
+    ui->stackedWidget->setEnabled(0);
 }
 void BaseForm::getsigOpenPort()
 {
@@ -335,6 +346,8 @@ void BaseForm::getsigOpenPort()
     //start ADI update timer
     m_ADI->adiStart();
     m_Compass->compassStart();
+    ui->stackedWidget->setEnabled(1);
+
 }
 
 void BaseForm::getsigPortClosed()
@@ -354,6 +367,7 @@ void BaseForm::getsigPortClosed()
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
     update_BTNConnect_state();
+    ui->stackedWidget->setEnabled(0);
 }
 
 /**
@@ -647,3 +661,4 @@ void BaseForm::getsigSendATcmd(QString ATcmd)
     ATcmd+="\r\n";
     ch_serialport->writeData(ATcmd);
 }
+

@@ -99,35 +99,40 @@
           <number>20</number>
          </property>
          <item>
-          <widget class="QPushButton" name="BTNConnect">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>10</number>
            </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>200</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Times New Roman</family>
-             <pointsize>-1</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
+           <item>
+            <widget class="QPushButton" name="BTNConnect">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>80</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>80</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+               <pointsize>-1</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
 font-size:20px;
 background-color: #00ACC1; 
 color: #f1f1f1; 
@@ -143,14 +148,59 @@ background-color: #008C9D;
 QPushButton:disabled {
 background-color:#dedede;
 }</string>
-           </property>
-           <property name="text">
-            <string>Connect</string>
-           </property>
-           <property name="flat">
-            <bool>true</bool>
-           </property>
-          </widget>
+             </property>
+             <property name="text">
+              <string>Connect</string>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="BTNDisconnect">
+             <property name="minimumSize">
+              <size>
+               <width>30</width>
+               <height>80</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>80</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+font-size:20px;
+background-color: #D7443E; 
+color: #f1f1f1; 
+border: none;
+border-radius:2px;
+}
+QPushButton:hover:!pressed{
+background-color: #D7443E;
+}
+QPushButton:pressed{
+background-color: #B82D27;
+}
+QPushButton:disabled {
+background-color:#dedede;
+}
+
+</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="resources.qrc">
+               <normaloff>:/images/cancel.png</normaloff>:/images/cancel.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QListWidget" name="ListGWNode">
@@ -1424,8 +1474,8 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>814</width>
-               <height>702</height>
+               <width>55</width>
+               <height>24</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -1528,6 +1578,8 @@ color: black;
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

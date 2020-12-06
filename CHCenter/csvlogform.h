@@ -30,8 +30,6 @@ public:
 private slots:
     void on_BTNPath_clicked();
 
-    void on_BTNSync_clicked();
-
     void on_BTNStart_clicked();
 
     void getIMUData(receive_imusol_packet_t);
@@ -39,8 +37,6 @@ private slots:
     void getGWIMUData(receive_gwsol_packet_t);
 
     void on_BTNStop_clicked();
-
-    void on_BTNPause_clicked();
 
     void on_SBLogPeriod_valueChanged(int arg1);
 
@@ -51,10 +47,11 @@ private slots:
     void logging_countdown();
 
 
+    void on_BTNClear_clicked();
+
 private:
     Ui::CSVLogForm *ui;
-    QString current_path;
-    QString dir;
+    QString current_dir;
 
     receive_imusol_packet_t m_imudata;
     receive_gwsol_packet_t m_gwimudata;

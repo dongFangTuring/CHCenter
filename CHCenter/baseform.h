@@ -92,6 +92,8 @@ private slots:
 
 
 
+    void on_BTNDisconnect_clicked();
+
 private:
     Ui::BaseForm *ui;
     ComForm *comform;
