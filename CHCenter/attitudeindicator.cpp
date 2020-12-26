@@ -3,10 +3,6 @@
 QADI::QADI(QWidget *parent)
     : QWidget(parent)
 {
-    timer=new QTimer(this);
-    connect(timer, SIGNAL(timeout(void)), this, SLOT(canvasReplot_slot(void)));
-    timer->setInterval(40);
-
     m_sizeMin = 150;
     m_sizeMax = 150;
     m_offset = 2;
@@ -26,14 +22,6 @@ QADI::~QADI()
 {
 }
 
-void QADI::adiStart()
-{
-    timer->start();
-}
-void QADI::adiStop()
-{
-    timer->stop();
-}
 
 void QADI::canvasReplot_slot(void)
 {
@@ -48,6 +36,8 @@ void QADI::resizeEvent(QResizeEvent *event)
 
 void QADI::paintEvent(QPaintEvent *event)
 {
+//    QTime t;
+//    t.start();
 
     QPainter painter(this);
 
@@ -126,7 +116,7 @@ void QADI::paintEvent(QPaintEvent *event)
 
 
         // draw lines
-        for(short i=-9; i<=9; i++) {
+        for(short i=-9; i<=9; i=i+3) {
             p = i*10;
 
             s = QString("%1").arg(p);
@@ -197,10 +187,10 @@ void QADI::paintEvent(QPaintEvent *event)
 
     // draw roll degree lines
     {
-        int     nRollLines = 18;
+        int     nRollLines = 12;
         float   rotAng = 360.0 / nRollLines;
         int     rollLineLeng = m_size/25;
-        float  fx1, fy1, fx2, fy2;
+        float   fx1, fy1, fx2, fy2;
         int     fontSize = 10;
         QString s;
 
@@ -259,6 +249,9 @@ void QADI::paintEvent(QPaintEvent *event)
         };
         painter.drawPolygon(points, 3);
     }
+
+
+//    qDebug()<<t.elapsed();
 }
 
 
@@ -269,10 +262,6 @@ void QADI::paintEvent(QPaintEvent *event)
 QCompass::QCompass(QWidget *parent)
     : QWidget(parent)
 {
-
-    timer=new QTimer(this);
-    connect(timer, SIGNAL(timeout(void)), this, SLOT(canvasReplot_slot(void)));
-    timer->setInterval(50);
 
     m_sizeMin = 150;
     m_sizeMax = 150;
@@ -290,23 +279,12 @@ QCompass::QCompass(QWidget *parent)
 
 QCompass::~QCompass()
 {
-    timer->stop();
 }
 
-void QCompass::compassStart()
-{
-    timer->start();
-}
-void QCompass::compassStop()
-{
-    timer->stop();
-}
 
 void QCompass::canvasReplot_slot(void)
 {
-
     update();
-
 }
 
 void QCompass::resizeEvent(QResizeEvent *event)
@@ -345,7 +323,7 @@ void QCompass::paintEvent(QPaintEvent *event)
 
     // draw yaw lines
     {
-        int     nyawLines = 18;
+        int     nyawLines = 12;
         float   rotAng = 360.0 / nyawLines;
         int     yawLineLeng = m_size/25;
         float  fx1, fy1, fx2, fy2;

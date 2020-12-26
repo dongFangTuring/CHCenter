@@ -2,17 +2,25 @@
 
 CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
 {
-    //this->setParent(nullptr);
-
+    //this->setParent(nullptr); this is unnecessary
     m_thread = new QThread();
+
     CH_serial = new QSerialPort();
     timer_framerate = new QTimer();
+
+    //move those to second thread
     this->moveToThread(m_thread);
     CH_serial->moveToThread(m_thread);
     timer_framerate->moveToThread(m_thread);
+
+    //cross threads signals
     connect(m_thread, SIGNAL(started()), this, SLOT(on_thread_started()),Qt::QueuedConnection);
     connect(m_thread, SIGNAL(finished()), this, SLOT(on_thread_stopped()),Qt::QueuedConnection);
+
+    //be able to write data from baseform to serial port in second thread
     connect(this, SIGNAL(sigWriteData(QString)), this, SLOT(getsigWriteData(QString)));
+
+    //be able to close port and thread from baseform
     connect(this, SIGNAL(sigCloseThreadAndPort()), this, SLOT(closeThreadAndPort()));
 
     timer_framerate->setInterval(1000);
@@ -170,7 +178,7 @@ void CHSerialport::handleData()
                     emit sigSendIMUmsg(m_IMUmsg);
                     m_IMUmsg="";
                 }
-                if(list1.lastIndexOf("ERR")>=0){
+                else if(list1.lastIndexOf("ERR")>=0){
                     emit sigSendIMUmsg(m_IMUmsg);
                     m_IMUmsg="";
                 }
@@ -187,7 +195,7 @@ void CHSerialport::handleData()
             {
                 if(m_is_gwsol==1){
                     m_is_gwsol=0;
-                    emit sigUpdateListGWNode(0);
+                    emit sigUpdateDongleList(0);
                 }
 
                 emit sigSendIMU(receive_imusol);
@@ -196,15 +204,15 @@ void CHSerialport::handleData()
             {
                 if(m_is_gwsol==0){
                     m_is_gwsol=1;
-                    emit sigUpdateListGWNode(1);
+                    emit sigUpdateDongleList(1);
                 }
                 if(!(m_number_of_node==receive_gwsol.n)){
                     m_number_of_node=receive_gwsol.n;
-                    emit sigUpdateListGWNode(1);
+                    emit sigUpdateDongleList(1);
                 }
 
 
-                emit sigSendGWIMU(receive_gwsol);
+                emit sigSendDongle(receive_gwsol);
 
             }
             if(Content_bits!=bitmap){

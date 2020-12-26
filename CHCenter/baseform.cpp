@@ -28,28 +28,46 @@ BaseForm::BaseForm(QWidget *parent)
     ui->ListGWNode->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->ListGWNode->setVisible(0);
 
+
+    ch_comform=new CHComForm(this);
+    ch_comform->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+
+    //get BTN signal from comport selecting form
+    connect(ch_comform, SIGNAL(sigPortChose(QString,int)), this, SLOT(getsigPortChose(QString,int)));
+    connect(ch_comform, SIGNAL(sigPortCancle()), this, SLOT(getsigPortCancle()));
+
+
     ch_serialport = new CHSerialport(nullptr);
-    comform=new ComForm(this);
-    comform->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
-    //connect signals from class of CHSerialport and ComForm
-    connect(comform, SIGNAL(sigPortChose(QString,int)), this, SLOT(getsigPortChose(QString,int)));
-    connect(comform, SIGNAL(sigPortCancle()), this, SLOT(getsigPortCancle()));
-
+    //get data from ch_serialport class
     connect(ch_serialport, SIGNAL(errorOpenPort()), this, SLOT(geterrorOpenPort()));
     connect(ch_serialport, SIGNAL(sigOpenPort()), this, SLOT(getsigOpenPort()));
     connect(ch_serialport, SIGNAL(sigPortClosed()), this, SLOT(getsigPortClosed()));
-    connect(ch_serialport, SIGNAL(sigUpdateListGWNode(bool)), this, SLOT(updateListGWNode(bool)));
+    connect(ch_serialport, SIGNAL(sigUpdateDongleList(bool)), this, SLOT(updateListGWNode(bool)));
     connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
             this, SLOT(getIMUData(receive_imusol_packet_t)), Qt::QueuedConnection);
-    connect(ch_serialport, SIGNAL(sigSendGWIMU(receive_gwsol_packet_t)),
-            this, SLOT(getGWIMUData(receive_gwsol_packet_t)), Qt::QueuedConnection);
+    connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
+            this, SLOT(getDongleData(receive_gwsol_packet_t)), Qt::QueuedConnection);
     connect(ch_serialport, SIGNAL(sigSendIMUmsg(QString)), this, SLOT(getIMUmsg(QString)));
 
-    //page 1 widget initialize;
+    //page 1 widget initialize : Attitude indicator
     addADI();
+    baseform_timer=new QTimer(this);
+    connect(baseform_timer, SIGNAL(timeout(void)), this, SLOT(updateBaseForm(void)));
+    baseform_timer->setInterval(50);
 
-    //page 2 widget initialize;
+    m_chartAcc=new ChartWindow(nullptr,"acc");
+    m_chartGyr=new ChartWindow(nullptr,"gyr");
+    m_chartMag=new ChartWindow(nullptr,"mag");
+    m_chartEul=new ChartWindow(nullptr,"eul");
+    m_chartQuat=new ChartWindow(nullptr,"quat");
+
+    connect(this, SIGNAL(sigUpdateBaseFormChart(receive_imusol_packet_t, uint)),
+            this, SLOT(updateBaseFormChart(receive_imusol_packet_t, uint)));
+
+    qDebug() << "main thread is:" << QThread::currentThreadId();
+
+    //page 2 widget initialize : 3D widget
     ch_threeDform=new ThreeDForm(this);
     ui->PageThreeDViewLayout->addWidget(ch_threeDform);
 
@@ -58,12 +76,12 @@ BaseForm::BaseForm(QWidget *parent)
     ui->PageCSVLoggerLayout->addWidget(ch_csvlogform);
     connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
             ch_csvlogform, SLOT(getIMUData(receive_imusol_packet_t)));
-    connect(ch_serialport, SIGNAL(sigSendGWIMU(receive_gwsol_packet_t)),
-            ch_csvlogform, SLOT(getGWIMUData(receive_gwsol_packet_t)));
-    connect(ch_serialport, SIGNAL(sigSendBitmap(unsigned int)),
-            ch_csvlogform, SLOT(getBitmap(unsigned int)));
-    connect(ch_serialport, SIGNAL(sigPortClosed()),
-            ch_csvlogform, SLOT(stopLogging()));
+    connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
+            ch_csvlogform, SLOT(getDongleData(receive_gwsol_packet_t)));
+    connect(ch_serialport, SIGNAL(sigSendBitmap(uint)),
+            ch_csvlogform, SLOT(getBitmap(uint)));
+    //    connect(ch_serialport, SIGNAL(sigPortClosed()),
+    //            ch_csvlogform, SLOT(stopLogging()));
 
     //page 4
     ch_settingform=new CHSettingForm(this);
@@ -78,7 +96,7 @@ BaseForm::BaseForm(QWidget *parent)
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
 
-    //page 1 is the default page
+    //set page 1 as the default page
     on_SideBarBTN1_clicked();
     update_BTNConnect_state();
     ui->stackedWidget->setEnabled(0);
@@ -136,16 +154,10 @@ void BaseForm::SideBar_toggled(int index)
 
 
     if(index==1){
-        connect(this, SIGNAL(sigPage1Display(receive_imusol_packet_t, int)),
-                this, SLOT(getsigBaseFormDisplay(receive_imusol_packet_t, int)));
-        m_ADI->adiStart();
-        m_Compass->compassStart();
+        baseform_timer->start();
     }
     else{
-        disconnect(this, SIGNAL(sigPage1Display(receive_imusol_packet_t, int)),
-                   this, SLOT(getsigBaseFormDisplay(receive_imusol_packet_t, int)));
-        m_ADI->adiStop();
-        m_Compass->compassStop();
+        baseform_timer->stop();
     }
 
     if(index==2){
@@ -180,11 +192,10 @@ void BaseForm::SideBar_toggled(int index)
         break;
     }
     case 4: {
-        ch_settingform->on_StopStreamBTN_clicked();
+        getsigSendATcmd("AT+EOUT=0");
         ch_settingform->settingConfig_init();
         ch_serialport->Is_msgMode=1;
         ui->SideBarBTN4->setEnabled(0);
-
         break;
     }
     default:
@@ -194,16 +205,15 @@ void BaseForm::SideBar_toggled(int index)
 
 /**
  * @brief BaseForm::on_BTNConnect_clicked -
- * 1. serialport is not opened:show comform
+ * 1. serialport is not opened:show ch_comform
  * 2. serialport is opened:disconnect it
- * 3. while comform is opened, BTN is disabled
+ * 3. while ch_comform is opened, BTN is disabled
  */
-
 void BaseForm::on_BTNConnect_clicked()
 {
     if(!ch_serialport->CH_serial->isOpen()){
-        comform->show();
-        comform->on_BTNPortRefresh_clicked();
+        ch_comform->show();
+        ch_comform->on_BTNPortRefresh_clicked();
     }
 
     update_BTNConnect_state();
@@ -214,7 +224,6 @@ void BaseForm::on_BTNDisconnect_clicked()
 {
     if(ch_serialport->CH_serial->isOpen()){
         ch_serialport->closePort();
-
     }
 }
 
@@ -222,7 +231,7 @@ void BaseForm::update_BTNConnect_state()
 {
     if(!ch_serialport->CH_serial->isOpen()){
         ui->BTNConnect->setFixedWidth(200);
-        if(comform->isVisible()){
+        if(ch_comform->isVisible()){
             ui->BTNConnect->setEnabled(0);
         }
         else{
@@ -240,7 +249,7 @@ void BaseForm::update_BTNConnect_state()
 
 /**
  * @brief BaseForm::updateListGWNode
- * if number of nodes changes send sigUpdateListGWNode():call updateListGWNode()
+ * if number of nodes changes send sigUpdateDongleList():call updateListGWNode()
  */
 void BaseForm::updateListGWNode(bool m_is_gwsol)
 {
@@ -283,7 +292,7 @@ void BaseForm::on_ListGWNode_itemClicked(QListWidgetItem *item)
     updateListGWNode(1);
 }
 
-///signal from comform ui///
+///signal from ch_comform ui///
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -297,7 +306,7 @@ void BaseForm::on_ListGWNode_itemClicked(QListWidgetItem *item)
 void BaseForm::getsigPortChose(QString port_name, int baudrate)
 {
 
-    comform->hide();
+    ch_comform->hide();
     ch_serialport->linkCHdevices(port_name,baudrate);
 
     statusbar_msg.baudrate=QString::number(baudrate);
@@ -309,7 +318,7 @@ void BaseForm::getsigPortChose(QString port_name, int baudrate)
 
 void BaseForm::getsigPortCancle()
 {
-    comform->close();
+    ch_comform->close();
     update_BTNConnect_state();
 }
 
@@ -322,7 +331,7 @@ void BaseForm::geterrorOpenPort()
 {
     showMessageBox(tr("Cannot build connection"),tr("Error"));
 
-    comform->show();
+    ch_comform->show();
 
     statusbar_msg.current_status=tr("Cannot build connection. Please check the selected port again");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
@@ -331,7 +340,7 @@ void BaseForm::geterrorOpenPort()
 }
 void BaseForm::getsigOpenPort()
 {
-    comform->hide();
+    ch_comform->hide();
 
     //"connect" BTN
     update_BTNConnect_state();
@@ -342,19 +351,12 @@ void BaseForm::getsigOpenPort()
 
     //send at+eout
     ch_settingform->StreamATcmd();
-
-    //start ADI update timer
-    m_ADI->adiStart();
-    m_Compass->compassStart();
     ui->stackedWidget->setEnabled(1);
 
 }
 
 void BaseForm::getsigPortClosed()
 {
-    //stop ADI update timer
-    m_ADI->adiStop();
-    m_Compass->compassStop();
 
     //close serial thread by main thread
     ch_serialport->quitmThread();
@@ -371,38 +373,62 @@ void BaseForm::getsigPortClosed()
 }
 
 /**
- * @brief BaseForm::getIMUData, BaseForm::getGWIMUData
+ * @brief BaseForm::getIMUData, BaseForm::getDongleData
  * process 2 kinds of data: hi226/hi229/ch110/hi221 vs hi221gw
  * @param current_gwnodeIndex: while streaming hi221gw, it will remember the chose node(by ID) until it's offine
  */
 void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 {
-    emit sigPage1Display(imu_data, 0);
+
+    mutex_writing.lock();
+
+    m_imu_data=imu_data;
+    m_is_dongle=false;
+    m_contentbits = ch_serialport->Content_bits;
+
+    mutex_writing.unlock();
+
+    emit sigUpdateBaseFormChart(m_imu_data, m_contentbits);
     emit sigSendIMUtoThreeD(imu_data);
 
 }
-void BaseForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
-{
+void BaseForm::getDongleData(receive_gwsol_packet_t gwimu_data)
+{    
+
     if(gwimu_data.n>0){
+
+        receive_imusol_packet_t imu_data;
         if(current_gwnodeIndex<0){
-            auto imu_data=gwimu_data.receive_imusol[0];
-            emit sigPage1Display(imu_data,1);
-            emit sigSendIMUtoThreeD(imu_data);
+            imu_data=gwimu_data.receive_imusol[0];
         }
         else{
-            auto imu_data=gwimu_data.receive_imusol[current_gwnodeIndex];
-            emit sigPage1Display(imu_data,1);
-            emit sigSendIMUtoThreeD(imu_data);
+            imu_data=gwimu_data.receive_imusol[current_gwnodeIndex];
         }
-    }
 
+        mutex_writing.lock();
+
+        m_imu_data=imu_data;
+        m_is_dongle=true;
+        m_contentbits = ch_serialport->Content_bits;
+
+        mutex_writing.unlock();
+
+        emit sigUpdateBaseFormChart(m_imu_data, m_contentbits);
+        emit sigSendIMUtoThreeD(imu_data);
+    }
 }
 
-void BaseForm::getsigBaseFormDisplay(receive_imusol_packet_t imu_data, int is_gw)
+/**
+ * @brief BaseForm::updateBaseForm()
+ * I use timer to update.
+ */
+void BaseForm::updateBaseForm()
 {
-    displayIMUnumber(imu_data, ch_serialport->Content_bits, is_gw);
-    m_ADI->setData(imu_data.eul[0],imu_data.eul[1]);
-    m_Compass->setYaw(imu_data.eul[2]);
+
+    updateIMUTable(m_imu_data, m_contentbits, m_is_dongle);
+    m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
+    m_Compass->setYaw(m_imu_data.eul[2]);
+
 }
 
 
@@ -435,12 +461,12 @@ void BaseForm::addADI()
 }
 
 /**
- * @brief BaseForm::displayIMUnumber
+ * @brief BaseForm::updateIMUTable
  * @param imu_data:package from a single node
  * @param Content_bits:define what kinds of data can be showed
  */
 
-void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int content_bits, int gwmode)
+void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uint content_bits, int gwmode)
 {
 
     QString setptl="";
@@ -449,121 +475,124 @@ void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int c
     if(gwmode==1){
         setptl="62";
     }
-    if(content_bits==BIT_VALID_ALL && gwmode==0){
-        setptl="91";
-
-        if(!ui->LabelID->isVisible())
-            ui->LabelID->setVisible(1);
-        ui->LabelID->setText("ID = " + QString::number(imu_data.id));
-
-        if(!ui->LabelGPAcc->isVisible()){
-            ui->LabelGPAcc->setVisible(1);
-        }
-        ui->LabelAccX->setText(QString::number(imu_data.acc[0],'f',3));
-        ui->LabelAccY->setText(QString::number(imu_data.acc[1],'f',3));
-        ui->LabelAccZ->setText(QString::number(imu_data.acc[2],'f',3));
-
-        if(!ui->LabelGPGyro->isVisible())
-            ui->LabelGPGyro->setVisible(1);
-        ui->LabelGyroX->setText(QString::number(imu_data.gyr[0],'f',3));
-        ui->LabelGyroY->setText(QString::number(imu_data.gyr[1],'f',3));
-        ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2],'f',3));
-
-        if(!ui->LabelGPMag->isVisible())
-            ui->LabelGPMag->setVisible(1);
-        ui->LabelMagX->setText(QString::number(imu_data.mag[0],'f',0));
-        ui->LabelMagY->setText(QString::number(imu_data.mag[1],'f',0));
-        ui->LabelMagZ->setText(QString::number(imu_data.mag[2],'f',0));
-
-        if(!ui->LabelGPEuler->isVisible())
-            ui->LabelGPEuler->setVisible(1);
-        ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',2));
-        ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',2));
-        ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',2));
-
-        if(!ui->LabelGPQuat->isVisible())
-            ui->LabelGPQuat->setVisible(1);
-        ui->LabelQuatW->setText(QString::number(imu_data.quat[0],'f',3));
-        ui->LabelQuatX->setText(QString::number(imu_data.quat[1],'f',3));
-        ui->LabelQuatY->setText(QString::number(imu_data.quat[2],'f',3));
-        ui->LabelQuatZ->setText(QString::number(imu_data.quat[3],'f',3));
-    }
     else{
-        if(content_bits & BIT_VALID_ID){
+        if(content_bits==BIT_VALID_ALL){
+            setptl="91";
+
             if(!ui->LabelID->isVisible())
                 ui->LabelID->setVisible(1);
             ui->LabelID->setText("ID = " + QString::number(imu_data.id));
-            setptl+="90,";
-        }
-        else{
-            if(ui->LabelID->isVisible())
-                ui->LabelID->setVisible(0);
-        }
-        if(content_bits & BIT_VALID_ACC){
+
             if(!ui->LabelGPAcc->isVisible()){
                 ui->LabelGPAcc->setVisible(1);
             }
             ui->LabelAccX->setText(QString::number(imu_data.acc[0],'f',3));
             ui->LabelAccY->setText(QString::number(imu_data.acc[1],'f',3));
             ui->LabelAccZ->setText(QString::number(imu_data.acc[2],'f',3));
-            setptl+="A0,";
-        }
-        else{
-            if(ui->LabelGPAcc->isVisible()){
-                ui->LabelGPAcc->setVisible(0);
-            }
 
-        }
-        if(content_bits & BIT_VALID_GYR){
             if(!ui->LabelGPGyro->isVisible())
                 ui->LabelGPGyro->setVisible(1);
             ui->LabelGyroX->setText(QString::number(imu_data.gyr[0],'f',3));
             ui->LabelGyroY->setText(QString::number(imu_data.gyr[1],'f',3));
             ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2],'f',3));
-            setptl+="B0,";
-        }
-        else{
-            if(ui->LabelGPGyro->isVisible())
-                ui->LabelGPGyro->setVisible(0);
-        }
-        if(content_bits & BIT_VALID_MAG){
+
             if(!ui->LabelGPMag->isVisible())
                 ui->LabelGPMag->setVisible(1);
             ui->LabelMagX->setText(QString::number(imu_data.mag[0],'f',0));
             ui->LabelMagY->setText(QString::number(imu_data.mag[1],'f',0));
             ui->LabelMagZ->setText(QString::number(imu_data.mag[2],'f',0));
-            setptl+="C0,";
-        }
-        else{
-            if(ui->LabelGPMag->isVisible())
-                ui->LabelGPMag->setVisible(0);
-        }
-        if(content_bits & BIT_VALID_EUL){
+
             if(!ui->LabelGPEuler->isVisible())
                 ui->LabelGPEuler->setVisible(1);
             ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',2));
             ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',2));
             ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',2));
-            setptl+="D0,";
-        }
-        else{
-            if(ui->LabelGPEuler->isVisible())
-                ui->LabelGPEuler->setVisible(0);
-        }
-        if(content_bits & BIT_VALID_QUAT){
+
             if(!ui->LabelGPQuat->isVisible())
                 ui->LabelGPQuat->setVisible(1);
             ui->LabelQuatW->setText(QString::number(imu_data.quat[0],'f',3));
             ui->LabelQuatX->setText(QString::number(imu_data.quat[1],'f',3));
             ui->LabelQuatY->setText(QString::number(imu_data.quat[2],'f',3));
             ui->LabelQuatZ->setText(QString::number(imu_data.quat[3],'f',3));
-            setptl+="D1,";
+
         }
         else{
-            if(ui->LabelGPQuat->isVisible())
-                ui->LabelGPQuat->setVisible(0);
-        }
+            if(content_bits & BIT_VALID_ID){
+                if(!ui->LabelID->isVisible())
+                    ui->LabelID->setVisible(1);
+                ui->LabelID->setText("ID = " + QString::number(imu_data.id));
+                setptl+="90,";
+            }
+            else{
+                if(ui->LabelID->isVisible())
+                    ui->LabelID->setVisible(0);
+            }
+            if(content_bits & BIT_VALID_ACC){
+                if(!ui->LabelGPAcc->isVisible()){
+                    ui->LabelGPAcc->setVisible(1);
+                }
+                ui->LabelAccX->setText(QString::number(imu_data.acc[0],'f',3));
+                ui->LabelAccY->setText(QString::number(imu_data.acc[1],'f',3));
+                ui->LabelAccZ->setText(QString::number(imu_data.acc[2],'f',3));
+                setptl+="A0,";
+            }
+            else{
+                if(ui->LabelGPAcc->isVisible()){
+                    ui->LabelGPAcc->setVisible(0);
+                }
 
+            }
+            if(content_bits & BIT_VALID_GYR){
+                if(!ui->LabelGPGyro->isVisible())
+                    ui->LabelGPGyro->setVisible(1);
+                ui->LabelGyroX->setText(QString::number(imu_data.gyr[0],'f',3));
+                ui->LabelGyroY->setText(QString::number(imu_data.gyr[1],'f',3));
+                ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2],'f',3));
+                setptl+="B0,";
+            }
+            else{
+                if(ui->LabelGPGyro->isVisible())
+                    ui->LabelGPGyro->setVisible(0);
+            }
+            if(content_bits & BIT_VALID_MAG){
+                if(!ui->LabelGPMag->isVisible())
+                    ui->LabelGPMag->setVisible(1);
+                ui->LabelMagX->setText(QString::number(imu_data.mag[0],'f',0));
+                ui->LabelMagY->setText(QString::number(imu_data.mag[1],'f',0));
+                ui->LabelMagZ->setText(QString::number(imu_data.mag[2],'f',0));
+                setptl+="C0,";
+            }
+            else{
+                if(ui->LabelGPMag->isVisible())
+                    ui->LabelGPMag->setVisible(0);
+            }
+            if(content_bits & BIT_VALID_EUL){
+                if(!ui->LabelGPEuler->isVisible())
+                    ui->LabelGPEuler->setVisible(1);
+                ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',2));
+                ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',2));
+                ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',2));
+                setptl+="D0,";
+            }
+            else{
+                if(ui->LabelGPEuler->isVisible())
+                    ui->LabelGPEuler->setVisible(0);
+            }
+            if(content_bits & BIT_VALID_QUAT){
+                if(!ui->LabelGPQuat->isVisible())
+                    ui->LabelGPQuat->setVisible(1);
+                ui->LabelQuatW->setText(QString::number(imu_data.quat[0],'f',3));
+                ui->LabelQuatX->setText(QString::number(imu_data.quat[1],'f',3));
+                ui->LabelQuatY->setText(QString::number(imu_data.quat[2],'f',3));
+                ui->LabelQuatZ->setText(QString::number(imu_data.quat[3],'f',3));
+                setptl+="D1,";
+            }
+            else{
+                if(ui->LabelGPQuat->isVisible())
+                    ui->LabelGPQuat->setVisible(0);
+            }
+
+        }
     }
     //delete that last comma
     int ret=setptl.lastIndexOf(',');
@@ -572,8 +601,54 @@ void BaseForm::displayIMUnumber(receive_imusol_packet_t imu_data, unsigned int c
 
     ui->LabelDataProtocol->setText(tr("Data Protocol = %1").arg(setptl));
 
-
 }
+
+void BaseForm::updateBaseFormChart(receive_imusol_packet_t imu_data, uint content_bits)
+{
+    if(content_bits==BIT_VALID_ALL){
+
+        m_chartAcc->updateChart(imu_data.acc);
+        m_chartGyr->updateChart(imu_data.gyr);
+        m_chartMag->updateChart(imu_data.mag);
+        m_chartEul->updateChart(imu_data.eul);
+        m_chartQuat->updateChart(imu_data.quat);
+    }
+    else{
+        if(content_bits & BIT_VALID_ACC){
+            m_chartAcc->updateChart(imu_data.acc);
+        }
+        else{
+            m_chartAcc->setVisible(false);
+        }
+        if(content_bits & BIT_VALID_GYR){
+            m_chartGyr->updateChart(imu_data.gyr);
+        }
+        else{
+            m_chartGyr->setVisible(false);
+        }
+        if(content_bits & BIT_VALID_MAG){
+            m_chartMag->updateChart(imu_data.mag);
+        }
+        else{
+            m_chartMag->setVisible(false);
+        }
+        if(content_bits & BIT_VALID_EUL){
+            m_chartEul->updateChart(imu_data.eul);
+        }
+        else{
+            m_chartEul->setVisible(false);
+        }
+        if(content_bits & BIT_VALID_QUAT){
+            m_chartQuat->updateChart(imu_data.quat);
+        }
+        else{
+            m_chartQuat->setVisible(false);
+        }
+
+    }
+}
+
+
 
 ///MenuBar signals of actions///
 //////////////////////////////////////////////////////////////////////////////////////
@@ -662,3 +737,53 @@ void BaseForm::getsigSendATcmd(QString ATcmd)
     ch_serialport->writeData(ATcmd);
 }
 
+
+void BaseForm::on_BTNChartAcc_clicked()
+{
+    if(!m_chartAcc->isVisible()){
+        m_chartAcc->setVisible(true);
+        m_chartAcc->init();
+    }
+    else
+        m_chartAcc->setVisible(false);
+}
+
+void BaseForm::on_BTNChartGyr_clicked()
+{
+    if(!m_chartGyr->isVisible()){
+        m_chartGyr->setVisible(true);
+        m_chartGyr->init();
+    }
+    else
+        m_chartGyr->setVisible(false);
+}
+
+void BaseForm::on_BTNChartMag_clicked()
+{
+    if(!m_chartMag->isVisible()){
+        m_chartMag->setVisible(true);
+        m_chartMag->init();
+    }
+    else
+        m_chartMag->setVisible(false);
+}
+
+void BaseForm::on_BTNChartEul_clicked()
+{
+    if(!m_chartEul->isVisible()){
+        m_chartEul->setVisible(true);
+        m_chartEul->init();
+    }
+    else
+        m_chartEul->setVisible(false);
+}
+
+void BaseForm::on_BTNChartQuat_clicked()
+{
+    if(!m_chartQuat->isVisible()){
+        m_chartQuat->setVisible(true);
+        m_chartQuat->init();
+    }
+    else
+        m_chartQuat->setVisible(false);
+}

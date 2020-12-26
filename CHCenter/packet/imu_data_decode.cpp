@@ -127,7 +127,23 @@ static void on_data_received(packet_t *pkt)
 
 				offset += 76;
 			}
-			break;
+            break;
+
+        case 0x63:
+            receive_gwsol.tag = p[offset];
+            receive_gwsol.gw_id = p[offset + 1];
+            receive_gwsol.n = p[offset + 2];
+            offset += 8;
+            for (int i = 0; i < receive_gwsol.n; i++)
+            {
+                bitmap = BIT_VALID_ALL;
+                receive_gwsol.receive_imusol[i].tag = p[offset];
+                receive_gwsol.receive_imusol[i].id = p[offset + 1];
+                memcpy(&receive_gwsol.receive_imusol[i].acc, p + offset + 12 , sizeof(int16_t) * 6);
+
+                offset += 24;
+            }
+            break;
 
 		default:
 			/* offset ==> 0 2 9 16 23 30 47 52 76 */

@@ -1,4 +1,4 @@
-QT       += core gui serialport 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation
+QT       += core gui serialport 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,9 +13,10 @@ CONFIG += c++11 x86
 SOURCES += \
     attitudeindicator.cpp \
     baseform.cpp \
+    chartwindow.cpp \
+    chcomform.cpp \
     chserialport.cpp \
     chsettingform.cpp \
-    comform.cpp \
     csvlogform.cpp \
     main.cpp \
     packet/imu_data_decode.cpp \
@@ -26,9 +27,10 @@ SOURCES += \
 HEADERS += \
     attitudeindicator.h \
     baseform.h\
+    chartwindow.h \
+    chcomform.h \
     chserialport.h \
     chsettingform.h \
-    comform.h \
     csvlogform.h \
     packet/imu_data_decode.h \
     packet/packet.h \
@@ -36,8 +38,9 @@ HEADERS += \
 
 FORMS += \
     baseform.ui \
+    chartwindow.ui \
+    chcomform.ui \
     chsettingform.ui \
-    comform.ui \
     csvlogform.ui \
     threedform.ui
 

@@ -1,5 +1,5 @@
-#ifndef COMFORM_H
-#define COMFORM_H
+#ifndef CHComForm_H
+#define CHComForm_H
 
 #include <QWidget>
 #include <QSerialPort>
@@ -8,16 +8,16 @@
 #include <QListWidgetItem>
 
 namespace Ui {
-class ComForm;
+class CHComForm;
 }
 
-class ComForm : public QWidget
+class CHComForm : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ComForm(QWidget *parent = nullptr);
-    ~ComForm();
+    explicit CHComForm(QWidget *parent = nullptr);
+    ~CHComForm();
 
 public slots:
     void on_BTNPortRefresh_clicked();
@@ -35,8 +35,8 @@ signals:
 
 
 private:
-    Ui::ComForm *ui;
+    Ui::CHComForm *ui;
     QSerialPortInfo com_info;
 };
 
-#endif // COMFORM_H
+#endif // CHComForm_H

@@ -1,9 +1,9 @@
-#include "comform.h"
-#include "ui_comform.h"
+#include "chcomform.h"
+#include "ui_chcomform.h"
 
-ComForm::ComForm(QWidget *parent) :
+CHComForm::CHComForm(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ComForm)
+    ui(new Ui::CHComForm)
 {
     ui->setupUi(this);
     this->setStyleSheet("background-color:white;");
@@ -28,17 +28,17 @@ ComForm::ComForm(QWidget *parent) :
 }
 
 
-ComForm::~ComForm()
+CHComForm::~CHComForm()
 {
     delete ui;
 }
 
 /**
- * @brief ComForm::on_ListPort_itemClicked -
+ * @brief CHComForm::on_ListPort_itemClicked -
  * ok icon can be clicked only after user chose one item in listwidget.
  * @param port_name
  */
-void ComForm::on_ListPort_itemClicked(QListWidgetItem *)
+void CHComForm::on_ListPort_itemClicked(QListWidgetItem *)
 {
 
     ui->BTNOK->setEnabled(1);
@@ -47,10 +47,10 @@ void ComForm::on_ListPort_itemClicked(QListWidgetItem *)
 }
 
 /**
- * @brief ComForm::on_BTNOK_clicked - emit port_name to baseform,
+ * @brief CHComForm::on_BTNOK_clicked - emit port_name to baseform,
  * @param port_name - for example, port_name="COM1" in windows, "/dev/ttyUSB1" in Linux
  */
-void ComForm::on_BTNOK_clicked()
+void CHComForm::on_BTNOK_clicked()
 {
     QString port_name = ui->ListPort->currentItem()->text().split(" : ").at(0);
 
@@ -78,14 +78,14 @@ void ComForm::on_BTNOK_clicked()
 }
 
 /**
- * @brief ComForm::on_BTNCancle_clicked - emit close signal to baseform
+ * @brief CHComForm::on_BTNCancle_clicked - emit close signal to baseform
  */
-void ComForm::on_BTNCancle_clicked()
+void CHComForm::on_BTNCancle_clicked()
 {
     emit sigPortCancle();
 }
 
-void ComForm::on_BTNPortRefresh_clicked()
+void CHComForm::on_BTNPortRefresh_clicked()
 {
     ui->BTNOK->setEnabled(0);
     ui->ListPort->clear();

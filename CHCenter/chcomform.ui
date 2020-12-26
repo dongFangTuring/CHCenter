@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ComForm</class>
- <widget class="QWidget" name="ComForm">
+ <class>CHComForm</class>
+ <widget class="QWidget" name="CHComForm">
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
@@ -197,7 +197,14 @@ background-color: grey;
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="CBoxBaudrate"/>
+        <widget class="QComboBox" name="CBoxBaudrate">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

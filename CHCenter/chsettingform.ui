@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
+    <width>778</width>
     <height>881</height>
    </rect>
   </property>
@@ -243,7 +243,14 @@
         <string>Frame Rate</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="8" column="0">
+        <item row="7" column="0">
+         <widget class="QRadioButton" name="FR100BTN">
+          <property name="text">
+           <string>100 Hz</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0">
          <widget class="QPushButton" name="FRSetBTN">
           <property name="text">
            <string/>
@@ -268,10 +275,10 @@
           </property>
          </widget>
         </item>
-        <item row="7" column="0">
-         <widget class="QRadioButton" name="FR100BTN">
+        <item row="3" column="0">
+         <widget class="QRadioButton" name="FR0BTN">
           <property name="text">
-           <string>100 Hz</string>
+           <string>0 Hz</string>
           </property>
          </widget>
         </item>
@@ -282,10 +289,10 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QRadioButton" name="FR0BTN">
+        <item row="8" column="0">
+         <widget class="QRadioButton" name="FR400BTN">
           <property name="text">
-           <string>0 Hz</string>
+           <string>400 Hz</string>
           </property>
          </widget>
         </item>
@@ -384,7 +391,14 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QSpinBox" name="IDInput"/>
+           <widget class="QSpinBox" name="IDInput">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="IDSetBTN">
@@ -402,14 +416,21 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Net ID (GWID) : </string>
+           <string>Dongle ID : </string>
           </property>
          </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QSpinBox" name="GWIDInput"/>
+           <widget class="QSpinBox" name="GWIDInput">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="GWIDSetBTN">

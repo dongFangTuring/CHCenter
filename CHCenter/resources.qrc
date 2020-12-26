@@ -12,5 +12,8 @@
         <file>images/bluesquare.png</file>
         <file>images/greensquare.png</file>
         <file>images/redsquare.png</file>
+        <file>images/zoomin.png</file>
+        <file>images/zoomout.png</file>
+        <file>images/line-chart.png</file>
     </qresource>
 </RCC>

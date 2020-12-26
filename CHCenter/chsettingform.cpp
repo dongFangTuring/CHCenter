@@ -21,11 +21,11 @@ CHSettingForm::~CHSettingForm()
 void CHSettingForm::settingConfig_init()
 {
     new_ch_config=old_ch_config;
-    old_ch_config.Baud=-1;
+    old_ch_config.Baud=115200;
     old_ch_config.Setptl="";
     old_ch_config.FrameRate=-1;
     old_ch_config.GWID=0;
-    old_ch_config.ID=0;
+    old_ch_config.ID=1;
     old_ch_config.Mode=-1;
 
     if(old_ch_config.Setptl.indexOf("90")>=0)
@@ -88,8 +88,9 @@ void CHSettingForm::settingConfig_init()
     ui->IDInput->setValue(old_ch_config.ID);
     ui->GWIDInput->setValue(old_ch_config.GWID);
 
-    ui->BaudrateGB->setVisible(0);
     ui->TerminalBox->clear();
+    ui->BaudrateGB->setVisible(1);
+
 
 }
 void CHSettingForm::settingConfig_leave()
@@ -167,15 +168,19 @@ void CHSettingForm::on_BRSetBTN_clicked()
 
     if(ui->BR9600BTN->isChecked()){
         emit sigSendATcmd("AT+BAUD=9600");
+        new_ch_config.Baud=9600;
     }
     else if(ui->BR115200BTN->isChecked()){
         emit sigSendATcmd("AT+BAUD=115200");
+        new_ch_config.Baud=115200;
     }
     else if(ui->BR460800BTN->isChecked()){
         emit sigSendATcmd("AT+BAUD=460800");
+        new_ch_config.Baud=460800;
     }
     else if(ui->BR921600BTN->isChecked()){
         emit sigSendATcmd("AT+BAUD=921600");
+        new_ch_config.Baud=921600;
     }
 }
 
@@ -200,6 +205,10 @@ void CHSettingForm::on_FRSetBTN_clicked()
     else if(ui->FR100BTN->isChecked()){
         emit sigSendATcmd("AT+ODR=100");
         new_ch_config.FrameRate=100;
+    }
+    else if(ui->FR400BTN->isChecked()){
+        emit sigSendATcmd("AT+ODR=400");
+        new_ch_config.FrameRate=400;
     }
 
 }

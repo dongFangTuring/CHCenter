@@ -161,8 +161,8 @@ void ThreeDForm::drawLine(const QVector3D& start, const QVector3D& end, const QC
 
     // connectivity between vertices
     QByteArray indexBytes;
-    indexBytes.resize(2 * sizeof(unsigned int)); // start to end
-    unsigned int *indices = reinterpret_cast<unsigned int*>(indexBytes.data());
+    indexBytes.resize(2 * sizeof(uint)); // start to end
+    uint *indices = reinterpret_cast<uint*>(indexBytes.data());
     *indices++ = 0;
     *indices++ = 1;
 

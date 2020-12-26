@@ -65,6 +65,10 @@ void CSVLogForm::on_BTNStart_clicked()
     QDate dt_now = QDate::currentDate();
     QTime tm_now = QTime::currentTime();
 
+    //check if a directory "log" exists, if not,
+    //create a new folder.
+    if(!QDir("log").exists())
+        QDir().mkdir("log");
 
     //message in text browser
     QString filename="chlog_"+dt_now.toString("yyyy-MM-dd") + tm_now.toString("_hh-mm-ss")+ui->LineCustom->text()+".csv";
@@ -79,6 +83,7 @@ void CSVLogForm::on_BTNStart_clicked()
     QString str_time=time.toString("hh:mm:ss.zzz");
     ui->LabelRemainTime->setText(str_time);
 
+    frame_counter=0;
     ui->LabelFrameCounter->setText("0");
 
     bool fileExists = QFileInfo::exists(fullpath) && QFileInfo(fullpath).isFile();
@@ -87,7 +92,7 @@ void CSVLogForm::on_BTNStart_clicked()
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Error"));
         msgBox.setText(tr("The file already exists,"
-                             "Please choose another file name to save."));
+                          "Please choose another file name to save."));
 
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
@@ -129,6 +134,11 @@ void CSVLogForm::on_BTNStop_clicked()
     stopLogging();
 }
 
+void CSVLogForm::on_BTNClear_clicked()
+{
+    ui->textBrowser->clear();
+}
+
 void CSVLogForm::getIMUData(receive_imusol_packet_t imu_data)
 {
 
@@ -143,15 +153,14 @@ void CSVLogForm::getIMUData(receive_imusol_packet_t imu_data)
 
         if(frame_counter==0){
             if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)){
-
+                stopLogging();
                 QMessageBox msgBox;
                 msgBox.setWindowTitle(tr("Log error!"));
                 msgBox.setText(tr("The current file can't be writed. "
-                                             "Please close other windows that may using the file."));
+                                  "Please close other windows that may using the file."));
                 msgBox.setStandardButtons(QMessageBox::Ok);
                 msgBox.setButtonText(QMessageBox::Ok, tr("Ok"));
                 msgBox.exec();
-                stopLogging();
 
             }
             else{
@@ -186,16 +195,11 @@ void CSVLogForm::getIMUData(receive_imusol_packet_t imu_data)
         }
         ui->LabelFrameCounter->setText(QString::number(frame_counter-1));
     }
-    else{
-        if(ch_logfile.isOpen()){
-            ch_logfile.close();
-            qDebug()<<"not logging";
-        }
-    }
 
 }
-void CSVLogForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
+void CSVLogForm::getDongleData(receive_gwsol_packet_t gwimu_data)
 {
+    //qDebug()<<frame_counter;
     if(log_started==1){
 
         int remainMsec=timer_log_period->remainingTime();
@@ -218,16 +222,14 @@ void CSVLogForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
                 ui->LabelRemainTime->setText(str_time);
 
                 if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)){
-
+                    stopLogging();
                     QMessageBox msgBox;
                     msgBox.setWindowTitle(tr("Log error!"));
                     msgBox.setText(tr("The current file can't be writed. "
-                                                 "Please close other windows that may using the file."));
+                                      "Please close other windows that may using the file."));
                     msgBox.setStandardButtons(QMessageBox::Ok);
                     msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
                     msgBox.exec();
-                    stopLogging();
-
                 }
                 else{
                     QTextStream stream(&ch_logfile);
@@ -316,16 +318,12 @@ void CSVLogForm::getGWIMUData(receive_gwsol_packet_t gwimu_data)
                     }
                 }
             }
+            ui->LabelFrameCounter->setText(QString::number(frame_counter-1));
         }
-        ui->LabelFrameCounter->setText(QString::number(frame_counter-1));
     }
 
-    else{
-        stopLogging();
-
-    }
 }
-void CSVLogForm::getBitmap(unsigned int bitmap)
+void CSVLogForm::getBitmap(uint bitmap)
 {
     m_bitmap=bitmap;
 }
@@ -423,6 +421,7 @@ void CSVLogForm::startLogging()
     timer_log_period->setInterval(ui->SBLogPeriod->value()*1000);
     timer_log_period->start();
     ui->textBrowser->append(tr("->Start logging ......"));
+    QTimer::singleShot(1000, this, SLOT(checkIsStarted()));
 }
 
 void CSVLogForm::stopLogging()
@@ -437,11 +436,24 @@ void CSVLogForm::stopLogging()
         ui->textBrowser->append(tr("->File has been successfully saved at : %1\n").arg(ch_logfile.fileName()));
         ch_logfile.close();
     }
+    else{
+        ui->textBrowser->append(tr("->No file is saved! Please check connection, Baud, and frame rate setting."));
+    }
     if(timer_log_period->isActive()){
         timer_log_period->stop();
     }
 
 
+}
+
+void CSVLogForm::checkIsStarted()
+{
+    if(frame_counter==0){
+        stopLogging();
+    }
+    else{
+        //keep
+    }
 }
 
 void CSVLogForm::logging_countdown()
@@ -460,7 +472,3 @@ void CSVLogForm::logging_countdown()
 
 }
 
-void CSVLogForm::on_BTNClear_clicked()
-{
-    ui->textBrowser->clear();
-}

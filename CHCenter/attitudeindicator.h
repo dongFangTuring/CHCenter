@@ -2,11 +2,9 @@
 #define ATTITUDEINDICATOR_H
 
 #include <QWidget>
-#include <QThread>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>
@@ -27,14 +25,8 @@ public:
         if( m_roll > 180  ) m_roll =  180;
         if( m_pitch < -90 ) m_pitch = -90;
         if( m_pitch > 90  ) m_pitch =  90;
+        canvasReplot_slot();
     }
-
-    void adiStart();
-    void adiStop();
-
-signals:
-    void sigadiStart(void);
-    void sigAdiStop(void);
 
 protected slots:
     void canvasReplot_slot(void);
@@ -49,7 +41,7 @@ protected:
 
     float  m_roll;                         ///< roll angle (in degree)
     float  m_pitch;                        ///< pitch angle (in degree)
-    QTimer *timer;
+
 };
 
 
@@ -68,13 +60,8 @@ public:
         m_yaw  = val;
         if( m_yaw < 0   ) m_yaw = 360 + m_yaw;
         if( m_yaw > 360 ) m_yaw = m_yaw - 360;
+        canvasReplot_slot();
     }
-
-    void compassStart();
-    void compassStop();
-signals:
-    void sigcompassStart(void);
-    void sigCompassStop(void);
 
 protected slots:
     void canvasReplot_slot(void);
@@ -88,6 +75,6 @@ protected:
     int m_size, m_offset;                   ///< widget size and offset size
 
     float m_yaw;                              ///< yaw angle (in degree)
-    QTimer *timer;
+
 };
 #endif

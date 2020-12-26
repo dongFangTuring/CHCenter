@@ -28,26 +28,30 @@ public:
 
 
 private slots:
+
+    //BTN
     void on_BTNPath_clicked();
-
     void on_BTNStart_clicked();
-
-    void getIMUData(receive_imusol_packet_t);
-
-    void getGWIMUData(receive_gwsol_packet_t);
-
     void on_BTNStop_clicked();
+    void on_BTNClear_clicked();
+
+    //Get data from baseform
+    void getIMUData(receive_imusol_packet_t);
+    void getDongleData(receive_gwsol_packet_t);
+    void getBitmap(uint);
 
     void on_SBLogPeriod_valueChanged(int arg1);
 
-    void getBitmap(unsigned int);
-
     void startLogging();
     void stopLogging();
+
+    //check if any frame is logged in 1 second
+    void checkIsStarted();
+
     void logging_countdown();
 
 
-    void on_BTNClear_clicked();
+
 
 private:
     Ui::CSVLogForm *ui;
@@ -73,7 +77,7 @@ private:
 
     QString imudata2csvrow(receive_imusol_packet_t);
 
-    unsigned int m_bitmap;
+    uint m_bitmap;
 
 
 };

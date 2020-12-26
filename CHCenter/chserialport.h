@@ -28,8 +28,8 @@ public:
 
     receive_imusol_packet_t *IMU_data=&receive_imusol;
     receive_gwsol_packet_t *IMUs_data=&receive_gwsol;
-    unsigned int Frame_rate=0;
-    unsigned int Content_bits;
+    uint Frame_rate=0;
+    uint Content_bits;
 
 
     QByteArray CH_rawmsg="";
@@ -42,17 +42,22 @@ public slots:
     void quitmThread();
 
 signals:
-    void sigSendGWIMU(receive_gwsol_packet_t);
+    //emit data to baseform
+    void sigSendDongle(receive_gwsol_packet_t);
     void sigSendIMU(receive_imusol_packet_t);
     void sigSendIMUmsg(QString);
+    void sigSendBitmap(uint);
 
+    //port status handle
     void errorOpenPort();
     void sigOpenPort();
     void sigPortClosed();
     void sigCloseThreadAndPort();
-    void sigUpdateListGWNode(bool);
+    void sigUpdateDongleList(bool);
+
+    //write to serial, a cross thread command
     void sigWriteData(QString);   
-    void sigSendBitmap(unsigned int);
+
 
 private:
     QTimer *timer_framerate;
@@ -64,7 +69,7 @@ private:
     bool m_is_gwsol=0;
     QString m_IMUmsg="";
 
-    unsigned int m_frame_received=0;
+    uint m_frame_received=0;
 
 private slots:
     void countFrameRate();
@@ -72,7 +77,11 @@ private slots:
     void on_thread_stopped();
     void initThreadReading();
     void closeThreadAndPort();
+
+    //handle all data from serial
     void handleData();
+
+    //write to serial, a cross thread command
     void getsigWriteData(QString);
 
 
