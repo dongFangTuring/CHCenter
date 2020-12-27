@@ -191,34 +191,37 @@ void CHSerialport::handleData()
 
         if(m_frame_received!=frame_count){
 
-            if(receive_gwsol.tag != KItemGWSOL)
+
+            if(receive_gwsol.tag == KItemDongle || receive_gwsol.tag == KItemDongleRaw)
             {
+                //if switch from single IMU module
+                if(m_is_gwsol==0){
+                    m_is_gwsol=1;
+                    emit sigUpdateDongleList(1);
+                }
+
+                //if the new numbers of nodes isn't equal to the list
+                if(!(m_number_of_node==receive_gwsol.n)){
+                    m_number_of_node=receive_gwsol.n;
+                    emit sigUpdateDongleList(1);
+                }
+
+                emit sigSendDongle(receive_gwsol);
+
+            }
+            else{
                 if(m_is_gwsol==1){
                     m_is_gwsol=0;
                     emit sigUpdateDongleList(0);
                 }
 
                 emit sigSendIMU(receive_imusol);
-            }
-            else
-            {
-                if(m_is_gwsol==0){
-                    m_is_gwsol=1;
-                    emit sigUpdateDongleList(1);
-                }
-                if(!(m_number_of_node==receive_gwsol.n)){
-                    m_number_of_node=receive_gwsol.n;
-                    emit sigUpdateDongleList(1);
-                }
-
-
-                emit sigSendDongle(receive_gwsol);
 
             }
+
+
             if(Content_bits!=bitmap){
                 Content_bits=bitmap;
-                emit sigSendBitmap(bitmap);
-
             }
             m_frame_received=frame_count;
 

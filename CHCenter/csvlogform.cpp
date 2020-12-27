@@ -323,7 +323,7 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t gwimu_data)
     }
 
 }
-void CSVLogForm::getBitmap(uint bitmap)
+void CSVLogForm::getBitmap(uchar bitmap)
 {
     m_bitmap=bitmap;
 }

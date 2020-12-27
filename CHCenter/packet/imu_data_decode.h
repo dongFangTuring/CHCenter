@@ -49,7 +49,8 @@ typedef enum
     kItemPressure =             0xF0,   /* pressure            */
     kItemEnd =                  0x00,   
 	KItemIMUSOL =               0x91,   /* IMUSOL  */
-	KItemGWSOL =                0x62,   /* RFSOL  */
+    KItemDongle =               0x62,   /* RFSOL  */
+    KItemDongleRaw =            0x63,   /* RF Raw acc&gyro  */
 }ItemID_t;
 
 int imu_data_decode_init(void);

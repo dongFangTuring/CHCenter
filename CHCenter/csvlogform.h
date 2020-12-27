@@ -38,7 +38,7 @@ private slots:
     //Get data from baseform
     void getIMUData(receive_imusol_packet_t);
     void getDongleData(receive_gwsol_packet_t);
-    void getBitmap(uint);
+    void getBitmap(uchar);
 
     void on_SBLogPeriod_valueChanged(int arg1);
 
@@ -77,7 +77,7 @@ private:
 
     QString imudata2csvrow(receive_imusol_packet_t);
 
-    uint m_bitmap;
+    uchar m_bitmap;
 
 
 };

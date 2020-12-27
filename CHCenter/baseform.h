@@ -28,7 +28,7 @@ public:
     ~BaseForm();
 
 signals:
-    void sigUpdateBaseFormChart(receive_imusol_packet_t, uint);
+    void sigUpdateBaseFormChart(receive_imusol_packet_t, uchar);
     void sigSendIMUtoThreeD(receive_imusol_packet_t);
 
 
@@ -63,8 +63,8 @@ private slots:
     ///stackwidget page1 content:data, chart and attitude indicator///
     void updateBaseForm();
     void addADI();
-    void updateIMUTable(receive_imusol_packet_t, uint, int);
-    void updateBaseFormChart(receive_imusol_packet_t, uint);
+    void updateIMUTable(receive_imusol_packet_t, uchar, uchar);
+    void updateBaseFormChart(receive_imusol_packet_t, uchar);
 
     ///stackwidget page2 content:///
 
@@ -102,8 +102,8 @@ private:
 
     //IMU node and dongle
     receive_imusol_packet_t m_imu_data;
-    bool m_is_dongle=false;
-    uint m_contentbits=0;
+    uchar m_protocol_tag;
+    uchar m_contentbits=0;
 
     QMutex mutex_writing;
 

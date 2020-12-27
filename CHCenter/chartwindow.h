@@ -40,16 +40,21 @@ class CusChartView: public QChartView
 
 public:
     CusChartView(QChart* chart, QWidget *parent = 0);
+    int valueRange[2];
+    float max_sample_number;
+
+    void zoom(bool in_out, bool x_y);
 
 protected:
 
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void wheelEvent(QWheelEvent *event) override;
 
 private:
+    QPoint m_lastMousePos;
 
-    QPointF m_lastMousePos;
 };
 
 
@@ -64,6 +69,7 @@ public:
     CusChartView *m_chartView;   //因為佈局時其它函式會訪問這個畫布，所以設為public
     void updateChart(float *);
     void init();
+
 
 
 public slots:
@@ -91,9 +97,13 @@ private slots:
 
     void on_BTNValueZoomOut_clicked();
 
+    void on_BNTValueReset_clicked();
+
 private:
     Ui::ChartWindow *ui;
 
+    int valueRange[2];
+    const float max_sample_number=50000;
     //紀錄圖表資料種類
     QString m_type;
 
@@ -117,7 +127,7 @@ private:
 
     QThread *m_thread;
 
-    int valueRange[2];
+
 };
 
 

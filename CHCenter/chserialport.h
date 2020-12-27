@@ -29,7 +29,7 @@ public:
     receive_imusol_packet_t *IMU_data=&receive_imusol;
     receive_gwsol_packet_t *IMUs_data=&receive_gwsol;
     uint Frame_rate=0;
-    uint Content_bits;
+    uchar Content_bits;
 
 
     QByteArray CH_rawmsg="";
@@ -46,7 +46,7 @@ signals:
     void sigSendDongle(receive_gwsol_packet_t);
     void sigSendIMU(receive_imusol_packet_t);
     void sigSendIMUmsg(QString);
-    void sigSendBitmap(uint);
+    void sigSendBitmap(uchar);
 
     //port status handle
     void errorOpenPort();

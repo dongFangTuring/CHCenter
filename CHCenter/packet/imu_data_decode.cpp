@@ -102,7 +102,7 @@ static void on_data_received(packet_t *pkt)
 			break; 
 
 		case KItemIMUSOL:
-            receive_gwsol.tag = 0;
+            receive_gwsol.tag = KItemIMUSOL;
 			bitmap = BIT_VALID_ALL;
 			receive_imusol.id =p[offset + 1];
 			memcpy(&receive_imusol.times, p + 8, sizeof(int)); 	
@@ -113,8 +113,9 @@ static void on_data_received(packet_t *pkt)
         case 0x60:
             offset += (4*8)+1;
             break;
-		case KItemGWSOL:
-			receive_gwsol.tag = p[offset];
+
+        case KItemDongle:
+            receive_gwsol.tag = KItemDongle;
 			receive_gwsol.gw_id = p[offset + 1]; 
 			receive_gwsol.n = p[offset + 2];
 			offset += 8;
@@ -129,19 +130,32 @@ static void on_data_received(packet_t *pkt)
 			}
             break;
 
-        case 0x63:
-            receive_gwsol.tag = p[offset];
+        case KItemDongleRaw:
+            receive_gwsol.tag = KItemDongleRaw;
             receive_gwsol.gw_id = p[offset + 1];
             receive_gwsol.n = p[offset + 2];
             offset += 8;
+            bitmap |= BIT_VALID_ID;
+            bitmap |= BIT_VALID_ACC;
+            bitmap |= BIT_VALID_GYR;
+
             for (int i = 0; i < receive_gwsol.n; i++)
             {
-                bitmap = BIT_VALID_ALL;
+
                 receive_gwsol.receive_imusol[i].tag = p[offset];
                 receive_gwsol.receive_imusol[i].id = p[offset + 1];
-                memcpy(&receive_gwsol.receive_imusol[i].acc, p + offset + 12 , sizeof(int16_t) * 6);
 
-                offset += 24;
+                offset += 12;
+                stream2int16(temp, p + offset);
+                receive_gwsol.receive_imusol[i].acc[0] = (float)temp[0] / 1000;
+                receive_gwsol.receive_imusol[i].acc[1] = (float)temp[1] / 1000;
+                receive_gwsol.receive_imusol[i].acc[2] = (float)temp[2] / 1000;
+                offset += 6;
+                stream2int16(temp, p + offset);
+                receive_gwsol.receive_imusol[i].gyr[0] = (float)temp[0] / 10;
+                receive_gwsol.receive_imusol[i].gyr[1] = (float)temp[1] / 10;
+                receive_gwsol.receive_imusol[i].gyr[2] = (float)temp[2] / 10;
+                offset += 6;
             }
             break;
 
