@@ -39,7 +39,7 @@ class CusChartView: public QChartView
     Q_OBJECT
 
 public:
-    CusChartView(QChart* chart, QWidget *parent = 0);
+    CusChartView(QChart* chart, QWidget *parent = nullptr);
     int valueRange[2];
     float max_sample_number;
 
@@ -67,7 +67,7 @@ class ChartWindow : public QWidget
     Q_OBJECT
 public:
     explicit ChartWindow(QWidget *parent = nullptr, QString type="");
-    ~ChartWindow();
+    ~ChartWindow() override;
 
     CusChartView *m_chartView;   //因為佈局時其它函式會訪問這個畫布，所以設為public
     void updateChart(float *);

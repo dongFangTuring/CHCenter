@@ -16,6 +16,9 @@ BaseForm::BaseForm(QWidget *parent)
 
     ui->setupUi(this);
 
+    double sf_version=2.1;
+    this->setWindowTitle(tr("CH Center V%1").arg(sf_version));
+
 
     //hide the bottom StatusBar.
     this->setStatusBar(nullptr);
@@ -25,8 +28,8 @@ BaseForm::BaseForm(QWidget *parent)
     ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
 
     //initial the HI221GW node choosing widget
-    ui->ListGWNode->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->ListGWNode->setVisible(0);
+    ui->DongleNodeList->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->DongleNodeList->setVisible(0);
 
 
     ch_comform=new CHComForm(this);
@@ -41,9 +44,9 @@ BaseForm::BaseForm(QWidget *parent)
 
     //get data from ch_serialport class
     connect(ch_serialport, SIGNAL(errorOpenPort()), this, SLOT(geterrorOpenPort()));
-    connect(ch_serialport, SIGNAL(sigOpenPort()), this, SLOT(getsigOpenPort()));
+    connect(ch_serialport, SIGNAL(sigPortOpened()), this, SLOT(getsigPortOpened()));
     connect(ch_serialport, SIGNAL(sigPortClosed()), this, SLOT(getsigPortClosed()));
-    connect(ch_serialport, SIGNAL(sigUpdateDongleList(bool)), this, SLOT(updateListGWNode(bool)));
+    connect(ch_serialport, SIGNAL(sigUpdateDongleNodeList(bool)), this, SLOT(updateDongleNodeList(bool)));
     connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
             this, SLOT(getIMUData(receive_imusol_packet_t)), Qt::QueuedConnection);
     connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
@@ -52,6 +55,8 @@ BaseForm::BaseForm(QWidget *parent)
 
     //page 1 widget initialize : Attitude indicator
     addADI();
+
+    //a timer to update baseform
     baseform_timer=new QTimer(this);
     connect(baseform_timer, SIGNAL(timeout(void)), this, SLOT(updateBaseForm(void)));
     baseform_timer->setInterval(50);
@@ -65,7 +70,6 @@ BaseForm::BaseForm(QWidget *parent)
     connect(this, SIGNAL(sigUpdateBaseFormChart(receive_imusol_packet_t, uchar)),
             this, SLOT(updateBaseFormChart(receive_imusol_packet_t, uchar)));
 
-    qDebug() << "main thread is:" << QThread::currentThreadId();
 
     //page 2 widget initialize : 3D widget
     ch_threeDform=new ThreeDForm(this);
@@ -92,7 +96,7 @@ BaseForm::BaseForm(QWidget *parent)
     statusbar_msg.baudrate="";
     statusbar_msg.port="";
     statusbar_msg.current_status=tr("Unconnected");
-    statusbar_msg.sw_version=tr("Software Version: ")+QString::number(0.1);
+    statusbar_msg.sw_version=tr("Software Version : %1").arg(sf_version);
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
 
@@ -217,7 +221,7 @@ void BaseForm::on_BTNConnect_clicked()
     }
 
     update_BTNConnect_state();
-    updateListGWNode(0);
+    updateDongleNodeList(0);
 }
 
 void BaseForm::on_BTNDisconnect_clicked()
@@ -248,14 +252,14 @@ void BaseForm::update_BTNConnect_state()
 }
 
 /**
- * @brief BaseForm::updateListGWNode
- * if number of nodes changes send sigUpdateDongleList():call updateListGWNode()
+ * @brief BaseForm::updateDongleNodeList
+ * if number of nodes changes send sigUpdateDongleNodeList():call updateDongleNodeList()
  */
-void BaseForm::updateListGWNode(bool m_is_gwsol)
+void BaseForm::updateDongleNodeList(bool m_is_dongle)
 {
-    if(m_is_gwsol==1){
-        ui->ListGWNode->clear();
-        ui->ListGWNode->setVisible(1);
+    if(m_is_dongle==1){
+        ui->DongleNodeList->clear();
+        ui->DongleNodeList->setVisible(1);
 
         receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
 
@@ -264,32 +268,32 @@ void BaseForm::updateListGWNode(bool m_is_gwsol)
         {
             int t_id=imusData.receive_imusol[i].id;
 
-            ui->ListGWNode->addItem(tr("Wireless Node ID : %1").arg(t_id));
+            ui->DongleNodeList->addItem(tr("Wireless Node ID : %1").arg(t_id));
 
-            if(t_id==current_gwnodeID){
-                ui->ListGWNode->setCurrentRow(i);
-                current_gwnodeIndex=i;
+            if(t_id==cur_dongle_nodeID){
+                ui->DongleNodeList->setCurrentRow(i);
+                cur_dongle_nodeIndex=i;
                 idexist=true;
             }
 
         }
         if(idexist==false)
-            current_gwnodeIndex=-1;
+            cur_dongle_nodeIndex=-1;
     }
     else
-        ui->ListGWNode->setVisible(0);
+        ui->DongleNodeList->setVisible(0);
 }
 
 /**
- * @brief BaseForm::on_ListGWNode_itemClicked
- * @param current_gwnodeID:remember the chosen ID
+ * @brief BaseForm::on_DongleNodeList_itemClicked
+ * @param cur_dongle_nodeID:remember the chosen ID
  */
-void BaseForm::on_ListGWNode_itemClicked(QListWidgetItem *item)
+void BaseForm::on_DongleNodeList_itemClicked(QListWidgetItem *item)
 {
-    QString id = ui->ListGWNode->currentItem()->text().split(" : ").last();
+    QString id = ui->DongleNodeList->currentItem()->text().split(" : ").last();
 
-    current_gwnodeID=id.toInt();
-    updateListGWNode(1);
+    cur_dongle_nodeID=id.toInt();
+    updateDongleNodeList(1);
 }
 
 ///signal from ch_comform ui///
@@ -300,7 +304,7 @@ void BaseForm::on_ListGWNode_itemClicked(QListWidgetItem *item)
 /**
  * @brief BaseForm::rec_port_chose -
  * linking to CH device, if port can't opened, thead will be stop and pop up an error message.
- * 1.sigOpenPort():getsigOpenPort() and start sigSendData()
+ * 1.sigPortOpened():getsigPortOpened() and start sigSendData()
  * 2.errorOpenPort():call geterrorOpenPort()
  */
 void BaseForm::getsigPortChose(QString port_name, int baudrate)
@@ -338,7 +342,7 @@ void BaseForm::geterrorOpenPort()
     update_BTNConnect_state();
     ui->stackedWidget->setEnabled(0);
 }
-void BaseForm::getsigOpenPort()
+void BaseForm::getsigPortOpened()
 {
     ch_comform->hide();
 
@@ -375,7 +379,7 @@ void BaseForm::getsigPortClosed()
 /**
  * @brief BaseForm::getIMUData, BaseForm::getDongleData
  * process 2 kinds of data: hi226/hi229/ch110/hi221 vs hi221gw
- * @param current_gwnodeIndex: while streaming hi221gw, it will remember the chose node(by ID) until it's offine
+ * @param cur_dongle_nodeIndex: while streaming hi221gw, it will remember the chose node(by ID) until it's offine
  */
 void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 {
@@ -387,7 +391,7 @@ void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 
     mutex_writing.unlock();
 
-    emit sigUpdateBaseFormChart(m_imu_data, m_contentbits);
+    emit sigUpdateBaseFormChart(imu_data, ch_serialport->Content_bits);
     emit sigSendIMUtoThreeD(imu_data);
 
 }
@@ -397,11 +401,11 @@ void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
     if(dongle_data.n>0){
 
         receive_imusol_packet_t imu_data;
-        if(current_gwnodeIndex<0){
+        if(cur_dongle_nodeIndex<0){
             imu_data=dongle_data.receive_imusol[0];
         }
         else{
-            imu_data=dongle_data.receive_imusol[current_gwnodeIndex];
+            imu_data=dongle_data.receive_imusol[cur_dongle_nodeIndex];
         }
 
         mutex_writing.lock();
@@ -412,7 +416,7 @@ void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
 
         mutex_writing.unlock();
 
-        emit sigUpdateBaseFormChart(m_imu_data, m_contentbits);
+        emit sigUpdateBaseFormChart(imu_data, ch_serialport->Content_bits);
         emit sigSendIMUtoThreeD(imu_data);
     }
 }
@@ -427,7 +431,7 @@ void BaseForm::updateBaseForm()
     updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
     m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
     m_Compass->setYaw(m_imu_data.eul[2]);
-
+    m_protocol_tag=0;
 }
 
 
@@ -546,10 +550,10 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
         if(ui->LabelGPQuat->isVisible())
             ui->LabelGPQuat->setVisible(0);
     }
-    if(protocol_tag==KItemIMUSOL){
+    if(content_bits & BIT_VALID_ALL){
         setptl="91";
     }
-    else if(protocol_tag==KItemDongleRaw)
+    if(protocol_tag==KItemDongleRaw)
         setptl="63";
 
     else if (protocol_tag==KItemDongle)

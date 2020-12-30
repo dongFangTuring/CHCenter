@@ -20,16 +20,16 @@ uint32_t frame_count;
 
 static void crc16_update(uint16_t *currect_crc, const uint8_t *src, uint32_t len)
 {
-    uint32_t crc = *currect_crc;
-    uint32_t j;
+    uint16_t crc = *currect_crc;
+    uint16_t j;
     for (j=0; j < len; ++j)
     {
-        uint32_t i;
-        uint32_t byte = src[j];
+        uint16_t i;
+        uint16_t byte = src[j];
         crc ^= byte << 8;
         for (i = 0; i < 8; ++i)
         {
-            uint32_t temp = crc << 1;
+            uint16_t temp = crc << 1;
             if (crc & 0x8000)
             {
                 temp ^= 0x1021;

@@ -16,9 +16,9 @@ class QADI : public QWidget
 
 public:
     QADI(QWidget *parent = nullptr);
-    ~QADI();
+    ~QADI() override;
 
-    void setData(float r, float p) {
+    void setData(qreal r, qreal p) {
         m_roll = r;
         m_pitch = p;
         if( m_roll < -180 ) m_roll = -180;
@@ -32,15 +32,15 @@ protected slots:
     void canvasReplot_slot(void);
 
 protected:
-    void paintEvent(QPaintEvent *event);
-    void resizeEvent(QResizeEvent *event);
+    void virtual paintEvent(QPaintEvent *event) override;
+    void virtual resizeEvent(QResizeEvent *event) override;
 
 protected:
     int     m_sizeMin, m_sizeMax;           ///< widget's min/max size (in pixel)
     int     m_size, m_offset;               ///< current size & offset
 
-    float  m_roll;                         ///< roll angle (in degree)
-    float  m_pitch;                        ///< pitch angle (in degree)
+    qreal  m_roll;                         ///< roll angle (in degree)
+    qreal  m_pitch;                        ///< pitch angle (in degree)
 
 };
 
@@ -55,7 +55,7 @@ class QCompass : public QWidget
 
 public:
     QCompass(QWidget *parent = nullptr);
-    ~QCompass();
+    ~QCompass() override;
     void setYaw(float val) {
         m_yaw  = val;
         if( m_yaw < 0   ) m_yaw = 360 + m_yaw;
@@ -67,14 +67,14 @@ protected slots:
     void canvasReplot_slot(void);
 
 protected:
-    void paintEvent(QPaintEvent *event);
-    void resizeEvent(QResizeEvent *event);
+    void virtual paintEvent(QPaintEvent *event) override;
+    void virtual resizeEvent(QResizeEvent *event) override;
 
 protected:
     int m_sizeMin, m_sizeMax;               ///< widget min/max size (in pixel)
     int m_size, m_offset;                   ///< widget size and offset size
 
-    float m_yaw;                              ///< yaw angle (in degree)
+    qreal m_yaw;                              ///< yaw angle (in degree)
 
 };
 #endif

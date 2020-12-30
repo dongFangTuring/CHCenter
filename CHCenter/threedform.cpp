@@ -32,6 +32,7 @@ void ThreeDForm::initView()
 
     // put Qt3DWindow into a container in order to make it possible
     // to handle the view inside a widget
+
     container = createWindowContainer(view,this);
     container->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
     ui->ThreeDLayout->addWidget(container);
@@ -304,7 +305,3 @@ void ThreeDForm::on_SliderLeftRight_sliderMoved(int theta)
 
     m_cam_scale[2]=theta;
 }
-
-
-
-

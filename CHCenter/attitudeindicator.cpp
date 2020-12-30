@@ -60,7 +60,7 @@ void QADI::paintEvent(QPaintEvent *event)
 
 
     // FIXME: AHRS output left-hand values
-    float pitch_tem = -m_pitch;
+    qreal pitch_tem = -m_pitch;
 
     // draw background
     {
@@ -69,25 +69,25 @@ void QADI::paintEvent(QPaintEvent *event)
 
         int y_min, y_max;
 
-        y_min = m_size/2*-40.0/45.0;
-        y_max = m_size/2* 40.0/45.0;
+        y_min = int(m_size/2*-40.0/45.0);
+        y_max = int(m_size/2* 40.0/45.0);
 
-        int y = -m_size/2*pitch_tem/45.;
+        int y = int(-m_size/2*pitch_tem/45.);
         if( y < y_min ) y = y_min;
         if( y > y_max ) y = y_max;
 
-        int x = sqrt(m_size*m_size/4 - y*y);
-        qreal gr = atan((float)(y)/x);
+        int x = int(sqrt(m_size*m_size/4 - y*y));
+        qreal gr = atan((qreal)(y)/x);
         gr = gr * 180./3.1415926;
 
         painter.setPen(blackPen);
         painter.setBrush(bgSky);
         painter.drawChord(-m_size/2, -m_size/2, m_size, m_size,
-                          gr*16, (180-2*gr)*16);
+                          int(gr*16), int((180-2*gr)*16));
 
         painter.setBrush(bgGround);
         painter.drawChord(-m_size/2, -m_size/2, m_size, m_size,
-                          gr*16, -(180+2*gr)*16);
+                          int(gr*16), int(-(180+2*gr)*16));
 
     }
 
@@ -101,7 +101,7 @@ void QADI::paintEvent(QPaintEvent *event)
     {
         int x, y, x1, y1;
         int textWidth;
-        float p, r;
+        qreal p, r;
         int ll = m_size/8, l;
 
         int fontSize = 10;
@@ -133,7 +133,7 @@ void QADI::paintEvent(QPaintEvent *event)
                 painter.setPen(pitchPen);
             }
 
-            y = m_size/2*p/45.0 + m_size/2*pitch_tem/45.;
+            y = int(m_size/2*p/45.0 + m_size/2*pitch_tem/45.);
             x = l;
 
             r = sqrt(x*x + y*y);
@@ -157,7 +157,7 @@ void QADI::paintEvent(QPaintEvent *event)
 
         // draw marker
         int     markerSize = m_size/10;
-        float   fx1, fy1, fx2, fy2, fx3, fy3;
+        qreal   fx1, fy1, fx2, fy2, fx3, fy3;
 
         painter.setBrush(QBrush(QColor(235,149,58)));
         painter.setPen(Qt::NoPen);
@@ -188,9 +188,9 @@ void QADI::paintEvent(QPaintEvent *event)
     // draw roll degree lines
     {
         int     nRollLines = 12;
-        float   rotAng = 360.0 / nRollLines;
+        qreal   rotAng = 360.0 / nRollLines;
         int     rollLineLeng = m_size/25;
-        float   fx1, fy1, fx2, fy2;
+        qreal   fx1, fy1, fx2, fy2;
         int     fontSize = 10;
         QString s;
 
@@ -230,7 +230,7 @@ void QADI::paintEvent(QPaintEvent *event)
     // draw roll marker
     {
         int     rollMarkerSize = m_size/25;
-        float  fx1, fy1, fx2, fy2, fx3, fy3;
+        qreal  fx1, fy1, fx2, fy2, fx3, fy3;
 
         painter.rotate(-m_roll);
         painter.setBrush(QBrush(Qt::black));
@@ -324,9 +324,9 @@ void QCompass::paintEvent(QPaintEvent *event)
     // draw yaw lines
     {
         int     nyawLines = 12;
-        float   rotAng = 360.0 / nyawLines;
+        qreal   rotAng = 360.0 / nyawLines;
         int     yawLineLeng = m_size/25;
-        float  fx1, fy1, fx2, fy2;
+        qreal  fx1, fy1, fx2, fy2;
         int     fontSize = 10;
         QString s;
 
@@ -386,7 +386,7 @@ void QCompass::paintEvent(QPaintEvent *event)
     // draw S/N arrow
     {
         int     arrowWidth = m_size/6;
-        float  fx1, fy1, fx2, fy2, fx3, fy3;
+        qreal  fx1, fy1, fx2, fy2, fx3, fy3;
 
         painter.rotate(-m_yaw);
         fx1 = 0;

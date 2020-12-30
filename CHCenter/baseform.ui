@@ -134,16 +134,16 @@
              <property name="styleSheet">
               <string notr="true">QPushButton {
 font-size:20px;
-background-color: #00ACC1; 
+background-color: #5c6bc0; 
 color: #f1f1f1; 
 border: none;
 border-radius:2px;
 }
 QPushButton:hover:!pressed{
-background-color: #00ACC1;
+background-color: #5c6bc0;
 }
 QPushButton:pressed{
-background-color: #008C9D;
+background-color: #26418f;
 }
 QPushButton:disabled {
 background-color:#dedede;
@@ -203,7 +203,7 @@ background-color:#dedede;
           </layout>
          </item>
          <item>
-          <widget class="QListWidget" name="ListGWNode">
+          <widget class="QListWidget" name="DongleNodeList">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
              <horstretch>0</horstretch>
@@ -483,8 +483,8 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>814</width>
-               <height>702</height>
+               <width>784</width>
+               <height>739</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -1700,8 +1700,8 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>55</width>
-               <height>24</height>
+               <width>46</width>
+               <height>28</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -1755,7 +1755,7 @@ color: black;
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>26</height>
+     <height>34</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWindow">

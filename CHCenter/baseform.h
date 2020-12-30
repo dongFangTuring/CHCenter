@@ -45,8 +45,8 @@ private slots:
     void update_BTNConnect_state();
 
     //this will be show if device is HI221GW
-    void updateListGWNode(bool);
-    void on_ListGWNode_itemClicked(QListWidgetItem *item);
+    void updateDongleNodeList(bool);
+    void on_DongleNodeList_itemClicked(QListWidgetItem *item);
 
     ///signal from CHComForm ui///
     void getsigPortChose(QString port_name,int baudrate);
@@ -54,7 +54,7 @@ private slots:
 
     ///signal from CHSerialPort class///
     void geterrorOpenPort();
-    void getsigOpenPort();
+    void getsigPortOpened();
     void getsigPortClosed();
     void getIMUData(receive_imusol_packet_t);
     void getDongleData(receive_gwsol_packet_t);
@@ -114,8 +114,8 @@ private:
     //serial port
     CHComForm *ch_comform;
     CHSerialport *ch_serialport;
-    int current_gwnodeID=0;
-    int current_gwnodeIndex;
+    int cur_dongle_nodeID=0;
+    int cur_dongle_nodeIndex;
 
     CHSettingForm *ch_settingform;
     ThreeDForm *ch_threeDform;

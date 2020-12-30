@@ -21,7 +21,7 @@ CHSettingForm::~CHSettingForm()
 void CHSettingForm::settingConfig_init()
 {
     new_ch_config=old_ch_config;
-    old_ch_config.Baud=115200;
+    old_ch_config.Baud=0;
     old_ch_config.Setptl="";
     old_ch_config.FrameRate=-1;
     old_ch_config.GWID=0;

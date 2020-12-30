@@ -50,10 +50,10 @@ signals:
 
     //port status handle
     void errorOpenPort();
-    void sigOpenPort();
+    void sigPortOpened();
     void sigPortClosed();
     void sigCloseThreadAndPort();
-    void sigUpdateDongleList(bool);
+    void sigUpdateDongleNodeList(bool);
 
     //write to serial, a cross thread command
     void sigWriteData(QString);   

@@ -39,241 +39,247 @@
         <translation>模組設定</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="525"/>
+        <location filename="baseform.ui" line="528"/>
         <source>Data Protocol = </source>
         <translation>傳輸協議 = </translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="549"/>
+        <location filename="baseform.ui" line="552"/>
         <source>Frame Rate : </source>
         <oldsource>Frame Rate = 0 Hz</oldsource>
         <translation>幀率 : </translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="574"/>
+        <location filename="baseform.ui" line="577"/>
         <source>0 Hz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="611"/>
+        <location filename="baseform.ui" line="614"/>
         <source>ID = 0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="660"/>
+        <location filename="baseform.ui" line="651"/>
+        <source>Raw Data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="682"/>
         <source>Linear Accelaration (g)</source>
         <translation>加速度 (g)</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="683"/>
+        <location filename="baseform.ui" line="708"/>
         <source>X= </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="702"/>
-        <location filename="baseform.ui" line="731"/>
-        <location filename="baseform.ui" line="753"/>
-        <location filename="baseform.ui" line="872"/>
-        <location filename="baseform.ui" line="894"/>
-        <location filename="baseform.ui" line="916"/>
-        <location filename="baseform.ui" line="1022"/>
-        <location filename="baseform.ui" line="1044"/>
-        <location filename="baseform.ui" line="1066"/>
-        <location filename="baseform.ui" line="1172"/>
-        <location filename="baseform.ui" line="1194"/>
-        <location filename="baseform.ui" line="1216"/>
-        <location filename="baseform.ui" line="1338"/>
-        <location filename="baseform.ui" line="1360"/>
-        <location filename="baseform.ui" line="1382"/>
-        <location filename="baseform.ui" line="1404"/>
+        <location filename="baseform.ui" line="727"/>
+        <location filename="baseform.ui" line="756"/>
+        <location filename="baseform.ui" line="791"/>
+        <location filename="baseform.ui" line="929"/>
+        <location filename="baseform.ui" line="951"/>
+        <location filename="baseform.ui" line="973"/>
+        <location filename="baseform.ui" line="1108"/>
+        <location filename="baseform.ui" line="1130"/>
+        <location filename="baseform.ui" line="1152"/>
+        <location filename="baseform.ui" line="1329"/>
+        <location filename="baseform.ui" line="1351"/>
+        <location filename="baseform.ui" line="1373"/>
+        <location filename="baseform.ui" line="1524"/>
+        <location filename="baseform.ui" line="1546"/>
+        <location filename="baseform.ui" line="1568"/>
+        <location filename="baseform.ui" line="1590"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="712"/>
+        <location filename="baseform.ui" line="737"/>
         <source>Y= </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="769"/>
+        <location filename="baseform.ui" line="772"/>
         <source>Z= </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1438"/>
-        <source>PushButton</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="816"/>
+        <location filename="baseform.ui" line="870"/>
         <source>Gyroscope (°/s)</source>
         <oldsource>Gyroscope (°/s)     </oldsource>
         <translation>陀螺儀 (角速度(°/s))</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="800"/>
-        <location filename="baseform.ui" line="950"/>
-        <location filename="baseform.ui" line="1100"/>
-        <location filename="baseform.ui" line="1250"/>
-        <source>Unreleased</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="839"/>
-        <location filename="baseform.ui" line="989"/>
-        <location filename="baseform.ui" line="1292"/>
+        <location filename="baseform.ui" line="896"/>
+        <location filename="baseform.ui" line="1075"/>
+        <location filename="baseform.ui" line="1478"/>
         <source>X=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="846"/>
-        <location filename="baseform.ui" line="996"/>
-        <location filename="baseform.ui" line="1306"/>
+        <location filename="baseform.ui" line="903"/>
+        <location filename="baseform.ui" line="1082"/>
+        <location filename="baseform.ui" line="1492"/>
         <source>Y=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="853"/>
-        <location filename="baseform.ui" line="1003"/>
-        <location filename="baseform.ui" line="1313"/>
+        <location filename="baseform.ui" line="910"/>
+        <location filename="baseform.ui" line="1089"/>
+        <location filename="baseform.ui" line="1499"/>
         <source>Z=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="966"/>
+        <location filename="baseform.ui" line="1052"/>
         <source>Magnetometer (μT)</source>
         <translation>磁場計 (μT)</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1116"/>
+        <location filename="baseform.ui" line="1251"/>
+        <source>Sensor Fusion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="1273"/>
         <source>Euler Angle (°)</source>
         <oldsource>Euler Angle (°)             </oldsource>
         <translation>歐拉角 (°)</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1139"/>
+        <location filename="baseform.ui" line="1296"/>
         <source>X(Roll)=</source>
         <translation>X=</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1146"/>
+        <location filename="baseform.ui" line="1303"/>
         <source>Y(Pitch)=</source>
         <translation>Y=</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1153"/>
+        <location filename="baseform.ui" line="1310"/>
         <source>Z(Yaw)=</source>
         <translation>Z=</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1269"/>
+        <location filename="baseform.ui" line="1455"/>
         <source>Quaterinion</source>
         <oldsource>Quaterinion (norm)</oldsource>
         <translation>四元數</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1299"/>
+        <location filename="baseform.ui" line="1485"/>
         <source>W=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1515"/>
+        <location filename="baseform.ui" line="1741"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1537"/>
+        <location filename="baseform.ui" line="1763"/>
         <source>Window</source>
         <translation>視窗</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1541"/>
+        <location filename="baseform.ui" line="1767"/>
         <source>Language</source>
         <translation>語言</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1562"/>
+        <location filename="baseform.ui" line="1788"/>
         <source>Traditional Chinese</source>
         <translation>繁體中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1567"/>
+        <location filename="baseform.ui" line="1793"/>
         <source>Simplified Chinese</source>
         <translation>简体中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1572"/>
+        <location filename="baseform.ui" line="1798"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1577"/>
+        <location filename="baseform.ui" line="1803"/>
         <source>Exit</source>
         <translation>離開</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="77"/>
-        <location filename="baseform.cpp" line="363"/>
+        <location filename="baseform.cpp" line="98"/>
+        <location filename="baseform.cpp" line="371"/>
         <source>Unconnected</source>
         <translation>未連接設備</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="78"/>
-        <location filename="baseform.cpp" line="364"/>
+        <location filename="baseform.cpp" line="372"/>
         <source>Software Version: </source>
         <translation>軟體版本: </translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="256"/>
+        <location filename="baseform.cpp" line="271"/>
         <source>Wireless Node ID : %1</source>
         <translation>無線節點 ID : %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="303"/>
+        <location filename="baseform.cpp" line="20"/>
+        <source>CH Center V%1</source>
+        <translation>CH Center V%1</translation>
+    </message>
+    <message>
+        <location filename="baseform.cpp" line="99"/>
+        <source>Software Version : %1</source>
+        <translation>版本 : %1</translation>
+    </message>
+    <message>
+        <location filename="baseform.cpp" line="318"/>
         <source>Connecting...</source>
         <translation>連接設備中...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="321"/>
+        <location filename="baseform.cpp" line="336"/>
         <source>Cannot build connection</source>
         <translation>無法連接設備</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="321"/>
+        <location filename="baseform.cpp" line="336"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="325"/>
+        <location filename="baseform.cpp" line="340"/>
         <source>Cannot build connection. Please check the selected port again</source>
         <translation>無法連接設備。請檢查所選的端口是否正確。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="338"/>
+        <location filename="baseform.cpp" line="353"/>
         <source>Streaming...</source>
         <translation>數據串流中...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="419"/>
+        <location filename="baseform.cpp" line="447"/>
         <source>Please restart the device to take effect, and connect with new Baudrate.</source>
         <translation>請重啟模組以生效，並以新的波特率重新連線。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="576"/>
+        <location filename="baseform.cpp" line="569"/>
         <source>Data Protocol = %1</source>
         <translation>數據協議 = %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="609"/>
-        <location filename="baseform.cpp" line="626"/>
-        <location filename="baseform.cpp" line="644"/>
+        <location filename="baseform.cpp" line="639"/>
+        <location filename="baseform.cpp" line="656"/>
+        <location filename="baseform.cpp" line="674"/>
         <source>Please restart software to activate new language.</source>
         <translation>請重啟本程式以套用新語言。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="609"/>
-        <location filename="baseform.cpp" line="626"/>
-        <location filename="baseform.cpp" line="644"/>
+        <location filename="baseform.cpp" line="639"/>
+        <location filename="baseform.cpp" line="656"/>
+        <location filename="baseform.cpp" line="674"/>
         <source>Information</source>
         <translation>提醒</translation>
     </message>
@@ -667,7 +673,7 @@
     <message>
         <location filename="csvlogform.cpp" line="98"/>
         <location filename="csvlogform.cpp" line="109"/>
-        <location filename="csvlogform.cpp" line="226"/>
+        <location filename="csvlogform.cpp" line="231"/>
         <source>OK</source>
         <translation>確認</translation>
     </message>
@@ -683,64 +689,151 @@
         <translation>已在記錄中！</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="153"/>
-        <location filename="csvlogform.cpp" line="222"/>
+        <location filename="csvlogform.cpp" line="158"/>
+        <location filename="csvlogform.cpp" line="227"/>
         <source>Log error!</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="154"/>
-        <location filename="csvlogform.cpp" line="223"/>
+        <location filename="csvlogform.cpp" line="159"/>
+        <location filename="csvlogform.cpp" line="228"/>
         <source>The current file can&apos;t be writed. Please close other windows that may using the file.</source>
         <translation>目前文件無法寫入。請關閉其他可能正在使用該文件的視窗。</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="157"/>
+        <location filename="csvlogform.cpp" line="162"/>
         <source>Ok</source>
         <translation>確認</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="163"/>
+        <location filename="csvlogform.cpp" line="168"/>
         <source>Time,Frame,AccX,AccY,AccZ,GyrX,GyrY,GyrZ,MagX,MagY,MagZ,Roll,Pitch,Yaw,Qw,Qx,Qy,Qz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="179"/>
-        <location filename="csvlogform.cpp" line="262"/>
+        <location filename="csvlogform.cpp" line="184"/>
+        <location filename="csvlogform.cpp" line="267"/>
         <source>%1,%2,</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="238"/>
+        <location filename="csvlogform.cpp" line="243"/>
         <source>AccX(id%1),AccY(id%1),AccZ(id%1),GyrX(id%1),GyrY(id%1),GyrZ(id%1),MagX(id%1),MagY(id%1),MagZ(id%1),Roll(id%1),Pitch(id%1),Yaw(id%1),Qw(id%1),Qx(id%1),Qy(id%1),Qz(id%1),</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="331"/>
+        <location filename="csvlogform.cpp" line="336"/>
         <source>%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14,%15,%16,</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="418"/>
+        <location filename="csvlogform.cpp" line="423"/>
         <source>-&gt;Start logging ......</source>
         <translation>-&gt;開始記錄 ......</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="430"/>
+        <location filename="csvlogform.cpp" line="436"/>
         <source>-&gt;File has been successfully saved at : %1
 </source>
         <translation>-&gt;文件已成功儲存在 : %1
 </translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="434"/>
-        <source>-&gt;No file is saved!</source>
-        <translation>-&gt;檔案並未儲存!</translation>
+        <location filename="csvlogform.cpp" line="440"/>
+        <source>-&gt;No file is saved! Please check connection, Baud, and frame rate setting.</source>
+        <translation>-&gt;沒有文件被保存，請檢查連接是否正確、波特率和幀率設置。</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="453"/>
+        <source>-&gt;No file is saved!</source>
+        <translation type="vanished">-&gt;檔案並未儲存!</translation>
+    </message>
+    <message>
+        <location filename="csvlogform.cpp" line="469"/>
         <source>-&gt;Will be started at %1s ...</source>
         <translation>-&gt;將在 %1 秒後開始...</translation>
+    </message>
+</context>
+<context>
+    <name>ChartWindow</name>
+    <message>
+        <location filename="chartwindow.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.ui" line="203"/>
+        <source>V=0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.ui" line="284"/>
+        <source>Mouse Control:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.ui" line="293"/>
+        <source>Left-button : Drag chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.ui" line="300"/>
+        <source>Wheel: zoom Y-axis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.ui" line="311"/>
+        <source>Ctrl or Right-button + Wheel: zoom X-axis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="31"/>
+        <source>Acceleration Chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="38"/>
+        <source>Acceleration (G)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="43"/>
+        <source>Angular Velocity Chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="50"/>
+        <source>Angular Velocity (°/s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="55"/>
+        <source>Magnetic Field Chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="62"/>
+        <source>Magnetic Field (μT)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="66"/>
+        <source>Eular Angles Chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="73"/>
+        <source>Euler Angles (°)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="78"/>
+        <source>Quaternion Chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="chartwindow.cpp" line="86"/>
+        <source>Quaternion (Norm)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -826,19 +919,19 @@
         <translation>PS : 需要在協議中啟用歐拉角才能顯示 3D 模型。</translation>
     </message>
     <message>
-        <location filename="threedform.cpp" line="49"/>
-        <location filename="threedform.cpp" line="236"/>
+        <location filename="threedform.cpp" line="50"/>
+        <location filename="threedform.cpp" line="237"/>
         <source>No file exists or wrong path!</source>
         <translation>文件不存在或路徑錯誤!</translation>
     </message>
     <message>
-        <location filename="threedform.cpp" line="50"/>
-        <location filename="threedform.cpp" line="237"/>
+        <location filename="threedform.cpp" line="51"/>
+        <location filename="threedform.cpp" line="238"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="threedform.cpp" line="223"/>
+        <location filename="threedform.cpp" line="224"/>
         <source>Open .obj model</source>
         <translation>開啟 .obj 模型</translation>
     </message>

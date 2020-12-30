@@ -105,6 +105,12 @@
            <height>40</height>
           </size>
          </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="pageStep">
           <number>10</number>
          </property>
@@ -119,6 +125,9 @@
    </item>
    <item row="1" column="2" rowspan="2">
     <layout class="QVBoxLayout" name="LayoutChart">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">

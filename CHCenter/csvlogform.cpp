@@ -197,7 +197,7 @@ void CSVLogForm::getIMUData(receive_imusol_packet_t imu_data)
     }
 
 }
-void CSVLogForm::getDongleData(receive_gwsol_packet_t gwimu_data)
+void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
 {
     //qDebug()<<frame_counter;
     if(log_started==1){
@@ -209,7 +209,7 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t gwimu_data)
         QString str_time=time.toString("hh:mm:ss.zzz");
         ui->LabelRemainTime->setText(str_time);
 
-        if(gwimu_data.n>0){
+        if(dongle_data.n>0){
 
             if(frame_counter==0){
 
@@ -236,15 +236,15 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t gwimu_data)
 
                     stream << "Time,Frame,";
 
-                    for(unsigned short i=0;i<gwimu_data.n;i++){
-                        auto imu_data=gwimu_data.receive_imusol[i];
+                    for(unsigned short i=0;i<dongle_data.n;i++){
+                        auto imu_data=dongle_data.receive_imusol[i];
                         gwnode_idlist.push_back(imu_data.id);
 
                         QString title_row=tr("AccX(id%1),AccY(id%1),AccZ(id%1),GyrX(id%1),GyrY(id%1),GyrZ(id%1),"
                                              "MagX(id%1),MagY(id%1),MagZ(id%1),Roll(id%1),Pitch(id%1),Yaw(id%1),"
                                              "Qw(id%1),Qx(id%1),Qy(id%1),Qz(id%1),").arg(imu_data.id);
 
-                        if(i==gwimu_data.n-1){
+                        if(i==dongle_data.n-1){
                             int ret=title_row.lastIndexOf(',');
                             if(ret!=-1)
                                 title_row.remove(ret,1);
@@ -268,13 +268,13 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t gwimu_data)
 
 
                     //if we lost some nodes.
-                    if(gwimu_data.n<gwnode_idlist.size()){
+                    if(dongle_data.n<gwnode_idlist.size()){
                         for(unsigned short i=0;i<gwnode_idlist.size();i++){
 
                             QString csv_row=",,,,,,,,,,,,,,,,";
-                            for(int j=0;j<gwimu_data.n;j++){
+                            for(int j=0;j<dongle_data.n;j++){
 
-                                auto imu_data=gwimu_data.receive_imusol[j];
+                                auto imu_data=dongle_data.receive_imusol[j];
 
                                 if(imu_data.id==gwnode_idlist[i]){
                                     csv_row=imudata2csvrow(imu_data);
@@ -295,14 +295,14 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t gwimu_data)
                     //if all nodes are online
                     else{
 
-                        for(unsigned short i=0;i<gwimu_data.n;i++){
-                            auto imu_data=gwimu_data.receive_imusol[i];
+                        for(unsigned short i=0;i<dongle_data.n;i++){
+                            auto imu_data=dongle_data.receive_imusol[i];
 
                             QString csv_row=imudata2csvrow(imu_data);
 
 
 
-                            if(i==gwimu_data.n-1){
+                            if(i==dongle_data.n-1){
                                 int ret=csv_row.lastIndexOf(',');
                                 if(ret!=-1)
                                     csv_row.remove(ret,1);

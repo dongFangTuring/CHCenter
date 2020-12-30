@@ -10,9 +10,10 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     ui->setupUi(this);
     m_type=type;
 
+    this->setStyleSheet("background-color:#424242; color:white;");
 
     m_chart = new QChart;
-    movingwindow_timer.setInterval(33);
+    movingwindow_timer.setInterval(20);
     connect(&movingwindow_timer, SIGNAL(timeout(void)), this, SLOT(updateMovingWindow(void)));
     movingwindow_timer.start();
 
@@ -20,7 +21,6 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     axisX = new QValueAxis;
     axisY = new QValueAxis;
 
-    //axisX->setTickCount(11);//this will cause lag
 
     m_chart->addAxis(axisX, Qt::AlignBottom);//將座標軸加到chart上，居下
     m_chart->addAxis(axisY, Qt::AlignLeft);//居左
@@ -124,10 +124,11 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     ui->LayoutChart->addWidget(m_chartView);
 
     ui->SliderSample->setPageStep(1000);
-    ui->SliderSample->setSingleStep(1);
+    ui->SliderSample->setSingleStep(100);
 
     ui->SliderValue->setRange(valueRange[0]*100,valueRange[1]*100);
-    ui->SliderValue->setSingleStep(1);
+    ui->SliderValue->setPageStep(100);
+    ui->SliderValue->setSingleStep(10);
 
 
 }
@@ -139,9 +140,8 @@ ChartWindow::~ChartWindow()
 
 void ChartWindow::updateChart(float *array){
 
-    m_chartView->setFocus();
+    //m_chartView->setFocus();
     if(this->isVisible()){
-        //max_sample_number=uint(ui->SliderSample->value());
 
         if(sample_counter>=max_sample_number){
             sample_counter=0;
@@ -237,11 +237,19 @@ void ChartWindow::updateMovingWindow()
 
         if(!m_serieslist.last()->isVisible()){
             m_serieslist.last()->setName("Following Mode");
-            axisX->setRange(sample_counter-1000,sample_counter);
-
+            if(sample_counter<=1000){
+                axisX->setRange(0,1000);
+            }
+            else{
+                axisX->setRange(sample_counter-1000,sample_counter);
+            }
+            if(movingwindow_timer.interval()!=100)
+                movingwindow_timer.setInterval(100);
         }
         else{
             m_serieslist.last()->setName("Free Mode");
+            if(movingwindow_timer.interval()!=30)
+                movingwindow_timer.setInterval(30);
         }
 
 
@@ -441,11 +449,13 @@ void ChartWindow::on_SliderValue_valueChanged(int value)
 void ChartWindow::on_BTNValueZoomIn_clicked()
 {
     m_chartView->zoom(0,1);
+    qDebug()<<"zoomin";
 }
 
 void ChartWindow::on_BTNValueZoomOut_clicked()
 {
     m_chartView->zoom(1,1);
+    qDebug()<<"zoomout";
 }
 void ChartWindow::on_BNTValueReset_clicked()
 {
@@ -472,6 +482,8 @@ CusChartView::CusChartView(QChart* chart, QWidget *parent)
 
 void CusChartView::zoom(bool in_out, bool x_y)
 {
+
+
     //static cast is faster, father to child
     QValueAxis *axisX= (QValueAxis*)(this->chart()->axisX());
     QValueAxis *axisY = (QValueAxis*)(this->chart()->axisY());
