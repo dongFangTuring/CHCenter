@@ -72,6 +72,7 @@ private slots:
     void on_IDSetBTN_clicked();
     void on_GWIDSetBTN_clicked();
 
+
 signals:
     void sigSendATcmd(QString);
 

@@ -11,6 +11,7 @@ CONFIG += c++11 x86
 
 
 SOURCES += \
+    aboutform.cpp \
     attitudeindicator.cpp \
     baseform.cpp \
     chartwindow.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     threedform.cpp
 
 HEADERS += \
+    aboutform.h \
     attitudeindicator.h \
     baseform.h\
     chartwindow.h \
@@ -37,6 +39,7 @@ HEADERS += \
     threedform.h
 
 FORMS += \
+    aboutform.ui \
     baseform.ui \
     chartwindow.ui \
     chcomform.ui \

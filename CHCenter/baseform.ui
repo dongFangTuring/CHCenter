@@ -483,8 +483,8 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>784</width>
-               <height>739</height>
+               <width>814</width>
+               <height>702</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -1700,8 +1700,8 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>46</width>
-               <height>28</height>
+               <width>55</width>
+               <height>24</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -1755,7 +1755,7 @@ color: black;
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>34</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWindow">
@@ -1773,7 +1773,15 @@ color: black;
     <addaction name="menuLanguage"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuDescription">
+    <property name="title">
+     <string>Description</string>
+    </property>
+    <addaction name="actionFAQ"/>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuWindow"/>
+   <addaction name="menuDescription"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="sizePolicy">
@@ -1801,6 +1809,16 @@ color: black;
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionFAQ">
+   <property name="text">
+    <string>FAQ</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

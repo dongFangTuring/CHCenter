@@ -318,3 +318,4 @@ void CHSettingForm::on_GWIDSetBTN_clicked()
     emit sigSendATcmd("AT+GWID="+ui->GWIDInput->text());
     new_ch_config.GWID=ui->GWIDInput->text().toInt();
 }
+

@@ -17,7 +17,7 @@ BaseForm::BaseForm(QWidget *parent)
     ui->setupUi(this);
 
     double sf_version=2.1;
-    this->setWindowTitle(tr("CH Center V%1").arg(sf_version));
+    this->setWindowTitle(tr("CH Center"));
 
 
     //hide the bottom StatusBar.
@@ -29,7 +29,7 @@ BaseForm::BaseForm(QWidget *parent)
 
     //initial the HI221GW node choosing widget
     ui->DongleNodeList->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->DongleNodeList->setVisible(0);
+    ui->DongleNodeList->setVisible(false);
 
 
     ch_comform=new CHComForm(this);
@@ -92,6 +92,12 @@ BaseForm::BaseForm(QWidget *parent)
     ui->PageSettingWidget->addWidget(ch_settingform);
     connect(ch_settingform,SIGNAL(sigSendATcmd(QString)), this, SLOT(getsigSendATcmd(QString)));
 
+    //about form
+    m_aboutform = new AboutForm(this);
+    m_aboutform->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint);
+    m_aboutform->setFixedSize(500,500);
+
+
     //Welcome message
     statusbar_msg.baudrate="";
     statusbar_msg.port="";
@@ -103,7 +109,7 @@ BaseForm::BaseForm(QWidget *parent)
     //set page 1 as the default page
     on_SideBarBTN1_clicked();
     update_BTNConnect_state();
-    ui->stackedWidget->setEnabled(0);
+    ui->stackedWidget->setEnabled(false);
 }
 
 BaseForm::~BaseForm()
@@ -151,10 +157,10 @@ void BaseForm::SideBar_toggled(int index)
     }
 
 
-    ui->SideBarBTN1->setEnabled(1);
-    ui->SideBarBTN2->setEnabled(1);
-    ui->SideBarBTN3->setEnabled(1);
-    ui->SideBarBTN4->setEnabled(1);
+    ui->SideBarBTN1->setEnabled(true);
+    ui->SideBarBTN2->setEnabled(true);
+    ui->SideBarBTN3->setEnabled(true);
+    ui->SideBarBTN4->setEnabled(true);
 
 
     if(index==1){
@@ -180,26 +186,26 @@ void BaseForm::SideBar_toggled(int index)
     case 1: {
         ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
-        ui->SideBarBTN1->setEnabled(0);
+        ui->SideBarBTN1->setEnabled(false);
         break;
     }
     case 2: {
         ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
-        ui->SideBarBTN2->setEnabled(0);
+        ui->SideBarBTN2->setEnabled(false);
         break;
     }
     case 3: {
         ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
-        ui->SideBarBTN3->setEnabled(0);
+        ui->SideBarBTN3->setEnabled(false);
         break;
     }
     case 4: {
         getsigSendATcmd("AT+EOUT=0");
         ch_settingform->settingConfig_init();
         ch_serialport->Is_msgMode=1;
-        ui->SideBarBTN4->setEnabled(0);
+        ui->SideBarBTN4->setEnabled(false);
         break;
     }
     default:
@@ -236,17 +242,17 @@ void BaseForm::update_BTNConnect_state()
     if(!ch_serialport->CH_serial->isOpen()){
         ui->BTNConnect->setFixedWidth(200);
         if(ch_comform->isVisible()){
-            ui->BTNConnect->setEnabled(0);
+            ui->BTNConnect->setEnabled(false);
         }
         else{
-            ui->BTNConnect->setEnabled(1);
+            ui->BTNConnect->setEnabled(true);
             ui->BTNDisconnect->hide();
         }
 
     }
     else{
         ui->BTNConnect->setFixedWidth(150);
-        ui->BTNConnect->setEnabled(0);
+        ui->BTNConnect->setEnabled(false);
         ui->BTNDisconnect->show();
     }
 }
@@ -259,7 +265,7 @@ void BaseForm::updateDongleNodeList(bool m_is_dongle)
 {
     if(m_is_dongle==1){
         ui->DongleNodeList->clear();
-        ui->DongleNodeList->setVisible(1);
+        ui->DongleNodeList->setVisible(true);
 
         receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
 
@@ -281,7 +287,7 @@ void BaseForm::updateDongleNodeList(bool m_is_dongle)
             cur_dongle_nodeIndex=-1;
     }
     else
-        ui->DongleNodeList->setVisible(0);
+        ui->DongleNodeList->setVisible(false);
 }
 
 /**
@@ -340,7 +346,7 @@ void BaseForm::geterrorOpenPort()
     statusbar_msg.current_status=tr("Cannot build connection. Please check the selected port again");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
     update_BTNConnect_state();
-    ui->stackedWidget->setEnabled(0);
+    ui->stackedWidget->setEnabled(false);
 }
 void BaseForm::getsigPortOpened()
 {
@@ -355,7 +361,7 @@ void BaseForm::getsigPortOpened()
 
     //send at+eout
     ch_settingform->StreamATcmd();
-    ui->stackedWidget->setEnabled(1);
+    ui->stackedWidget->setEnabled(true);
 
 }
 
@@ -373,7 +379,7 @@ void BaseForm::getsigPortClosed()
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
     update_BTNConnect_state();
-    ui->stackedWidget->setEnabled(0);
+    ui->stackedWidget->setEnabled(false);
 }
 
 /**
@@ -412,6 +418,7 @@ void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
 
         m_imu_data=imu_data;
         m_contentbits = ch_serialport->Content_bits;
+
         m_protocol_tag = dongle_data.tag;
 
         mutex_writing.unlock();
@@ -475,20 +482,19 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
     QString setptl="";
     ui->LabelFrameRate->setText(QString::number(ch_serialport->Frame_rate) + " Hz");
 
-
     if(content_bits & BIT_VALID_ID){
         if(!ui->LabelID->isVisible())
-            ui->LabelID->setVisible(1);
+            ui->LabelID->setVisible(true);
         ui->LabelID->setText("ID = " + QString::number(imu_data.id));
         setptl+="90,";
     }
     else{
         if(ui->LabelID->isVisible())
-            ui->LabelID->setVisible(0);
+            ui->LabelID->setVisible(false);
     }
     if(content_bits & BIT_VALID_ACC){
         if(!ui->LabelGPAcc->isVisible()){
-            ui->LabelGPAcc->setVisible(1);
+            ui->LabelGPAcc->setVisible(true);
         }
         ui->LabelAccX->setText(QString::number(imu_data.acc[0],'f',3));
         ui->LabelAccY->setText(QString::number(imu_data.acc[1],'f',3));
@@ -497,13 +503,13 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
     }
     else{
         if(ui->LabelGPAcc->isVisible()){
-            ui->LabelGPAcc->setVisible(0);
+            ui->LabelGPAcc->setVisible(false);
         }
 
     }
     if(content_bits & BIT_VALID_GYR){
         if(!ui->LabelGPGyro->isVisible())
-            ui->LabelGPGyro->setVisible(1);
+            ui->LabelGPGyro->setVisible(true);
         ui->LabelGyroX->setText(QString::number(imu_data.gyr[0],'f',3));
         ui->LabelGyroY->setText(QString::number(imu_data.gyr[1],'f',3));
         ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2],'f',3));
@@ -511,11 +517,11 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
     }
     else{
         if(ui->LabelGPGyro->isVisible())
-            ui->LabelGPGyro->setVisible(0);
+            ui->LabelGPGyro->setVisible(false);
     }
     if(content_bits & BIT_VALID_MAG){
         if(!ui->LabelGPMag->isVisible())
-            ui->LabelGPMag->setVisible(1);
+            ui->LabelGPMag->setVisible(true);
         ui->LabelMagX->setText(QString::number(imu_data.mag[0],'f',0));
         ui->LabelMagY->setText(QString::number(imu_data.mag[1],'f',0));
         ui->LabelMagZ->setText(QString::number(imu_data.mag[2],'f',0));
@@ -523,11 +529,11 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
     }
     else{
         if(ui->LabelGPMag->isVisible())
-            ui->LabelGPMag->setVisible(0);
+            ui->LabelGPMag->setVisible(false);
     }
     if(content_bits & BIT_VALID_EUL){
         if(!ui->LabelGPEuler->isVisible())
-            ui->LabelGPEuler->setVisible(1);
+            ui->LabelGPEuler->setVisible(true);
         ui->LabelEulerX->setText(QString::number(imu_data.eul[0],'f',2));
         ui->LabelEulerY->setText(QString::number(imu_data.eul[1],'f',2));
         ui->LabelEulerZ->setText(QString::number(imu_data.eul[2],'f',2));
@@ -535,11 +541,11 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
     }
     else{
         if(ui->LabelGPEuler->isVisible())
-            ui->LabelGPEuler->setVisible(0);
+            ui->LabelGPEuler->setVisible(false);
     }
     if(content_bits & BIT_VALID_QUAT){
         if(!ui->LabelGPQuat->isVisible())
-            ui->LabelGPQuat->setVisible(1);
+            ui->LabelGPQuat->setVisible(true);
         ui->LabelQuatW->setText(QString::number(imu_data.quat[0],'f',3));
         ui->LabelQuatX->setText(QString::number(imu_data.quat[1],'f',3));
         ui->LabelQuatY->setText(QString::number(imu_data.quat[2],'f',3));
@@ -548,15 +554,16 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
     }
     else{
         if(ui->LabelGPQuat->isVisible())
-            ui->LabelGPQuat->setVisible(0);
+            ui->LabelGPQuat->setVisible(false);
     }
-    if(content_bits & BIT_VALID_ALL){
+
+    if(content_bits == BIT_VALID_ALL){
         setptl="91";
     }
-    if(protocol_tag==KItemDongleRaw)
+    if(protocol_tag == KItemDongleRaw)
         setptl="63";
 
-    else if (protocol_tag==KItemDongle)
+    else if (protocol_tag == KItemDongle)
         setptl="62";
 
 
@@ -675,6 +682,15 @@ void BaseForm::on_actionEnglish_triggered()
 
 }
 
+void BaseForm::on_actionFAQ_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://hipnuc.com/datahub.html"));
+}
+
+void BaseForm::on_actionAbout_triggered()
+{
+    m_aboutform->show();
+}
 
 ///StatusBar information///
 //////////////////////////////////////////////////////////////////////////////////////
@@ -695,6 +711,9 @@ void BaseForm::getsigSendATcmd(QString ATcmd)
     ch_serialport->writeData(ATcmd);
 }
 
+
+///Chart BTN///
+////////////////////////////////////////////////////////////////////////////////////////
 
 void BaseForm::on_BTNChartAcc_clicked()
 {
@@ -745,3 +764,4 @@ void BaseForm::on_BTNChartQuat_clicked()
     else
         m_chartQuat->setVisible(false);
 }
+

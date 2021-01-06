@@ -2,6 +2,109 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en">
 <context>
+    <name>AboutForm</name>
+    <message>
+        <location filename="aboutform.ui" line="23"/>
+        <source>Form</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="41"/>
+        <source>CHAOHE</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="71"/>
+        <source>Website :</source>
+        <translation>官方网站 :</translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="84"/>
+        <source>http://www.hipnuc.com</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="107"/>
+        <source>Manual &amp; Tutorial :</source>
+        <translation>说明手册与教学 :</translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="114"/>
+        <source>http://www.hipnuc.com/datahub</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="131"/>
+        <source>Version :</source>
+        <translation>软件版本 :</translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="144"/>
+        <source>2.1 (build20210106) </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="169"/>
+        <source>2.1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="174"/>
+        <source>-fix some bugs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="179"/>
+        <source>-zoom and move chart </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="184"/>
+        <source>-add About, FAQ page</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="189"/>
+        <source>2.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="194"/>
+        <source>-add chart</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="199"/>
+        <source>1.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="204"/>
+        <source>-initial release</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="209"/>
+        <source>-logger, setting, 3D, data display</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="214"/>
+        <source>-support all products</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="234"/>
+        <source>Copy right HiPNUC 2021. GNU GPLv3.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.cpp" line="9"/>
+        <source>About</source>
+        <translation>关于</translation>
+    </message>
+</context>
+<context>
     <name>BaseForm</name>
     <message>
         <location filename="baseform.ui" line="32"/>
@@ -63,7 +166,7 @@
     <message>
         <location filename="baseform.ui" line="651"/>
         <source>Raw Data</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="baseform.ui" line="682"/>
@@ -140,7 +243,7 @@
     <message>
         <location filename="baseform.ui" line="1251"/>
         <source>Sensor Fusion</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="baseform.ui" line="1273"/>
@@ -190,97 +293,113 @@
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1788"/>
+        <location filename="baseform.ui" line="1778"/>
+        <source>Description</source>
+        <translation>说明</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="1796"/>
         <source>Traditional Chinese</source>
         <translation>繁體中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1793"/>
+        <location filename="baseform.ui" line="1801"/>
         <source>Simplified Chinese</source>
         <translation>简体中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1798"/>
+        <location filename="baseform.ui" line="1806"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1803"/>
+        <location filename="baseform.ui" line="1811"/>
         <source>Exit</source>
         <translation>离开</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="98"/>
-        <location filename="baseform.cpp" line="371"/>
+        <location filename="baseform.ui" line="1816"/>
+        <source>FAQ</source>
+        <translation>常见问题</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="1821"/>
+        <source>About</source>
+        <translation>关于</translation>
+    </message>
+    <message>
+        <location filename="baseform.cpp" line="104"/>
+        <location filename="baseform.cpp" line="377"/>
         <source>Unconnected</source>
         <translation>未连接设备</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="372"/>
+        <location filename="baseform.cpp" line="378"/>
         <source>Software Version: </source>
         <translation>软件版本: </translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="271"/>
+        <location filename="baseform.cpp" line="277"/>
         <source>Wireless Node ID : %1</source>
         <translation>无线节点 ID : %1</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="20"/>
-        <source>CH Center V%1</source>
-        <translation>CH Center V%1</translation>
+        <source>CH Center</source>
+        <oldsource>CH Center V%1</oldsource>
+        <translation>CH Center</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="99"/>
+        <location filename="baseform.cpp" line="105"/>
         <source>Software Version : %1</source>
         <translation>版本 : %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="318"/>
+        <location filename="baseform.cpp" line="324"/>
         <source>Connecting...</source>
         <translation>连接设备中...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="336"/>
+        <location filename="baseform.cpp" line="342"/>
         <source>Cannot build connection</source>
         <translation>无法连接设备</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="336"/>
+        <location filename="baseform.cpp" line="342"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="340"/>
+        <location filename="baseform.cpp" line="346"/>
         <source>Cannot build connection. Please check the selected port again</source>
         <translation>无法连接设备。请检查所选的串口是否正确。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="353"/>
+        <location filename="baseform.cpp" line="359"/>
         <source>Streaming...</source>
         <translation>数据串流中...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="447"/>
+        <location filename="baseform.cpp" line="454"/>
         <source>Please restart the device to take effect, and connect with new Baudrate.</source>
         <translation>请重启设备以生效，并以新的波特率重新连接。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="569"/>
+        <location filename="baseform.cpp" line="576"/>
         <source>Data Protocol = %1</source>
         <translation>数据协议 = %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="639"/>
-        <location filename="baseform.cpp" line="656"/>
-        <location filename="baseform.cpp" line="674"/>
+        <location filename="baseform.cpp" line="646"/>
+        <location filename="baseform.cpp" line="663"/>
+        <location filename="baseform.cpp" line="681"/>
         <source>Please restart software to activate new language.</source>
         <translation>请重启本程序以套用新语言。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="639"/>
-        <location filename="baseform.cpp" line="656"/>
-        <location filename="baseform.cpp" line="674"/>
+        <location filename="baseform.cpp" line="646"/>
+        <location filename="baseform.cpp" line="663"/>
+        <location filename="baseform.cpp" line="681"/>
         <source>Information</source>
         <translation>提醒</translation>
     </message>
@@ -760,82 +879,82 @@
     <message>
         <location filename="chartwindow.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.ui" line="203"/>
         <source>V=0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.ui" line="284"/>
         <source>Mouse Control:</source>
-        <translation type="unfinished"></translation>
+        <translation>鼠标控制:</translation>
     </message>
     <message>
         <location filename="chartwindow.ui" line="293"/>
         <source>Left-button : Drag chart</source>
-        <translation type="unfinished"></translation>
+        <translation>左键 : 拖曳图表</translation>
     </message>
     <message>
         <location filename="chartwindow.ui" line="300"/>
         <source>Wheel: zoom Y-axis</source>
-        <translation type="unfinished"></translation>
+        <translation>滚轮滚动 : 缩放Y轴</translation>
     </message>
     <message>
         <location filename="chartwindow.ui" line="311"/>
         <source>Ctrl or Right-button + Wheel: zoom X-axis</source>
-        <translation type="unfinished"></translation>
+        <translation>(Ctrl 或右键)+滚轮滚动 : 缩放X轴</translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="31"/>
         <source>Acceleration Chart</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="38"/>
         <source>Acceleration (G)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="43"/>
         <source>Angular Velocity Chart</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="50"/>
         <source>Angular Velocity (°/s)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="55"/>
         <source>Magnetic Field Chart</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="62"/>
         <source>Magnetic Field (μT)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="66"/>
         <source>Eular Angles Chart</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="73"/>
         <source>Euler Angles (°)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="78"/>
         <source>Quaternion Chart</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chartwindow.cpp" line="86"/>
         <source>Quaternion (Norm)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

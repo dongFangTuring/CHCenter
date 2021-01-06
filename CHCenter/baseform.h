@@ -13,6 +13,7 @@
 #include "threedform.h"
 #include "csvlogform.h"
 #include "chartwindow.h"
+#include "aboutform.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -81,19 +82,17 @@ private slots:
     void on_actionTraditional_Chinese_triggered();
     void on_actionSimplified_Chinese_triggered();
     void on_actionEnglish_triggered();
+    void on_actionFAQ_triggered();
+    void on_actionAbout_triggered();
 
     ///StatusBar///
     void showMessageBox(QString msg, QString title);
-
     void on_BTNChartAcc_clicked();
-
     void on_BTNChartGyr_clicked();
-
     void on_BTNChartMag_clicked();
-
     void on_BTNChartEul_clicked();
-
     void on_BTNChartQuat_clicked();
+
 
 private:
     Ui::BaseForm *ui;
@@ -127,6 +126,8 @@ private:
     ChartWindow *m_chartMag;
     ChartWindow *m_chartEul;
     ChartWindow *m_chartQuat;
+
+    AboutForm *m_aboutform;
 
     //information in status bar
     struct StatusbarMsg{

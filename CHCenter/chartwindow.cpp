@@ -86,6 +86,11 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
         m_chart->setTitle(tr("Quaternion (Norm)"));
 
     }
+
+    //the max and min of Y axis
+    valueRange[0]=valueRange[0]*2;
+    valueRange[1]=valueRange[1]*2;
+
     refresh_Line.clear();
     refresh_Line.append(QPoint(sample_counter-1,valueRange[0]));
     refresh_Line.append(QPoint(sample_counter-1,valueRange[1]));
@@ -111,8 +116,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
     connectMarkers();  //將曲線與圖例連線起來，可以勾選進行顯示與隱藏
 
-    valueRange[0]=valueRange[0]*2;
-    valueRange[1]=valueRange[1]*2;
+
     m_chartView = new CusChartView(m_chart);
     m_chartView->valueRange[0]=valueRange[0];
     m_chartView->valueRange[1]=valueRange[1];
