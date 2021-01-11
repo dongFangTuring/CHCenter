@@ -92,7 +92,6 @@ void CSVLogForm::on_BTNStart_clicked()
 
     temp=fullpath;
     QString dir=temp.remove(index1,index2-index1+4);
-    qDebug()<<dir;
 
     bool dir_exists = QFileInfo::exists(dir) && QFileInfo(dir).isDir();
     if(!dir_exists==1){

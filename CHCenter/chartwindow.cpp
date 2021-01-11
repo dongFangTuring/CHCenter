@@ -94,10 +94,8 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     sample_counter=0;
 
     axisX->setLabelFormat("%d");
-    axisX->setRange(0,1000);
     axisX->setTitleText("Sample");
 
-    axisY->setRange(valueRange[0], valueRange[1]);
     axisY->setTickAnchor(0);
     axisY->setTickCount(11);
     axisY->setMinorTickCount(1);
@@ -110,7 +108,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
     connectMarkers();  //將曲線與圖例連線起來，可以勾選進行顯示與隱藏
 
-
+    //sync max and min value to cuschart class
     m_chartView = new CusChartView(m_chart);
     m_chartView->valueRange[0]=valueRange[0];
     m_chartView->valueRange[1]=valueRange[1];
@@ -128,9 +126,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     ui->SliderValue->setPageStep(100);
     ui->SliderValue->setSingleStep(10);
 
-    //default following mode
-    ui->BTNFollowingMode->setChecked(true);
-
+    init();
 
 }
 
@@ -213,7 +209,6 @@ void ChartWindow::updateMovingWindow()
             m_serieslist.at(2)->replace(point_Z);
 
         }
-        m_serieslist.last()->replace(refresh_Line);
         m_chartView->setUpdatesEnabled(true);
 
 
@@ -262,12 +257,21 @@ void ChartWindow::updateMovingWindow()
 
 void ChartWindow::init()
 {
+    //default following mode
+    ui->BTNFollowingMode->setChecked(true);
+
+    //reset sample_counter
     sample_counter=0;
+
+    //reset zoom
+    axisX->setRange(0,1000);
+    axisY->setRange(valueRange[0], valueRange[1]);
+
+    //clear all lines
     point_W.clear();
     point_X.clear();
     point_Y.clear();
     point_Z.clear();
-    refresh_Line.clear();
 }
 
 
@@ -443,13 +447,13 @@ void ChartWindow::on_SliderValue_valueChanged(int value)
 void ChartWindow::on_BTNValueZoomIn_clicked()
 {
     m_chartView->zoom(0,1,0);
-    qDebug()<<"zoomin";
+    //qDebug()<<"zoomin";
 }
 
 void ChartWindow::on_BTNValueZoomOut_clicked()
 {
     m_chartView->zoom(1,1,0);
-    qDebug()<<"zoomout";
+    //qDebug()<<"zoomout";
 }
 void ChartWindow::on_BNTValueReset_clicked()
 {

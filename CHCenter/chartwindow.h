@@ -123,7 +123,6 @@ private:
     QList<QPointF> point_Y;
     QList<QPointF> point_Z;
     QList<QPointF> point_W;
-    QList<QPointF> refresh_Line;
 
 
     uint sample_counter;
