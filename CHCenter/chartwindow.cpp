@@ -92,8 +92,8 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     valueRange[1]=valueRange[1]*2;
 
     refresh_Line.clear();
-    refresh_Line.append(QPoint(sample_counter-1,valueRange[0]));
-    refresh_Line.append(QPoint(sample_counter-1,valueRange[1]));
+//    refresh_Line.append(QPoint(sample_counter-1,valueRange[0]));
+//    refresh_Line.append(QPoint(sample_counter-1,valueRange[1]));
     addSeries(refresh_Line,"Refresh Line");
 
     sample_counter=0;
@@ -149,15 +149,15 @@ void ChartWindow::updateChart(float *array){
 
         if(sample_counter>=max_sample_number){
             sample_counter=0;
-            refresh_Line.clear();
-            refresh_Line.append(QPoint(sample_counter-1,valueRange[0]));
-            refresh_Line.append(QPoint(sample_counter-1,valueRange[1]));
+//            refresh_Line.clear();
+//            refresh_Line.append(QPoint(sample_counter-1,valueRange[0]));
+//            refresh_Line.append(QPoint(sample_counter-1,valueRange[1]));
         }
 
         else{
-            refresh_Line.clear();
-            refresh_Line.append(QPoint(sample_counter+2,valueRange[0]));
-            refresh_Line.append(QPoint(sample_counter+2,valueRange[1]));
+//            refresh_Line.clear();
+//            refresh_Line.append(QPoint(sample_counter+2,valueRange[0]));
+//            refresh_Line.append(QPoint(sample_counter+2,valueRange[1]));
 
             if(m_type=="quat"){
                 if(point_X.count()>=max_sample_number){
@@ -207,6 +207,7 @@ void ChartWindow::updateMovingWindow()
 
         m_chartView->setUpdatesEnabled(false);
 
+        //m_chartView->sample_counter=sample_counter;
         if(m_type=="quat"){
             m_serieslist.at(0)->replace(point_W);
             m_serieslist.at(1)->replace(point_X);
@@ -232,6 +233,7 @@ void ChartWindow::updateMovingWindow()
         qreal distance_x=abs(cur_x_max-cur_x_min);
         qreal distance_y=abs(cur_y_max-cur_y_min);
         QPointF view_center=QPointF((cur_x_max+cur_x_min)/2,(cur_y_max+cur_y_min)/2);
+        axisX->setTitleText(tr("%1 Sample").arg(round(distance_x)));
 
         ui->SliderSample->setRange(round(0+distance_x/2),round(max_sample_number-distance_x/2));
         ui->SliderValue->setRange(round((valueRange[0]+distance_y/2)*100),round((valueRange[1]-distance_y/2)*100));
@@ -241,26 +243,26 @@ void ChartWindow::updateMovingWindow()
 
         if(!m_serieslist.last()->isVisible()){
             m_serieslist.last()->setName("Following Mode");
-            if(sample_counter<=1000){
-                axisX->setRange(0,1000);
+            if(sample_counter<=distance_x){
+                axisX->setRange(0,distance_x);
             }
             else{
-                axisX->setRange(sample_counter-1000,sample_counter);
+                axisX->setRange(sample_counter-distance_x,sample_counter);
             }
             if(movingwindow_timer.interval()!=100)
                 movingwindow_timer.setInterval(100);
+            m_chartView->zoom_mode=2;
         }
         else{
             m_serieslist.last()->setName("Free Mode");
             if(movingwindow_timer.interval()!=30)
                 movingwindow_timer.setInterval(30);
+
+            m_chartView->zoom_mode=1;
         }
 
 
     }
-
-
-
 
 }
 
@@ -296,7 +298,8 @@ void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //ç”¨æ–
     else if(legend_title=="Refresh Line"){
         legend_title="Free Mode";
         series->setColor(Qt::black);
-        series->setPen(QPen(Qt::black, 2));
+        series->setPen(QPen(Qt::black, 1));
+
     }
 
 
@@ -420,13 +423,13 @@ void ChartWindow::on_SliderSample_valueChanged(int value)
 
 void ChartWindow::on_BTNSampleZoomIn_clicked()
 {
-    m_chartView->zoom(0,0);
+    m_chartView->zoom(0,0,0);
 
 }
 
 void ChartWindow::on_BTNSampleZoomOut_clicked()
 {
-    m_chartView->zoom(1,0);
+    m_chartView->zoom(1,0,0);
 }
 
 void ChartWindow::on_SliderValue_valueChanged(int value)
@@ -452,13 +455,13 @@ void ChartWindow::on_SliderValue_valueChanged(int value)
 
 void ChartWindow::on_BTNValueZoomIn_clicked()
 {
-    m_chartView->zoom(0,1);
+    m_chartView->zoom(0,1,0);
     qDebug()<<"zoomin";
 }
 
 void ChartWindow::on_BTNValueZoomOut_clicked()
 {
-    m_chartView->zoom(1,1);
+    m_chartView->zoom(1,1,0);
     qDebug()<<"zoomout";
 }
 void ChartWindow::on_BNTValueReset_clicked()
@@ -472,6 +475,11 @@ void ChartWindow::on_BNTValueReset_clicked()
 }
 
 
+
+///CusChartView class
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
 CusChartView::CusChartView(QChart* chart, QWidget *parent)
     : QChartView(chart, parent)
 {
@@ -480,11 +488,7 @@ CusChartView::CusChartView(QChart* chart, QWidget *parent)
 }
 
 
-///CusChartView class
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-
-void CusChartView::zoom(bool in_out, bool x_y)
+void CusChartView::zoom(bool in_out, bool x_y, int mode)
 {
 
 
@@ -505,21 +509,65 @@ void CusChartView::zoom(bool in_out, bool x_y)
 
     if(x_y==0){ //x
         if(in_out==0){  //zoom in
-            if(!(distance_x<100))
-                axisX->setRange(view_center.x()-distance_x/2/1.2,view_center.x()+distance_x/2/1.2);
+
+            if(distance_x>100){
+                if(mode==0){//zoom at center
+                    qreal new_distance_x=distance_x*0.8;
+                    axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
+                }
+                else if (mode==1){ //zoom at cursur position
+
+
+                    qreal ratio=qreal(cursor_pos.x())/qreal(this->width());
+                    int target_data=round(cur_x_min+distance_x*ratio);
+                    qreal new_distance_x=distance_x*0.8;
+                    int view_centerX=round(target_data-new_distance_x*(ratio-0.5));
+
+                    view_center.setX(view_centerX);
+
+                    axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
+                }
+                else if(mode==2){//zoom at the newest
+                    qreal new_distance_x=distance_x*0.8;
+                    axisX->setRange(cur_x_max-new_distance_x,cur_x_max);
+                }
+            }
+
             else{
                 axisX->setRange(view_center.x()-50,view_center.x()+50);
             }
+
         }
         else if(in_out==1){  //zoom out
-            axisX->setRange(view_center.x()-distance_x/2*1.2,view_center.x()+distance_x/2*1.2);
+            if(mode==0){//zoom at center
+                qreal new_distance_x=distance_x*1.2;
+                axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
+            }
+            else if (mode==1){ //zoom at cursur position
 
-            if(axisX->min()<0){
-                axisX->setRange(0,axisX->max());
+                if(distance_x<max_sample_number){
+                    qreal ratio=qreal(cursor_pos.x())/qreal(this->width());
+                    int target_data=round(cur_x_min+distance_x*ratio);
+                    qreal new_distance_x=distance_x*1.2;
+                    int view_centerX=round(target_data-new_distance_x*(ratio-0.5));
+
+                    view_center.setX(view_centerX);
+
+                    axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
+                }
+
             }
-            if(axisX->max()>max_sample_number){
-                axisX->setRange(axisX->min(),max_sample_number);
+            else if(mode==2){//zoom at the newest
+                qreal new_distance_x=distance_x*1.2;
+                axisX->setRange(cur_x_max-new_distance_x,cur_x_max);
             }
+
+        }
+        if(axisX->min()<0){
+            axisX->setRange(0,axisX->max());
+        }
+        if(axisX->max()>max_sample_number){
+            axisX->setRange(axisX->min(),max_sample_number);
         }
 
     }
@@ -621,21 +669,22 @@ void CusChartView::mouseReleaseEvent(QMouseEvent *event)
 void CusChartView::wheelEvent(QWheelEvent *event)
 {
     QPoint numDegrees = event->angleDelta();
-
+    cursor_pos=event->pos();
+    //qDebug()<<cursor_pos;
 
     if(event->buttons() & Qt::RightButton || key_ctrl_pressed==true){
         if(numDegrees.y()>0)  //while right btn is pressed, zoom X
-            zoom(0,0);
+            zoom(0,0,zoom_mode);      //mode 1=free mode
         else if(numDegrees.y()<0)
-            zoom(1,0);
+            zoom(1,0,zoom_mode);
 
     }
 
-    else{
+    else{ //zoom Y
         if(numDegrees.y()>0)
-            zoom(0,1);
+            zoom(0,1,zoom_mode);
         else if(numDegrees.y()<0)
-            zoom(1,1);
+            zoom(1,1,zoom_mode);
 
     }
     event->accept();

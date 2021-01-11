@@ -42,8 +42,11 @@ public:
     CusChartView(QChart* chart, QWidget *parent = nullptr);
     int valueRange[2];
     float max_sample_number;
+    uint sample_counter;
+    int zoom_mode=0;
 
-    void zoom(bool in_out, bool x_y);
+
+    void zoom(bool in_out, bool x_y, int mode);
 
 protected:
 
@@ -57,6 +60,7 @@ protected:
 private:
     QPoint m_lastMousePos;
     bool key_ctrl_pressed=false;
+    QPoint cursor_pos;
 
 };
 
