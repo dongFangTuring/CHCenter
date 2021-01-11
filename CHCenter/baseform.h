@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QFile>
+#include <QCloseEvent>
+
 #include "packet/imu_data_decode.h"
 #include "packet/packet.h"
 #include "chcomform.h"
@@ -26,7 +28,10 @@ class BaseForm : public QMainWindow
 
 public:
     BaseForm(QWidget *parent = nullptr);
-    ~BaseForm();
+    ~BaseForm() override;
+protected:
+    virtual void closeEvent (QCloseEvent *event) override;
+
 
 signals:
     void sigUpdateBaseFormChart(receive_imusol_packet_t, uchar);

@@ -112,6 +112,38 @@ BaseForm::BaseForm(QWidget *parent)
     ui->stackedWidget->setEnabled(false);
 }
 
+void BaseForm::closeEvent (QCloseEvent *event)
+{
+    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "CH Center",
+                                                                tr("Are you sure to exit?\n"),
+                                                                QMessageBox::Cancel | QMessageBox::Yes);
+    if (resBtn != QMessageBox::Yes) {
+        event->ignore();
+    } else {
+        ch_serialport->closePort();
+        m_ADI->deleteLater();
+        m_Compass->deleteLater();
+
+        //serial port
+        ch_comform->deleteLater();
+        ch_serialport->deleteLater();
+
+
+        ch_settingform->deleteLater();
+        ch_threeDform->deleteLater();
+        ch_csvlogform->deleteLater();
+
+        //charts
+        m_chartAcc->close();
+        m_chartGyr->close();
+        m_chartMag->close();
+        m_chartEul->close();
+        m_chartQuat->close();
+
+        m_aboutform->close();
+        event->accept();
+    }
+}
 BaseForm::~BaseForm()
 {
     delete ui;
