@@ -16,9 +16,9 @@ CSVLogForm::CSVLogForm(QWidget *parent) :
     timer_countdown->setSingleShot(false);
 
 
-    current_dir=QDir::currentPath()+"/log";
+    current_dir=QDir::currentPath()+"/log/data.csv";
 
-    ui->LabelPath->setText(current_dir);
+    ui->LinePath->setText(current_dir);
     ui->SBCountDown->setValue(3);
 
     log_started=0;
@@ -49,18 +49,20 @@ CSVLogForm::~CSVLogForm()
 
 void CSVLogForm::on_BTNPath_clicked()
 {
+    QString dir_path = QFileDialog::getSaveFileName(this, tr("Save File"),
+                               current_dir,
+                               tr("csv file (*.csv)"));
 
-    QString dirtemp = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                        current_dir,
-                                                        QFileDialog::DontResolveSymlinks);
-    if(!dirtemp.isEmpty())
-        current_dir=dirtemp;
+    if(!dir_path.isEmpty())
+        current_dir=dir_path;
 
-    ui->LabelPath->setText(current_dir);
+    ui->LinePath->setText(current_dir);
 }
 
 void CSVLogForm::on_BTNStart_clicked()
 {
+    current_dir=ui->LinePath->text();
+
 
     QDate dt_now = QDate::currentDate();
     QTime tm_now = QTime::currentTime();
@@ -70,11 +72,10 @@ void CSVLogForm::on_BTNStart_clicked()
     if(!QDir("log").exists())
         QDir().mkdir("log");
 
-    //message in text browser
-    QString filename="chlog_"+dt_now.toString("yyyy-MM-dd") + tm_now.toString("_hh-mm-ss")+ui->LineCustom->text()+".csv";
-    QString fullpath=current_dir+"/"+filename;
-    ui->textBrowser->append(tr("->Save path : %1").arg(current_dir));
-    ui->textBrowser->append(tr("->File name : %1").arg(filename));
+    //add timestamp
+    QString timestamp="_"+dt_now.toString("yyyyMMdd") + tm_now.toString("_hhmmss");
+    QString temp=current_dir;
+    QString fullpath=temp.replace(".csv",timestamp+".csv");
 
     //update remaining time label
     int remainMsec=ui->SBLogPeriod->value()*1000;
@@ -86,13 +87,19 @@ void CSVLogForm::on_BTNStart_clicked()
     frame_counter=0;
     ui->LabelFrameCounter->setText("0");
 
-    bool fileExists = QFileInfo::exists(fullpath) && QFileInfo(fullpath).isFile();
-    if(fileExists==1){
+    int index1=fullpath.lastIndexOf("/");
+    int index2=fullpath.lastIndexOf(".csv");
+
+    temp=fullpath;
+    QString dir=temp.remove(index1,index2-index1+4);
+    qDebug()<<dir;
+
+    bool dir_exists = QFileInfo::exists(dir) && QFileInfo(dir).isDir();
+    if(!dir_exists==1){
 
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Error"));
-        msgBox.setText(tr("The file already exists,"
-                          "Please choose another file name to save."));
+        msgBox.setText(tr("The save directory not exists."));
 
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
@@ -110,6 +117,8 @@ void CSVLogForm::on_BTNStart_clicked()
             msgBox.exec();
         }
         else{
+            //message
+            ui->textBrowser->append(tr("->Save path : %1").arg(fullpath));
 
             ch_logfile.setFileName(fullpath);
             ui->BTNStart->setEnabled(0);
@@ -123,9 +132,9 @@ void CSVLogForm::on_BTNStart_clicked()
                 ui->BTNStop->setEnabled(1);
                 startLogging();
             }
-
         }
     }
+
 }
 
 

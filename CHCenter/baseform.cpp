@@ -16,7 +16,10 @@ BaseForm::BaseForm(QWidget *parent)
 
     ui->setupUi(this);
 
-    double sf_version=2.1;
+
+    double sf_version=2.2;
+
+
     this->setWindowTitle(tr("CH Center"));
 
 

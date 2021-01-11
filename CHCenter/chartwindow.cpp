@@ -91,13 +91,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     valueRange[0]=valueRange[0]*2;
     valueRange[1]=valueRange[1]*2;
 
-    refresh_Line.clear();
-//    refresh_Line.append(QPoint(sample_counter-1,valueRange[0]));
-//    refresh_Line.append(QPoint(sample_counter-1,valueRange[1]));
-    addSeries(refresh_Line,"Refresh Line");
-
     sample_counter=0;
-
 
     axisX->setLabelFormat("%d");
     axisX->setRange(0,1000);
@@ -134,6 +128,9 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     ui->SliderValue->setPageStep(100);
     ui->SliderValue->setSingleStep(10);
 
+    //default following mode
+    ui->BTNFollowingMode->setChecked(true);
+
 
 }
 
@@ -149,15 +146,11 @@ void ChartWindow::updateChart(float *array){
 
         if(sample_counter>=max_sample_number){
             sample_counter=0;
-//            refresh_Line.clear();
-//            refresh_Line.append(QPoint(sample_counter-1,valueRange[0]));
-//            refresh_Line.append(QPoint(sample_counter-1,valueRange[1]));
+
         }
 
         else{
-//            refresh_Line.clear();
-//            refresh_Line.append(QPoint(sample_counter+2,valueRange[0]));
-//            refresh_Line.append(QPoint(sample_counter+2,valueRange[1]));
+
 
             if(m_type=="quat"){
                 if(point_X.count()>=max_sample_number){
@@ -241,8 +234,8 @@ void ChartWindow::updateMovingWindow()
         ui->SliderSample->setValue(view_center.x());
         ui->SliderValue->setValue(round(-view_center.y()*100));
 
-        if(!m_serieslist.last()->isVisible()){
-            m_serieslist.last()->setName("Following Mode");
+        if(ui->BTNFollowingMode->isChecked()){
+
             if(sample_counter<=distance_x){
                 axisX->setRange(0,distance_x);
             }
@@ -254,7 +247,7 @@ void ChartWindow::updateMovingWindow()
             m_chartView->zoom_mode=2;
         }
         else{
-            m_serieslist.last()->setName("Free Mode");
+
             if(movingwindow_timer.interval()!=30)
                 movingwindow_timer.setInterval(30);
 
@@ -294,12 +287,6 @@ void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //ç”¨æ–
     }
     else if(legend_title=="W"){
         series->setColor(Qt::gray);
-    }
-    else if(legend_title=="Refresh Line"){
-        legend_title="Free Mode";
-        series->setColor(Qt::black);
-        series->setPen(QPen(Qt::black, 1));
-
     }
 
 
