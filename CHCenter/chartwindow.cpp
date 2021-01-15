@@ -114,7 +114,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     m_chartView->valueRange[1]=valueRange[1];
     m_chartView->max_sample_number=max_sample_number;
 
-    //m_chartView->setRenderHint(QPainter::Antialiasing);
+    m_chartView->setRenderHint(QPainter::Antialiasing);
     //m_chartView->setRubberBand(QChartView::RectangleRubberBand);  //整體縮放
 
     ui->LayoutChart->addWidget(m_chartView);
@@ -132,7 +132,6 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
 ChartWindow::~ChartWindow()
 {
-
 }
 
 void ChartWindow::updateChart(float *array){
@@ -237,8 +236,8 @@ void ChartWindow::updateMovingWindow()
             else{
                 axisX->setRange(sample_counter-distance_x,sample_counter);
             }
-            if(movingwindow_timer.interval()!=30)
-                movingwindow_timer.setInterval(30);
+            if(movingwindow_timer.interval()!=20)
+                movingwindow_timer.setInterval(20);
             m_chartView->zoom_mode=2;
         }
         else{
@@ -281,13 +280,16 @@ void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //用�
     QLineSeries *series = new QLineSeries();
     series->setUseOpenGL(true);
     if(legend_title=="X"){
-        series->setColor(QColor(171,34,29));
+
+        series->setPen(QPen(QColor(171,34,29), 1));
     }
     else if(legend_title=="Y"){
-        series->setColor(QColor(13,139,77));
+
+        series->setPen(QPen(QColor(13,139,77), 1));
     }
     else if(legend_title=="Z"){
-        series->setColor(QColor(65,83,175));
+
+        series->setPen(QPen(QColor(65,83,175), 1));
     }
     else if(legend_title=="W"){
         series->setColor(Qt::gray);
