@@ -237,8 +237,8 @@ void ChartWindow::updateMovingWindow()
             else{
                 axisX->setRange(sample_counter-distance_x,sample_counter);
             }
-            if(movingwindow_timer.interval()!=100)
-                movingwindow_timer.setInterval(100);
+            if(movingwindow_timer.interval()!=30)
+                movingwindow_timer.setInterval(30);
             m_chartView->zoom_mode=2;
         }
         else{
