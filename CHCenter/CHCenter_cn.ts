@@ -120,7 +120,7 @@
     <message>
         <location filename="baseform.ui" line="32"/>
         <source>BaseForm</source>
-        <translation>CH Center 1.0</translation>
+        <translation>CH Center</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="153"/>
@@ -150,7 +150,7 @@
     <message>
         <location filename="baseform.ui" line="453"/>
         <source>Device Setting</source>
-        <translation></translation>
+        <translation>模块设置</translation>
     </message>
     <message>
         <location filename="baseform.ui" line="528"/>
