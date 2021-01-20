@@ -117,7 +117,7 @@ void CHSerialport::on_thread_started()
     }
     else{
         emit sigPortOpened();
-        qDebug() << "serial port thread is:" << QThread::currentThreadId();
+        //qDebug() << "serial port thread is:" << QThread::currentThreadId();
     }
 }
 
@@ -222,6 +222,7 @@ void CHSerialport::handleData()
 
             if(Content_bits!=bitmap){
                 Content_bits=bitmap;
+                sigSendBitmap(Content_bits);
             }
             m_frame_received=frame_count;
 

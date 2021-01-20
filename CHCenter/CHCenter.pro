@@ -22,7 +22,6 @@ SOURCES += \
     main.cpp \
     packet/imu_data_decode.cpp \
     packet/packet.cpp \
-    packet/packet.cpp \
     threedform.cpp
 
 HEADERS += \

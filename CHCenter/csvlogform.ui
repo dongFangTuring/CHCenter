@@ -64,6 +64,9 @@
             <height>50</height>
            </size>
           </property>
+          <property name="dragEnabled">
+           <bool>false</bool>
+          </property>
           <property name="readOnly">
            <bool>true</bool>
           </property>

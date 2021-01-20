@@ -20,7 +20,7 @@
 
 #include <QThread>
 
-
+#include <math.h>
 
 
 QT_CHARTS_BEGIN_NAMESPACE
