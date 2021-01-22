@@ -1,5 +1,6 @@
 QT       += core gui serialport 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation charts
 
+RC_FILE = exe_ico.rc
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CCONFIG -= x86_64
