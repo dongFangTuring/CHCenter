@@ -8,17 +8,14 @@
 #include <QFileDialog>
 #include <QtEndian>
 
-#include "utilities/serial.h"
-#include "kptl/kptl.h"
-#include "kptl/kboot_protocol.h"
-#include "utilities/hex2bin.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("HIPNUC固件升级");
+    this->setWindowTitle(tr("HiPNUC Updater"));
     ui->comboBox_baud->setCurrentIndex(1); /* 115200 */
     ui->groupBox_2->setEnabled(false);
     mserial = new serial();
@@ -33,12 +30,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::scan_port()
 {
-    QStringList list = mserial->refreshSerialPort();
-    ui->comboBox_com->clear();
+    QStringList list;
 
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
+    {
+
+        list.append(info.portName()+":"+info.description());
+    }
+    list.sort();
+
+
+    ui->comboBox_com->clear();
+    QString str;
     foreach(QString str, list)
     {
-        str = str.mid(0,str.indexOf("("));
         ui->comboBox_com->addItem(str);
     }
 }
@@ -46,21 +51,22 @@ void MainWindow::scan_port()
 
 void MainWindow::on_btn_serial_open_clicked()
 {
-    if(ui->btn_serial_open->text() == tr("打开"))
+    if(ui->btn_serial_open->text() == tr("Open"))
     {
         /* open serial port */
+        QString portname=ui->comboBox_com->currentText().split(":").first();
 
-        if(mserial->open(ui->comboBox_com->currentText(), ui->comboBox_baud->currentText().toInt()))
+        if(mserial->open(portname, ui->comboBox_baud->currentText().toInt()))
         {
             ui->comboBox_com->setEnabled(false);
             ui->comboBox_baud->setEnabled(false);
-            ui->btn_serial_open->setText(tr("关闭"));
+            ui->btn_serial_open->setText(tr("Close"));
             ui->groupBox_2->setEnabled(true);
 
-            // 当下位机中有数据发送过来时就会响应这个槽函数
+            // 當下位機中有數據發送過來時就會響應這個槽函數
             //connect(mserial, &serial::sig_rx_rdy, this, &MainWindow::slt_read_serial);
             connect(mserial, &QSerialPort::errorOccurred, this, &MainWindow::slt_serial_error);
-            this->setWindowTitle(QString("HIPNUC固件升级- %1,%2").arg(ui->comboBox_com->currentText()).arg(ui->comboBox_baud->currentText()));
+            this->setWindowTitle(QString("HIPNUC Updater - %1,%2").arg(portname).arg(ui->comboBox_baud->currentText()));
             ui->textEdit->insertPlainText(QString("Open serial port OK\n"));
             kboot = new kboot_protocol(mserial);
         }
@@ -83,11 +89,11 @@ void MainWindow::serial_close_ui_action()
     ui->comboBox_baud->setEnabled(true);
     ui->groupBox_2->setEnabled(false);
     ui->textEdit->insertPlainText(QString("Close serial port OK\n"));
-    ui->btn_serial_open->setText(tr("打开"));
-    this->setWindowTitle("HIPNUC固件升级");
+    ui->btn_serial_open->setText(tr("Open"));
+    this->setWindowTitle(tr("HIPNUC Updater"));
 }
 
-void MainWindow::slt_serial_error(QSerialPort::SerialPortError error) // 读取从自定义串口类获得的数据
+void MainWindow::slt_serial_error(QSerialPort::SerialPortError error) // 讀取從自定義序列埠類獲得的數據
 {
     if(error == QSerialPort::ResourceError)
     {
@@ -101,10 +107,12 @@ void MainWindow::slt_serial_error(QSerialPort::SerialPortError error) // 读取�
 }
 
 
-
 void MainWindow::on_btn_open_file_clicked()
 {
     QString path = QFileDialog::getOpenFileName(this,tr("Open File"), ".",  tr("Text Files(*.hex)"));
+
+    QString filename=path.split("/").last();
+    ui->label_file->setText(filename);
 
     if(!path.isEmpty())
     {
@@ -136,6 +144,10 @@ void MainWindow::on_btn_open_file_clicked()
     }
 }
 
+void MainWindow::on_btn_reflash_com_clicked()
+{
+    scan_port();
+}
 
 void MainWindow::download_ui_reset_action(bool enabled)
 {
@@ -246,9 +258,4 @@ void MainWindow::on_btn_program_clicked()
         return;
     }
 
-}
-
-void MainWindow::on_btn_reflash_com_clicked()
-{
-    scan_port();
 }

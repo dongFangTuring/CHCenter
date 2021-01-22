@@ -3,8 +3,11 @@
 
 #include <QMainWindow>
 #include <QTimer>
+
 #include "utilities/serial.h"
+#include "kptl/kptl.h"
 #include "kptl/kboot_protocol.h"
+#include "utilities/hex2bin.h"
 
 
 QT_BEGIN_NAMESPACE

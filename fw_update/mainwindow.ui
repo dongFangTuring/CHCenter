@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>574</width>
-    <height>209</height>
+    <width>600</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>574</width>
-    <height>209</height>
+    <width>600</width>
+    <height>250</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>574</width>
-    <height>209</height>
+    <width>600</width>
+    <height>400</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -28,66 +28,101 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="title">
-         <string>串口选择</string>
-        </property>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Select Port</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QPushButton" name="btn_reflash_com">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
            <property name="text">
-            <string>刷新串口</string>
+            <string>Refresh</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="comboBox_baud">
-           <property name="currentText">
-            <string>9600</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>9600</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>115200</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>460800</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>921600</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="comboBox_com"/>
          </item>
          <item>
           <widget class="QPushButton" name="btn_serial_open">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
            <property name="text">
-            <string>打开</string>
+            <string>Open</string>
            </property>
           </widget>
          </item>
         </layout>
-       </widget>
-      </item>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_com">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>28</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_baud">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>28</height>
+          </size>
+         </property>
+         <property name="currentText">
+          <string>9600</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>9600</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>115200</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>460800</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>921600</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QGroupBox" name="groupBox_2">
         <property name="maximumSize">
@@ -97,35 +132,41 @@
          </size>
         </property>
         <property name="title">
-         <string>编程</string>
+         <string>Firmware Upload</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
           <widget class="QPushButton" name="btn_open_file">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
            <property name="text">
-            <string>打开</string>
+            <string>Open File</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_file">
+           <property name="text">
+            <string>File:</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="btn_program">
-           <property name="text">
-            <string>编程</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
+           <property name="minimumSize">
             <size>
-             <width>20</width>
-             <height>599</height>
+             <width>0</width>
+             <height>30</height>
             </size>
            </property>
-          </spacer>
+           <property name="text">
+            <string>Upload</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
