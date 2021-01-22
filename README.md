@@ -3,6 +3,13 @@ Next generation of host software to replace Uranus
 
 
 
+Development Environment
+
+* QT5.15
+* Default toolchain: MSVC2019 32bit
+
+
+
 QTranslation:
 
 1. In program, all the strings to be translated need to follow syntax:
@@ -35,3 +42,6 @@ QTranslation:
    t.load(":/CHCenter_en_US.ts");
    a.installTranslator(&t);
    ```
+
+
+
