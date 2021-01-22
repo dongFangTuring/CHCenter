@@ -141,7 +141,7 @@
         </size>
        </property>
        <property name="text">
-        <string>2.2 (build20210111) </string>
+        <string>1.0.0 (build20210122) </string>
        </property>
       </widget>
      </item>
@@ -166,7 +166,7 @@
      </property>
      <item>
       <property name="text">
-       <string>2.2</string>
+       <string>1.0.0</string>
       </property>
      </item>
      <item>
@@ -176,7 +176,7 @@
      </item>
      <item>
       <property name="text">
-       <string>2.1</string>
+       <string>0.9.0</string>
       </property>
      </item>
      <item>
@@ -196,7 +196,7 @@
      </item>
      <item>
       <property name="text">
-       <string>2.0</string>
+       <string>0.2.0</string>
       </property>
      </item>
      <item>
@@ -206,7 +206,7 @@
      </item>
      <item>
       <property name="text">
-       <string>1.0</string>
+       <string>0.1.0</string>
       </property>
      </item>
      <item>
