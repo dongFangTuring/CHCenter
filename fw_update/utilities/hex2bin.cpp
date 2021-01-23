@@ -8,7 +8,7 @@ uint32_t hex2bin::absoluteAddrLocal = 0x00;//本地记录绝对地址
 uint32_t hex2bin::_start_addr = 0xFFFFFFFF;
 
 
-bool hex2bin::read_hex_line(line_data_t *out,const QByteArray &ba)//false: 校验错误 true：校验成功
+bool hex2bin::read_hex_line(line_data_t *out, const QByteArray &ba)//false: 校验错误 true：校验成功
 {
     unsigned char i,checkoutCal=0;
 

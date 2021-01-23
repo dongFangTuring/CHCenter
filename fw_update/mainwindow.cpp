@@ -8,8 +8,6 @@
 #include <QFileDialog>
 #include <QtEndian>
 
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -128,13 +126,13 @@ void MainWindow::on_btn_open_file_clicked()
                 ui->textEdit->insertPlainText(QString("PATH:%1\n").arg(path));
                 ui->textEdit->insertPlainText(QString("SIZE:%1\n").arg(ba_image.size()));
 
-                /* 打印PC 和 SP */
+                /* print SP and PC */
                 int sp = qFromLittleEndian<int>(ba_image.mid(0, 4));
                 ui->textEdit->insertPlainText(QString("SP:0x%1\n").arg(sp, 8, 16, QLatin1Char('0')).toUpper());
                 int pc = qFromLittleEndian<int>(ba_image.mid(4, 8));
                 ui->textEdit->insertPlainText(QString("PC:0x%1\n").arg(pc, 8, 16, QLatin1Char('0')).toUpper());
 
-                /* 起始地址 */
+                /* image start addr */
                 this->start_addr = hex2bin::start_addr();
                 ui->textEdit->insertPlainText(QString("ADDR:0x%1\n").arg(this->start_addr, 8, 16, QLatin1Char('0')).toUpper());
 
@@ -225,7 +223,6 @@ void MainWindow::on_btn_program_clicked()
 
         int image_size = ba_image.size();
         int i = 0;
-        int retry = 3;
 
         ui->textEdit->insertPlainText(QString("Programming...\n"));
         if(!kboot->flash_write_memory(hex2bin::start_addr(), ba_image.size()))
@@ -241,7 +238,7 @@ void MainWindow::on_btn_program_clicked()
 
             QByteArray slice = ba_image.mid(i, pkt_len);
 
-            retry = 3;
+            int retry = 3;
             while(retry)
             {
                 if(kboot->send_data_packet(slice, (slice.size() == this->max_packet_size)?(false):(true)))
@@ -256,7 +253,7 @@ void MainWindow::on_btn_program_clicked()
                 }
             }
 
-            /* retry many times, no way to continue */
+            /* retry many times, return failed */
             if(retry == 0)
             {
                 download_ui_reset_action(true);

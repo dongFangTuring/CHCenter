@@ -19,7 +19,6 @@ private:
 
     static bool read_hex_line(line_data_t* out,const QByteArray & ba);
     static char hex_to_bin(line_data_t* ba, QByteArray &out);
-
     static uint32_t ExStageAddr;
     static uint32_t ExLineAddr;
     static uint32_t absoluteAddrLocal;

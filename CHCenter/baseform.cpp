@@ -117,12 +117,12 @@ BaseForm::BaseForm(QWidget *parent)
 
 void BaseForm::closeEvent (QCloseEvent *event)
 {
-    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "CH Center",
-                                                                tr("Are you sure to exit?\n"),
-                                                                QMessageBox::Cancel | QMessageBox::Yes);
-    if (resBtn != QMessageBox::Yes) {
-        event->ignore();
-    } else {
+//    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "CH Center",
+//                                                                tr("Are you sure to exit?\n"),
+//                                                                QMessageBox::Cancel | QMessageBox::Yes);
+//    if (resBtn != QMessageBox::Yes) {
+//        event->ignore();
+//    } else {
         ch_serialport->closePort();
         m_ADI->deleteLater();
         m_Compass->deleteLater();
@@ -145,7 +145,7 @@ void BaseForm::closeEvent (QCloseEvent *event)
 
         m_aboutform->close();
         event->accept();
-    }
+//    }
 }
 BaseForm::~BaseForm()
 {
