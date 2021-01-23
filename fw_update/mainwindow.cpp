@@ -225,6 +225,7 @@ void MainWindow::on_btn_program_clicked()
 
         int image_size = ba_image.size();
         int i = 0;
+        int retry = 3;
 
         ui->textEdit->insertPlainText(QString("Programming...\n"));
         if(!kboot->flash_write_memory(hex2bin::start_addr(), ba_image.size()))
@@ -236,14 +237,33 @@ void MainWindow::on_btn_program_clicked()
 
         while(i < image_size)
         {
+            int pkt_len = (image_size - i)>this->max_packet_size?(this->max_packet_size):(image_size - 1);
 
-            QByteArray slice = ba_image.mid(i, (image_size - i)>this->max_packet_size?(this->max_packet_size):(image_size-1));
+            QByteArray slice = ba_image.mid(i, pkt_len);
 
-            if(!kboot->send_data_packet(slice, (slice.size() == this->max_packet_size)?(false):(true)))
+            retry = 3;
+            while(retry)
             {
-                ui->textEdit->insertPlainText(QString("Send packet ERR\n"));
+                if(kboot->send_data_packet(slice, (slice.size() == this->max_packet_size)?(false):(true)))
+                {
+                    i += slice.size();
+                    break;
+                }
+                else
+                {
+                    ui->textEdit->insertPlainText(QString("Retry...\n"));
+                    retry--;
+                }
             }
-            i += slice.size();
+
+            /* retry many times, no way to continue */
+            if(retry == 0)
+            {
+                download_ui_reset_action(true);
+                ui->textEdit->insertPlainText(QString("Send packet ERR\n"));
+                return;
+            }
+
             ui->progressBar->setValue(i*100 / image_size);
         }
 
