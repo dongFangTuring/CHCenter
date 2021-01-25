@@ -53,7 +53,7 @@ signals:
     void sigPortOpened();
     void sigPortClosed();
     void sigCloseThreadAndPort();
-    void sigUpdateDongleNodeList(bool);
+    void sigUpdateDongleNodeList(bool, receive_gwsol_packet_t);
 
     //write to serial, a cross thread command
     void sigWriteData(QString);   

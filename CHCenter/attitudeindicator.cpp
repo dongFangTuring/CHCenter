@@ -53,7 +53,7 @@ void QADI::paintEvent(QPaintEvent *event)
     blackPen.setWidth(2);
     pitchZero.setWidth(3);
 
-    //painter.setRenderHints(QPainter::Antialiasing);
+    painter.setRenderHints(QPainter::Antialiasing);
 
     painter.translate(width() / 2, height() / 2);
 
@@ -341,27 +341,28 @@ void QCompass::paintEvent(QPaintEvent *event)
                 painter.setPen(whitePen);
 
                 painter.setFont(font_yaw);
-            } else if ( i == 9 ) {
+            } else if ( i == 3 ) {
                 s = "W";
                 painter.setPen(whitePen);
 
                 painter.setFont(font_yaw);
-            } else if ( i == 18 ) {
+            } else if ( i == 6 ) {
                 s = "S";
                 painter.setPen(whitePen);
 
                 painter.setFont(font_yaw);
-            } else if ( i == 27 ) {
+            } else if ( i == 9 ) {
                 s = "E";
                 painter.setPen(whitePen);
 
                 painter.setFont(font_yaw);
-            } else {
+            }
+            /* else {
                 s = QString("%1").arg(i*rotAng);
                 painter.setPen(whitePen);
 
                 painter.setFont(font_yaw);
-            }
+            }*/
 
             fx1 = 0;
             fy1 = -m_size/2 + m_offset;

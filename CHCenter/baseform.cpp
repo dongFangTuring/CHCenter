@@ -17,7 +17,7 @@ BaseForm::BaseForm(QWidget *parent)
     ui->setupUi(this);
 
 
-    QString sf_version="1.0.0";//major.minor.bugix
+    QString sf_version="1.0.1";//major.minor.bugix
 
 
     this->setWindowTitle(tr("CH Center"));
@@ -49,7 +49,7 @@ BaseForm::BaseForm(QWidget *parent)
     connect(ch_serialport, SIGNAL(errorOpenPort()), this, SLOT(geterrorOpenPort()));
     connect(ch_serialport, SIGNAL(sigPortOpened()), this, SLOT(getsigPortOpened()));
     connect(ch_serialport, SIGNAL(sigPortClosed()), this, SLOT(getsigPortClosed()));
-    connect(ch_serialport, SIGNAL(sigUpdateDongleNodeList(bool)), this, SLOT(updateDongleNodeList(bool)));
+    connect(ch_serialport, SIGNAL(sigUpdateDongleNodeList(bool, receive_gwsol_packet_t)), this, SLOT(updateDongleNodeList(bool, receive_gwsol_packet_t)));
     connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
             this, SLOT(getIMUData(receive_imusol_packet_t)), Qt::QueuedConnection);
     connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
@@ -117,35 +117,35 @@ BaseForm::BaseForm(QWidget *parent)
 
 void BaseForm::closeEvent (QCloseEvent *event)
 {
-//    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "CH Center",
-//                                                                tr("Are you sure to exit?\n"),
-//                                                                QMessageBox::Cancel | QMessageBox::Yes);
-//    if (resBtn != QMessageBox::Yes) {
-//        event->ignore();
-//    } else {
-        ch_serialport->closePort();
-        m_ADI->deleteLater();
-        m_Compass->deleteLater();
+    //    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "CH Center",
+    //                                                                tr("Are you sure to exit?\n"),
+    //                                                                QMessageBox::Cancel | QMessageBox::Yes);
+    //    if (resBtn != QMessageBox::Yes) {
+    //        event->ignore();
+    //    } else {
+    ch_serialport->closePort();
+    m_ADI->deleteLater();
+    m_Compass->deleteLater();
 
-        //serial port
-        ch_comform->deleteLater();
-        ch_serialport->deleteLater();
+    //serial port
+    ch_comform->deleteLater();
+    ch_serialport->deleteLater();
 
 
-        ch_settingform->deleteLater();
-        ch_threeDform->deleteLater();
-        ch_csvlogform->deleteLater();
+    ch_settingform->deleteLater();
+    ch_threeDform->deleteLater();
+    ch_csvlogform->deleteLater();
 
-        //charts
-        m_chartAcc->close();
-        m_chartGyr->close();
-        m_chartMag->close();
-        m_chartEul->close();
-        m_chartQuat->close();
+    //charts
+    m_chartAcc->close();
+    m_chartGyr->close();
+    m_chartMag->close();
+    m_chartEul->close();
+    m_chartQuat->close();
 
-        m_aboutform->close();
-        event->accept();
-//    }
+    m_aboutform->close();
+    event->accept();
+    //    }
 }
 BaseForm::~BaseForm()
 {
@@ -262,7 +262,9 @@ void BaseForm::on_BTNConnect_clicked()
     }
 
     update_BTNConnect_state();
-    updateDongleNodeList(0);
+
+    receive_gwsol_packet_t empty;
+    updateDongleNodeList(true,empty);
 }
 
 void BaseForm::on_BTNDisconnect_clicked()
@@ -296,30 +298,36 @@ void BaseForm::update_BTNConnect_state()
  * @brief BaseForm::updateDongleNodeList
  * if number of nodes changes send sigUpdateDongleNodeList():call updateDongleNodeList()
  */
-void BaseForm::updateDongleNodeList(bool m_is_dongle)
+void BaseForm::updateDongleNodeList(bool m_is_dongle, receive_gwsol_packet_t dongle_data)
 {
     if(m_is_dongle==1){
         ui->DongleNodeList->clear();
         ui->DongleNodeList->setVisible(true);
 
-        receive_gwsol_packet_t imusData=*ch_serialport->IMUs_data;
 
-        bool idexist=false;
-        for(int i = 0; i < imusData.n; i++)
-        {
-            int t_id=imusData.receive_imusol[i].id;
-
-            ui->DongleNodeList->addItem(tr("Wireless Node ID : %1").arg(t_id));
-
-            if(t_id==cur_dongle_nodeID){
-                ui->DongleNodeList->setCurrentRow(i);
-                cur_dongle_nodeIndex=i;
-                idexist=true;
-            }
+        if(dongle_data.n==0){
+            ui->DongleNodeList->addItem(tr("No node is online."));
 
         }
-        if(idexist==false)
-            cur_dongle_nodeIndex=-1;
+        else{
+            bool idexist=false;
+            for(int i = 0; i < dongle_data.n; i++)
+            {
+                int t_id=dongle_data.receive_imusol[i].id;
+
+                ui->DongleNodeList->addItem(tr("Wireless Node ID : %1").arg(t_id));
+
+                if(t_id==cur_dongle_nodeID){
+                    ui->DongleNodeList->setCurrentRow(i);
+                    cur_dongle_nodeIndex=i;
+                    idexist=true;
+                }
+
+            }
+            if(idexist==false)
+                cur_dongle_nodeIndex=0;
+        }
+
     }
     else
         ui->DongleNodeList->setVisible(false);
@@ -334,7 +342,8 @@ void BaseForm::on_DongleNodeList_itemClicked(QListWidgetItem *item)
     QString id = ui->DongleNodeList->currentItem()->text().split(" : ").last();
 
     cur_dongle_nodeID=id.toInt();
-    updateDongleNodeList(1);
+
+    //updateDongleNodeList(1);
 }
 
 ///signal from ch_comform ui///
@@ -439,27 +448,29 @@ void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
 {    
 
+    //Connected number of nodes > 0
     if(dongle_data.n>0){
 
         receive_imusol_packet_t imu_data;
-        if(cur_dongle_nodeIndex<0){
-            imu_data=dongle_data.receive_imusol[0];
-        }
-        else{
-            imu_data=dongle_data.receive_imusol[cur_dongle_nodeIndex];
-        }
+
+        imu_data=dongle_data.receive_imusol[cur_dongle_nodeIndex];
+
 
         mutex_writing.lock();
 
         m_imu_data=imu_data;
         m_contentbits = ch_serialport->Content_bits;
-
         m_protocol_tag = dongle_data.tag;
 
         mutex_writing.unlock();
 
         emit sigUpdateBaseFormChart(imu_data, ch_serialport->Content_bits);
         emit sigSendIMUtoThreeD(imu_data);
+    }
+    //No node is connected.
+    else{
+        m_contentbits=0;
+        m_protocol_tag=dongle_data.tag;
     }
 }
 

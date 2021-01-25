@@ -197,13 +197,13 @@ void CHSerialport::handleData()
                 //if switch from single IMU module
                 if(m_is_gwsol==0){
                     m_is_gwsol=1;
-                    emit sigUpdateDongleNodeList(1);
+                    emit sigUpdateDongleNodeList(true,receive_gwsol);
                 }
 
                 //if the new numbers of nodes isn't equal to the list
                 if(!(m_number_of_node==receive_gwsol.n)){
                     m_number_of_node=receive_gwsol.n;
-                    emit sigUpdateDongleNodeList(1);
+                    emit sigUpdateDongleNodeList(true,receive_gwsol);
                 }
 
                 emit sigSendDongle(receive_gwsol);
@@ -212,7 +212,7 @@ void CHSerialport::handleData()
             else{
                 if(m_is_gwsol==1){
                     m_is_gwsol=0;
-                    emit sigUpdateDongleNodeList(0);
+                    emit sigUpdateDongleNodeList(false,receive_gwsol);
                 }
 
                 emit sigSendIMU(receive_imusol);

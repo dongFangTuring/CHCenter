@@ -52,7 +52,7 @@ private slots:
     void update_BTNConnect_state();
 
     //this will be show if device is HI221GW
-    void updateDongleNodeList(bool);
+    void updateDongleNodeList(bool, receive_gwsol_packet_t);
     void on_DongleNodeList_itemClicked(QListWidgetItem *item);
 
     ///signal from CHComForm ui///
