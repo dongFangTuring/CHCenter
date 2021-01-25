@@ -264,13 +264,15 @@ void BaseForm::on_BTNConnect_clicked()
     update_BTNConnect_state();
 
     receive_gwsol_packet_t empty;
-    updateDongleNodeList(true,empty);
+    updateDongleNodeList(false,empty);
 }
 
 void BaseForm::on_BTNDisconnect_clicked()
 {
     if(ch_serialport->CH_serial->isOpen()){
         ch_serialport->closePort();
+        receive_gwsol_packet_t empty;
+        updateDongleNodeList(false,empty);
     }
 }
 

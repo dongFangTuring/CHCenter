@@ -40,72 +40,77 @@
     </message>
     <message>
         <location filename="aboutform.ui" line="144"/>
-        <source>2.2 (build20210111) </source>
-        <oldsource>2.1 (build20210106) </oldsource>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="aboutform.ui" line="169"/>
-        <source>2.2</source>
+        <source>1.0.1</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="174"/>
-        <source>-chart : you can track where you want to zoom</source>
+        <source>-fix:compass, empty HI221 Dongle</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="179"/>
-        <source>2.1</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="184"/>
-        <source>-fix some bugs</source>
+        <source>1.0.0</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="189"/>
-        <source>-zoom and move chart </source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="194"/>
-        <source>-add About, FAQ page</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="199"/>
-        <source>2.0</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="204"/>
-        <source>-add chart</source>
+        <source>0.9.0</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="209"/>
-        <source>1.0</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="214"/>
-        <source>-initial release</source>
+        <source>0.2.0</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="219"/>
-        <source>-logger, setting, 3D, data display</source>
+        <source>0.1.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="184"/>
+        <source>-chart : you can track where you want to zoom</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="194"/>
+        <source>-fix some bugs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="199"/>
+        <source>-zoom and move chart </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="204"/>
+        <source>-add About, FAQ page</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="214"/>
+        <source>-add chart</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="224"/>
+        <source>-initial release</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="229"/>
+        <source>-logger, setting, 3D, data display</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="234"/>
         <source>-support all products</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="244"/>
+        <location filename="aboutform.ui" line="254"/>
         <source>Copy right HiPNUC 2021. GNU GPLv3.</source>
         <translation></translation>
     </message>
@@ -339,17 +344,22 @@
     </message>
     <message>
         <location filename="baseform.cpp" line="107"/>
-        <location filename="baseform.cpp" line="412"/>
+        <location filename="baseform.cpp" line="421"/>
         <source>Unconnected</source>
         <translation>未連接設備</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="413"/>
+        <location filename="baseform.cpp" line="309"/>
+        <source>No node is online.</source>
+        <translation>無在線節點</translation>
+    </message>
+    <message>
+        <location filename="baseform.cpp" line="422"/>
         <source>Software Version: </source>
         <translation>軟體版本: </translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="312"/>
+        <location filename="baseform.cpp" line="318"/>
         <source>Wireless Node ID : %1</source>
         <translation>無線節點 ID : %1</translation>
     </message>
@@ -365,57 +375,56 @@
         <translation>版本 : %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="121"/>
         <source>Are you sure to exit?
 </source>
-        <translation>確認離開?</translation>
+        <translation type="vanished">確認離開?</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="359"/>
+        <location filename="baseform.cpp" line="368"/>
         <source>Connecting...</source>
         <translation>連接設備中...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="377"/>
+        <location filename="baseform.cpp" line="386"/>
         <source>Cannot build connection</source>
         <translation>無法連接設備</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="377"/>
+        <location filename="baseform.cpp" line="386"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="381"/>
+        <location filename="baseform.cpp" line="390"/>
         <source>Cannot build connection. Please check the selected port again</source>
         <translation>無法連接設備。請檢查所選的端口是否正確。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="394"/>
+        <location filename="baseform.cpp" line="403"/>
         <source>Streaming...</source>
         <translation>數據串流中...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="489"/>
+        <location filename="baseform.cpp" line="500"/>
         <source>Please restart the device to take effect, and connect with new Baudrate.</source>
         <translation>請重啟模組以生效，並以新的波特率重新連線。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="611"/>
+        <location filename="baseform.cpp" line="622"/>
         <source>Data Protocol = %1</source>
         <translation>數據協議 = %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="681"/>
-        <location filename="baseform.cpp" line="698"/>
-        <location filename="baseform.cpp" line="716"/>
+        <location filename="baseform.cpp" line="692"/>
+        <location filename="baseform.cpp" line="709"/>
+        <location filename="baseform.cpp" line="727"/>
         <source>Please restart software to activate new language.</source>
         <translation>請重啟本程式以套用新語言。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="681"/>
-        <location filename="baseform.cpp" line="698"/>
-        <location filename="baseform.cpp" line="716"/>
+        <location filename="baseform.cpp" line="692"/>
+        <location filename="baseform.cpp" line="709"/>
+        <location filename="baseform.cpp" line="727"/>
         <source>Information</source>
         <translation>提醒</translation>
     </message>
@@ -705,58 +714,58 @@
         <translation type="vanished">自訂後綴名 : </translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="82"/>
+        <location filename="csvlogform.ui" line="91"/>
         <source>Control</source>
         <translation>控制面板</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="113"/>
-        <location filename="csvlogform.ui" line="151"/>
+        <location filename="csvlogform.ui" line="122"/>
+        <location filename="csvlogform.ui" line="160"/>
         <source>s</source>
         <translation>秒</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="189"/>
+        <location filename="csvlogform.ui" line="198"/>
         <source>Log for</source>
         <translation>紀錄時長 :</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="224"/>
+        <location filename="csvlogform.ui" line="233"/>
         <source>Start after</source>
         <translation>倒數開始 :</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="239"/>
+        <location filename="csvlogform.ui" line="248"/>
         <source>Start</source>
         <translation>開始</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="255"/>
+        <location filename="csvlogform.ui" line="264"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="282"/>
+        <location filename="csvlogform.ui" line="291"/>
         <source>Logging Status</source>
         <translation>即時紀錄狀態</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="321"/>
+        <location filename="csvlogform.ui" line="330"/>
         <source>Time Remains :</source>
         <translation>剩餘時間 :</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="349"/>
+        <location filename="csvlogform.ui" line="358"/>
         <source>00:00:00.000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="407"/>
+        <location filename="csvlogform.ui" line="416"/>
         <source>Logged Frames :</source>
         <translation>已記錄幀數 :</translation>
     </message>
     <message>
-        <location filename="csvlogform.ui" line="435"/>
+        <location filename="csvlogform.ui" line="444"/>
         <source>0</source>
         <translation></translation>
     </message>
@@ -780,7 +789,7 @@
         <translation type="vanished">選擇資料夾</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="121"/>
+        <location filename="csvlogform.cpp" line="120"/>
         <source>-&gt;Save path : %1</source>
         <translation>-&gt;儲存路徑 : %1</translation>
     </message>
@@ -789,7 +798,7 @@
         <translation type="vanished">-&gt;文件名 : %1</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="101"/>
+        <location filename="csvlogform.cpp" line="100"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
@@ -808,80 +817,80 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="102"/>
+        <location filename="csvlogform.cpp" line="101"/>
         <source>The save directory not exists.</source>
         <translation>儲存資料夾不存在!</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="105"/>
-        <location filename="csvlogform.cpp" line="116"/>
-        <location filename="csvlogform.cpp" line="240"/>
+        <location filename="csvlogform.cpp" line="104"/>
+        <location filename="csvlogform.cpp" line="115"/>
+        <location filename="csvlogform.cpp" line="239"/>
         <source>OK</source>
         <translation>確認</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="113"/>
+        <location filename="csvlogform.cpp" line="112"/>
         <source>Wait...</source>
         <translation>稍等...</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="114"/>
+        <location filename="csvlogform.cpp" line="113"/>
         <source>Already logging!</source>
         <oldsource>already logging!</oldsource>
         <translation>已在記錄中！</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="167"/>
-        <location filename="csvlogform.cpp" line="236"/>
+        <location filename="csvlogform.cpp" line="166"/>
+        <location filename="csvlogform.cpp" line="235"/>
         <source>Log error!</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="168"/>
-        <location filename="csvlogform.cpp" line="237"/>
+        <location filename="csvlogform.cpp" line="167"/>
+        <location filename="csvlogform.cpp" line="236"/>
         <source>The current file can&apos;t be writed. Please close other windows that may using the file.</source>
         <translation>目前文件無法寫入。請關閉其他可能正在使用該文件的視窗。</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="171"/>
+        <location filename="csvlogform.cpp" line="170"/>
         <source>Ok</source>
         <translation>確認</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="177"/>
+        <location filename="csvlogform.cpp" line="176"/>
         <source>Time,Frame,AccX,AccY,AccZ,GyrX,GyrY,GyrZ,MagX,MagY,MagZ,Roll,Pitch,Yaw,Qw,Qx,Qy,Qz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="193"/>
-        <location filename="csvlogform.cpp" line="276"/>
+        <location filename="csvlogform.cpp" line="192"/>
+        <location filename="csvlogform.cpp" line="275"/>
         <source>%1,%2,</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="252"/>
+        <location filename="csvlogform.cpp" line="251"/>
         <source>AccX(id%1),AccY(id%1),AccZ(id%1),GyrX(id%1),GyrY(id%1),GyrZ(id%1),MagX(id%1),MagY(id%1),MagZ(id%1),Roll(id%1),Pitch(id%1),Yaw(id%1),Qw(id%1),Qx(id%1),Qy(id%1),Qz(id%1),</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="345"/>
+        <location filename="csvlogform.cpp" line="344"/>
         <source>%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14,%15,%16,</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="432"/>
+        <location filename="csvlogform.cpp" line="431"/>
         <source>-&gt;Start logging ......</source>
         <translation>-&gt;開始記錄 ......</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="445"/>
+        <location filename="csvlogform.cpp" line="444"/>
         <source>-&gt;File has been successfully saved at : %1
 </source>
         <translation>-&gt;文件已成功儲存在 : %1
 </translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="449"/>
+        <location filename="csvlogform.cpp" line="448"/>
         <source>-&gt;No file is saved! Please check connection, Baud, and frame rate setting.</source>
         <translation>-&gt;沒有文件被保存，請檢查連接是否正確、波特率和幀率設置。</translation>
     </message>
@@ -890,7 +899,7 @@
         <translation type="vanished">-&gt;檔案並未儲存!</translation>
     </message>
     <message>
-        <location filename="csvlogform.cpp" line="478"/>
+        <location filename="csvlogform.cpp" line="477"/>
         <source>-&gt;Will be started at %1s ...</source>
         <translation>-&gt;將在 %1 秒後開始...</translation>
     </message>
@@ -997,7 +1006,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="chartwindow.cpp" line="229"/>
+        <location filename="chartwindow.cpp" line="223"/>
         <source>%1 Sample</source>
         <translation>%1 Samples</translation>
     </message>
