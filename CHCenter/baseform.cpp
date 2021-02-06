@@ -344,8 +344,8 @@ void BaseForm::on_DongleNodeList_itemClicked(QListWidgetItem *item)
     QString id = ui->DongleNodeList->currentItem()->text().split(" : ").last();
 
     cur_dongle_nodeID=id.toInt();
+    cur_dongle_nodeIndex=ui->DongleNodeList->currentRow();
 
-    //updateDongleNodeList(1);
 }
 
 ///signal from ch_comform ui///
@@ -504,7 +504,11 @@ void BaseForm::getIMUmsg(QString str)
     }
 }
 
-
+void BaseForm::getsigSendATcmd(QString ATcmd)
+{
+    ATcmd+="\r\n";
+    ch_serialport->writeData(ATcmd);
+}
 ///stackwidget page1 content:data, chart and attitude indicator///
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
@@ -753,11 +757,6 @@ void BaseForm::showMessageBox(QString msg, QString title)
 }
 
 
-void BaseForm::getsigSendATcmd(QString ATcmd)
-{
-    ATcmd+="\r\n";
-    ch_serialport->writeData(ATcmd);
-}
 
 
 ///Chart BTN///
