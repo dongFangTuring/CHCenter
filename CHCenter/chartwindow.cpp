@@ -65,9 +65,9 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
         this->setWindowTitle(tr("Eular Angles Chart"));
 
-        addSeries(point_X, "X");
-        addSeries(point_Y, "Y");
-        addSeries(point_Z, "Z");
+        addSeries(point_X, "Roll");
+        addSeries(point_Y, "Pitch");
+        addSeries(point_Z, "Yaw");
         valueRange[0]=-180;
         valueRange[1]=180;
         m_chart->setTitle(tr("Euler Angles (°)"));

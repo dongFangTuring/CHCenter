@@ -1293,21 +1293,21 @@ color: black;
                           </sizepolicy>
                          </property>
                          <property name="text">
-                          <string>X(Roll)=</string>
+                          <string>Roll=</string>
                          </property>
                         </widget>
                        </item>
                        <item row="1" column="0">
                         <widget class="QLabel" name="label_22">
                          <property name="text">
-                          <string>Y(Pitch)=</string>
+                          <string>Pitch=</string>
                          </property>
                         </widget>
                        </item>
                        <item row="2" column="0">
                         <widget class="QLabel" name="label_19">
                          <property name="text">
-                          <string>Z(Yaw)=</string>
+                          <string>Yaw=</string>
                          </property>
                         </widget>
                        </item>
@@ -1700,8 +1700,8 @@ color: black;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
-               <height>28</height>
+               <width>55</width>
+               <height>24</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
