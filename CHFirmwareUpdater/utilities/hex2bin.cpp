@@ -113,7 +113,7 @@ char hex2bin::hex_to_bin(line_data_t* ba, QByteArray &out)//return 0: ok  1:hex�
 
 QByteArray hex2bin::convert(QTextStream &ts)
 {
-    QByteArray ba_line;
+    QByteArray ba_hex_string;
     QByteArray ba_out;
     line_data_t HexDataStr;
 
@@ -123,11 +123,11 @@ QByteArray hex2bin::convert(QTextStream &ts)
 
     while(1)
     {
-        ba_line = QByteArray::fromHex(ts.readLine().toUtf8());//从hex文件中读取一行
+        ba_hex_string = QByteArray::fromHex(ts.readLine().toUtf8());//从hex文件中读取一行
 
-        if(ba_line.size() > 0)
+        if(ba_hex_string.size() > 0)
         {
-            bool ret = read_hex_line(&HexDataStr, ba_line);//将一行数据解读到HexDataStr结构体
+            bool ret = read_hex_line(&HexDataStr, ba_hex_string);//将一行数据解读到HexDataStr结构体
             if(!ret){
                 qDebug("校验出错,hex文件有误.");
                 ba_out.clear();

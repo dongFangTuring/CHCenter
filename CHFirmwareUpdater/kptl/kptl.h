@@ -8,11 +8,7 @@
 extern "C" {
 #endif
 
-#if defined(GW)
 #define MAX_PACKET_LEN          (2048)
-#else
-#define MAX_PACKET_LEN          (256)
-#endif
 
 
 #if !defined(ARRAY2INT16)
