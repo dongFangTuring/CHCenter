@@ -15,14 +15,16 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     utilities/hex2bin.cpp \
-    utilities/serial.cpp
+    utilities/serial.cpp \
+    utilities/test2.cpp
 
 HEADERS += \
     kptl/kboot_protocol.h \
     kptl/kptl.h \
     mainwindow.h \
     utilities/hex2bin.h \
-    utilities/serial.h
+    utilities/serial.h \
+    utilities/test2.h
 
 FORMS += \
     mainwindow.ui

@@ -2,11 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTimer>
 
-#include "utilities/serial.h"
+
 #include "kptl/kptl.h"
 #include "kptl/kboot_protocol.h"
+#include "utilities/serial.h"
 #include "utilities/hex2bin.h"
 
 
@@ -28,6 +28,7 @@ private slots:
     void slt_serial_error(QSerialPort::SerialPortError);
     void on_btn_reflash_com_clicked();
     void on_btn_program_clicked();
+    void slt_update_progress_bar(int precent);
 
 signals:
 

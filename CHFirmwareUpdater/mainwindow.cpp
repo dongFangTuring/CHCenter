@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include <QtEndian>
 
+#include "utilities/test2.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -18,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->groupBox_2->setEnabled(false);
     mserial = new serial();
     scan_port();
+
+    //test2 tes22;
+    //test2 * mtest = new test2(3);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -37,7 +44,6 @@ void MainWindow::scan_port()
     }
     list.sort();
 
-
     ui->comboBox_com->clear();
     QString str;
     foreach(QString str, list)
@@ -46,6 +52,10 @@ void MainWindow::scan_port()
     }
 }
 
+void MainWindow:: slt_update_progress_bar(int precent)
+{
+    ui->progressBar->setValue(precent);
+}
 
 void MainWindow::on_btn_serial_open_clicked()
 {
@@ -62,11 +72,12 @@ void MainWindow::on_btn_serial_open_clicked()
             ui->groupBox_2->setEnabled(true);
 
             // 當下位機中有數據發送過來時就會響應這個槽函數
-            //connect(mserial, &serial::sig_rx_rdy, this, &MainWindow::slt_read_serial);
-            connect(mserial, &QSerialPort::errorOccurred, this, &MainWindow::slt_serial_error);
+
             this->setWindowTitle(QString("HIPNUC Updater - %1,%2").arg(portname).arg(ui->comboBox_baud->currentText()));
             ui->textEdit->insertPlainText(QString("Open serial port OK\n"));
             kboot = new kboot_protocol(mserial);
+            connect(kboot, &kboot_protocol::sig_download_progress, this, &MainWindow::slt_update_progress_bar);
+            connect(mserial, &QSerialPort::errorOccurred, this, &MainWindow::slt_serial_error);
         }
         else
         {
@@ -162,26 +173,31 @@ void MainWindow::on_btn_program_clicked()
     ui->progressBar->setValue(0);
 
     ba = QByteArray::fromRawData("AT+RST\r\n", 8);
-    kboot->serial_send_then_recv(ba, 20);
+    kboot->serial_send_then_recv(ba, ba, 9999, 50);
 
-    uint8_t slv_ver_major;
-    uint8_t slv_ver_minor;
-    uint8_t slv_ver_bugfix;
+    uint8_t ver_major;
+    uint8_t ver_minor;
+    uint8_t ver_bugfix;
 
-    if(!kboot->ping(slv_ver_bugfix, slv_ver_minor, slv_ver_major))
+    if(kboot->ping(ver_bugfix, ver_minor, ver_major) == false)
     {
         ui->textEdit->insertPlainText(QString("CONNECT ERR\r\n"));
         download_ui_reset_action(true);
         return;
     }
 
-    ui->textEdit->insertPlainText(QString("KBOOT:%1.%2.%3\n").arg(slv_ver_major).arg(slv_ver_minor).arg(slv_ver_bugfix));
 
     /* version */
-    ba = kboot->get_property(0x01);
+    ui->textEdit->insertPlainText(QString("KBOOT:%1.%2.%3\n").arg(ver_major).arg(ver_minor).arg(ver_bugfix));
+
+
+    /* version */
+    ba = kboot->cmd_get_property(0x01);
+    ui->textEdit->insertPlainText(QString("%1.%2.%3\n").arg(uint8_t(ba.at(2))).arg(uint8_t(ba[1])).arg(uint8_t(ba[0])));
+
 
     /* get max packet size */
-    ba = kboot->get_property(0x0B);
+    ba = kboot->cmd_get_property(0x0B);
     if(ba.size() == 4)
     {
         this->max_packet_size = qFromLittleEndian<int>(ba.data());
@@ -189,21 +205,21 @@ void MainWindow::on_btn_program_clicked()
     }
 
     /* flash size */
-    ba = kboot->get_property(0x04);
+    ba = kboot->cmd_get_property(0x04);
     if(ba.size() == 4)
     {
         ui->textEdit->insertPlainText(QString("FLASH SIZE:%1KB\n").arg(qFromLittleEndian<int>(ba.data()) / 1024));
     }
 
     //SDID
-    ba = kboot->get_property(0x10);
+    ba = kboot->cmd_get_property(0x10);
     if(ba.size() == 4)
     {
         ui->textEdit->insertPlainText("SDID:" + ba.toHex() + '\n');
     }
 
     //Flash Sector Size
-    ba = kboot->get_property(0x05);
+    ba = kboot->cmd_get_property(0x05);
     if(ba.size() == 4)
     {
         ui->textEdit->insertPlainText(QString("SECTOR:%1\n").arg(qFromLittleEndian<int>(ba.data())));
@@ -211,68 +227,15 @@ void MainWindow::on_btn_program_clicked()
 
     ui->textEdit->insertPlainText("Connect OK\n");
 
-    /* image available */
-    if(ba_image.size() > 0)
+    if(!kboot->download(ba_image, hex2bin::start_addr(), this->max_packet_size))
     {
-        if(!kboot->flash_erase_region(hex2bin::start_addr(), ba_image.size()))
-        {
-            ui->textEdit->insertPlainText(QString("Erase failed\n"));
-            download_ui_reset_action(true);
-            return;
-        }
-
-        int image_size = ba_image.size();
-        int i = 0;
-
-        ui->textEdit->insertPlainText(QString("Programming...\n"));
-        if(!kboot->flash_write_memory(hex2bin::start_addr(), ba_image.size()))
-        {
-            ui->textEdit->insertPlainText(QString("Write memory failed\n"));
-            download_ui_reset_action(true);
-            return;
-        }
-
-        while(i < image_size)
-        {
-            int pkt_len = (image_size - i)>this->max_packet_size?(this->max_packet_size):(image_size - 1);
-
-            QByteArray slice = ba_image.mid(i, pkt_len);
-
-            int retry = 3;
-            while(retry)
-            {
-                if(kboot->send_data_packet(slice, (slice.size() == this->max_packet_size)?(false):(true)))
-                {
-                    i += slice.size();
-                    break;
-                }
-                else
-                {
-                    ui->textEdit->insertPlainText(QString("Retry...\n"));
-                    retry--;
-                }
-            }
-
-            /* retry many times, return failed */
-            if(retry == 0)
-            {
-                download_ui_reset_action(true);
-                ui->textEdit->insertPlainText(QString("Send packet ERR\n"));
-                return;
-            }
-
-            ui->progressBar->setValue(i*100 / image_size);
-        }
-
-        kboot->reset();
-        ui->textEdit->insertPlainText(QString::fromUtf8("Update complete, image running...\n"));
-        download_ui_reset_action(true);
+        ui->textEdit->insertPlainText(QString("Download failed\n"));
     }
     else
     {
-        download_ui_reset_action(true);
-        ui->textEdit->insertPlainText("No file\n");
-        return;
+        ui->textEdit->insertPlainText(QString::fromUtf8("Update complete, image running...\n"));
     }
+
+    download_ui_reset_action(true);
 
 }
