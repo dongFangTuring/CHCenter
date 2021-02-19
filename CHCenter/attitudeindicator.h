@@ -8,9 +8,9 @@
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>
+#include <QOpenGLWidget>
 
-
-class QADI : public QWidget
+class QADI : public QOpenGLWidget
 {
     Q_OBJECT
 
@@ -28,14 +28,16 @@ public:
         canvasReplot_slot();
     }
 
+
 protected slots:
     void canvasReplot_slot(void);
 
 protected:
-    void virtual paintEvent(QPaintEvent *event) override;
-    void virtual resizeEvent(QResizeEvent *event) override;
+    void virtual initializeGL() override;
+    void virtual paintGL() override;
+    void virtual resizeGL();
 
-protected:
+private:
     int     m_sizeMin, m_sizeMax;           ///< widget's min/max size (in pixel)
     int     m_size, m_offset;               ///< current size & offset
 
@@ -49,7 +51,7 @@ protected:
  * @brief The QCompass class
  */
 
-class QCompass : public QWidget
+class QCompass : public QOpenGLWidget
 {
     Q_OBJECT
 
@@ -67,14 +69,17 @@ protected slots:
     void canvasReplot_slot(void);
 
 protected:
-    void virtual paintEvent(QPaintEvent *event) override;
-    void virtual resizeEvent(QResizeEvent *event) override;
+    void virtual initializeGL() override;
+    void virtual paintGL() override;
+    void virtual resizeGL();
 
-protected:
+private:
     int m_sizeMin, m_sizeMax;               ///< widget min/max size (in pixel)
     int m_size, m_offset;                   ///< widget size and offset size
 
     qreal m_yaw;                              ///< yaw angle (in degree)
 
 };
+
+
 #endif

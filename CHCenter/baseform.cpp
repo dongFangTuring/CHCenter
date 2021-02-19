@@ -17,7 +17,7 @@ BaseForm::BaseForm(QWidget *parent)
     ui->setupUi(this);
 
 
-    QString sf_version="1.0.1";//major.minor.bugix
+    QString sf_version="1.0.2";//major.minor.bugix
 
 
     this->setWindowTitle(tr("CH Center"));
@@ -29,6 +29,8 @@ BaseForm::BaseForm(QWidget *parent)
     //set the stylesheet of baseform
     ui->LabelStatusMsg->setStyleSheet("background-color:#30302E; color: white; padding:15px 30px 15px 30px;");
     ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
+    //ui->stackedWidget->setStyleSheet("background-color:rgb(250,250,250);");
+
 
     //initial the HI221GW node choosing widget
     ui->DongleNodeList->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -62,7 +64,7 @@ BaseForm::BaseForm(QWidget *parent)
     //a timer to update baseform
     baseform_timer=new QTimer(this);
     connect(baseform_timer, SIGNAL(timeout(void)), this, SLOT(updateBaseForm(void)));
-    baseform_timer->setInterval(50);
+    baseform_timer->setInterval(40);
 
     m_chartAcc=new ChartWindow(nullptr,"acc");
     m_chartGyr=new ChartWindow(nullptr,"gyr");
@@ -633,31 +635,31 @@ void BaseForm::updateBaseFormChart(receive_imusol_packet_t imu_data, uchar conte
 {
 
     if(content_bits & BIT_VALID_ACC){
-        m_chartAcc->updateChart(imu_data.acc);
+        m_chartAcc->updateLineData(imu_data.acc);
     }
     else{
         m_chartAcc->setVisible(false);
     }
     if(content_bits & BIT_VALID_GYR){
-        m_chartGyr->updateChart(imu_data.gyr);
+        m_chartGyr->updateLineData(imu_data.gyr);
     }
     else{
         m_chartGyr->setVisible(false);
     }
     if(content_bits & BIT_VALID_MAG){
-        m_chartMag->updateChart(imu_data.mag);
+        m_chartMag->updateLineData(imu_data.mag);
     }
     else{
         m_chartMag->setVisible(false);
     }
     if(content_bits & BIT_VALID_EUL){
-        m_chartEul->updateChart(imu_data.eul);
+        m_chartEul->updateLineData(imu_data.eul);
     }
     else{
         m_chartEul->setVisible(false);
     }
     if(content_bits & BIT_VALID_QUAT){
-        m_chartQuat->updateChart(imu_data.quat);
+        m_chartQuat->updateLineData(imu_data.quat);
     }
     else{
         m_chartQuat->setVisible(false);

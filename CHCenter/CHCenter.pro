@@ -1,4 +1,4 @@
-QT       += core gui serialport 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation charts
+QT       += core gui serialport 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation charts opengl
 
 RC_FILE = exe_ico.rc
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -51,6 +51,8 @@ TRANSLATIONS += \
     CHCenter_en_US.ts
     CHCenter_tc.ts
     CHCenter_cn.ts
+
+LIBS += -lopengl32
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

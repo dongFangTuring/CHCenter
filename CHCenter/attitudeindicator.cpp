@@ -1,7 +1,7 @@
 #include "attitudeindicator.h"
 
 QADI::QADI(QWidget *parent)
-    : QWidget(parent)
+    : QOpenGLWidget(parent)
 {
     m_sizeMin = 150;
     m_sizeMax = 150;
@@ -28,13 +28,18 @@ void QADI::canvasReplot_slot(void)
     update();
 }
 
+void QADI::initializeGL()
+{
+    glClearColor(1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1);
+}
 
-void QADI::resizeEvent(QResizeEvent *event)
+
+void QADI::resizeGL()
 {
     m_size = qMin(width(),height()) - 2*m_offset;
 }
 
-void QADI::paintEvent(QPaintEvent *event)
+void QADI::paintGL()
 {
 //    QTime t;
 //    t.start();
@@ -53,7 +58,9 @@ void QADI::paintEvent(QPaintEvent *event)
     blackPen.setWidth(2);
     pitchZero.setWidth(3);
 
-    painter.setRenderHints(QPainter::Antialiasing);
+
+    painter.setRenderHint(QPainter::Antialiasing);
+
 
     painter.translate(width() / 2, height() / 2);
 
@@ -110,7 +117,7 @@ void QADI::paintEvent(QPaintEvent *event)
         pitchPen.setWidth(2);
 
         QFont font_pitch=QFont("", fontSize);
-        //font_pitch.setStyleStrategy(QFont::NoAntialias);
+
         font_pitch.setWeight(QFont::Bold);
         painter.setFont(font_pitch);
 
@@ -195,7 +202,7 @@ void QADI::paintEvent(QPaintEvent *event)
         QString s;
 
         QFont font_roll=QFont("", fontSize);
-        font_roll.setStyleStrategy(QFont::NoAntialias);
+
         font_roll.setWeight(QFont::Bold);
         blackPen.setWidth(3);
         painter.setPen(blackPen);
@@ -260,7 +267,7 @@ void QADI::paintEvent(QPaintEvent *event)
 
 
 QCompass::QCompass(QWidget *parent)
-    : QWidget(parent)
+    : QOpenGLWidget(parent)
 {
 
     m_sizeMin = 150;
@@ -287,13 +294,19 @@ void QCompass::canvasReplot_slot(void)
     update();
 }
 
-void QCompass::resizeEvent(QResizeEvent *event)
+void QCompass::initializeGL()
+{
+    glClearColor(1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1);
+}
+
+void QCompass::resizeGL()
 {
     m_size = qMin(width(),height()) - 2*m_offset;
 }
 
-void QCompass::paintEvent(QPaintEvent *event)
+void QCompass::paintGL()
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     QPainter painter(this);
 
     QBrush bgGround(QColor(41,45,46));

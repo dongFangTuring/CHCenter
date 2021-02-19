@@ -141,7 +141,7 @@
         </size>
        </property>
        <property name="text">
-        <string>1.0.1</string>
+        <string>1.0.2</string>
        </property>
       </widget>
      </item>
@@ -164,6 +164,16 @@
      <property name="selectionMode">
       <enum>QAbstractItemView::NoSelection</enum>
      </property>
+     <item>
+      <property name="text">
+       <string>1.0.2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>-improve chart and graphic performence.</string>
+      </property>
+     </item>
      <item>
       <property name="text">
        <string>1.0.1</string>

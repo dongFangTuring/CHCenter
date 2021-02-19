@@ -17,12 +17,19 @@ QStringList loadsetting(QString setting){
 
 int main(int argc, char *argv[])
 {
+
+    QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
     QApplication a(argc, argv);
 
     //register type for passing value between signal/slot
     qRegisterMetaType<receive_imusol_packet_t>("receive_imusol_packet_t");
     qRegisterMetaType<receive_gwsol_packet_t>("receive_gwsol_packet_t");
 
+
+
+    QSurfaceFormat fmt;
+    fmt.setSamples(4);
+    QSurfaceFormat::setDefaultFormat(fmt);
 
     a.setWindowIcon(QIcon(":/images/mainicon.png"));
 

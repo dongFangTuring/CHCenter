@@ -13,7 +13,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     this->setStyleSheet("background-color:#424242; color:white;");
 
     m_chart = new QChart;
-    movingwindow_timer.setInterval(20);
+    movingwindow_timer.setInterval(30);
     connect(&movingwindow_timer, SIGNAL(timeout(void)), this, SLOT(updateMovingWindow(void)));
     movingwindow_timer.start();
 
@@ -134,7 +134,7 @@ ChartWindow::~ChartWindow()
 {
 }
 
-void ChartWindow::updateChart(float *array){
+void ChartWindow::updateLineData(float *array){
 
     //m_chartView->setFocus();
     if(this->isVisible()){
@@ -145,8 +145,6 @@ void ChartWindow::updateChart(float *array){
         }
 
         else{
-
-
             if(m_type=="quat"){
                 if(point_X.count()>=max_sample_number){
                     point_W.replace(sample_counter , QPointF(sample_counter, array[0]));
@@ -173,10 +171,7 @@ void ChartWindow::updateChart(float *array){
                     point_Y.append(QPointF(sample_counter,array[1]));
                     point_Z.append(QPointF(sample_counter,array[2]));
                 }
-
-
             }
-
             sample_counter++;
         }
 
@@ -188,28 +183,7 @@ void ChartWindow::updateChart(float *array){
 }
 void ChartWindow::updateMovingWindow()
 {
-
-
     if(this->isVisible()){
-
-
-        m_chartView->setUpdatesEnabled(false);
-
-        //m_chartView->sample_counter=sample_counter;
-        if(m_type=="quat"){
-            m_serieslist.at(0)->replace(point_W);
-            m_serieslist.at(1)->replace(point_X);
-            m_serieslist.at(2)->replace(point_Y);
-            m_serieslist.at(3)->replace(point_Z);
-        }
-        else{
-            m_serieslist.at(0)->replace(point_X);
-            m_serieslist.at(1)->replace(point_Y);
-            m_serieslist.at(2)->replace(point_Z);
-
-        }
-        m_chartView->setUpdatesEnabled(true);
-
 
         //定位拉條
         qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
@@ -228,30 +202,88 @@ void ChartWindow::updateMovingWindow()
         ui->SliderSample->setValue(view_center.x());
         ui->SliderValue->setValue(round(-view_center.y()*100));
 
-        if(ui->BTNFollowingMode->isChecked()){
 
-            if(sample_counter<=distance_x){
-                axisX->setRange(0,distance_x);
+        //for following mode
+        if(ui->BTNFollowingMode->isChecked()){
+            QElapsedTimer timer;
+            timer.start();
+
+
+            qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
+            qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
+            qreal distance_x=abs(cur_x_max-cur_x_min);
+
+            QList<QPointF> wSizePoints_X, wSizePoints_Y, wSizePoints_Z, wSizePoints_W;// a window size number of points.
+
+            if(sample_counter>=distance_x){
+                if(m_type=="quat"){
+                    wSizePoints_W=point_W.mid(sample_counter-(distance_x+1), distance_x+1) ;
+                }
+                wSizePoints_X=point_X.mid(sample_counter-(distance_x+1), distance_x+1) ;
+                wSizePoints_Y=point_Y.mid(sample_counter-(distance_x+1), distance_x+1) ;
+                wSizePoints_Z=point_Z.mid(sample_counter-(distance_x+1), distance_x+1) ;
+            }
+            else {
+                if(m_type=="quat"){
+                    wSizePoints_W=point_W.mid(0, sample_counter) ;
+                }
+                wSizePoints_X=point_X.mid(0, sample_counter) ;
+                wSizePoints_Y=point_Y.mid(0, sample_counter) ;
+                wSizePoints_Z=point_Z.mid(0, sample_counter) ;
+            }
+
+
+            //renumbering X axis of each point from 1 to zoom scale
+            for(int i =0; i<wSizePoints_X.length();i++){
+                if(m_type=="quat")
+                    wSizePoints_W.replace(i,QPointF(wSizePoints_W.at(i).x()+1-sample_counter+distance_x, wSizePoints_W.at(i).y()));
+                wSizePoints_X.replace(i,QPointF(wSizePoints_X.at(i).x()+1-sample_counter+distance_x, wSizePoints_X.at(i).y()));
+                wSizePoints_Y.replace(i,QPointF(wSizePoints_Y.at(i).x()+1-sample_counter+distance_x, wSizePoints_Y.at(i).y()));
+                wSizePoints_Z.replace(i,QPointF(wSizePoints_Z.at(i).x()+1-sample_counter+distance_x, wSizePoints_Z.at(i).y()));
+
+            }
+
+            if(m_type=="quat"){
+                m_serieslist.at(0)->replace(wSizePoints_W);
+                m_serieslist.at(1)->replace(wSizePoints_X);
+                m_serieslist.at(2)->replace(wSizePoints_Y);
+                m_serieslist.at(3)->replace(wSizePoints_Z);
             }
             else{
-                axisX->setRange(sample_counter-distance_x,sample_counter);
+                m_serieslist.at(0)->replace(wSizePoints_X);
+                m_serieslist.at(1)->replace(wSizePoints_Y);
+                m_serieslist.at(2)->replace(wSizePoints_Z);
             }
-            if(movingwindow_timer.interval()!=20)
-                movingwindow_timer.setInterval(20);
-            m_chartView->zoom_mode=2;
+
+            axisX->setRange(0,distance_x);
+
+            //qDebug() << "The slow operation took" << timer.elapsed() << "milliseconds";
+
+            m_chartView->zoom_mode=2;  //zoom at the newest
         }
+        //for free mode
         else{
 
-            if(movingwindow_timer.interval()!=30)
-                movingwindow_timer.setInterval(30);
+            if(m_type=="quat"){
+                m_serieslist.at(0)->replace(point_W);
+                m_serieslist.at(1)->replace(point_X);
+                m_serieslist.at(2)->replace(point_Y);
+                m_serieslist.at(3)->replace(point_Z);
+            }
+            else{
+                m_serieslist.at(0)->replace(point_X);
+                m_serieslist.at(1)->replace(point_Y);
+                m_serieslist.at(2)->replace(point_Z);
 
-            m_chartView->zoom_mode=1;
+            }
+
+            m_chartView->zoom_mode=1;  //zoom at the cursor pos
         }
-
 
     }
 
 }
+
 
 
 void ChartWindow::init()
@@ -279,15 +311,14 @@ void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //用�
 
     QLineSeries *series = new QLineSeries();
     series->setUseOpenGL(true);
-    if(legend_title=="X"){
-
+    if(legend_title=="X" || legend_title=="Roll"){
         series->setPen(QPen(QColor(171,34,29), 1));
     }
-    else if(legend_title=="Y"){
+    else if(legend_title=="Y" || legend_title=="Pitch"){
 
         series->setPen(QPen(QColor(13,139,77), 1));
     }
-    else if(legend_title=="Z"){
+    else if(legend_title=="Z"  || legend_title=="Yaw"){
 
         series->setPen(QPen(QColor(65,83,175), 1));
     }
@@ -484,6 +515,8 @@ CusChartView::CusChartView(QChart* chart, QWidget *parent)
 void CusChartView::zoom(bool in_out, bool x_y, int mode)
 {
 
+    static uchar scale_level=5;
+    static ushort x_scales[15]={50,100,200,500,1000,2000,5000,7500,10000,12500,15000,17500,20000,30000,50000};
 
     //static cast is faster, father to child
     QValueAxis *axisX= (QValueAxis*)(this->chart()->axisX());
@@ -502,18 +535,17 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
 
     if(x_y==0){ //x
         if(in_out==0){  //zoom in
+            if(scale_level>0){
+                scale_level--;
 
-            if(distance_x>100){
                 if(mode==0){//zoom at center
-                    qreal new_distance_x=distance_x*0.8;
+                    qreal new_distance_x=x_scales[scale_level];
                     axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
                 }
                 else if (mode==1){ //zoom at cursur position
-
-
                     qreal ratio=qreal(cursor_pos.x())/qreal(this->width());
                     int target_data=round(cur_x_min+distance_x*ratio);
-                    qreal new_distance_x=distance_x*0.8;
+                    qreal new_distance_x=x_scales[scale_level];
                     int view_centerX=round(target_data-new_distance_x*(ratio-0.5));
 
                     view_center.setX(view_centerX);
@@ -521,43 +553,66 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
                     axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
                 }
                 else if(mode==2){//zoom at the newest
-                    qreal new_distance_x=distance_x*0.8;
-                    axisX->setRange(cur_x_max-new_distance_x,cur_x_max);
+                    qreal new_distance_x=x_scales[scale_level];
+                    axisX->setRange(0,x_scales[scale_level]);
                 }
-            }
 
-            else{
-                axisX->setRange(view_center.x()-50,view_center.x()+50);
-            }
+                //old method 0.8x
+                //            if(distance_x>100){
+                //                if(mode==0){//zoom at center
+                //                    qreal new_distance_x=distance_x*0.8;
+                //                    axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
+                //                }
+                //                else if (mode==1){ //zoom at cursur position
 
+
+                //                    qreal ratio=qreal(cursor_pos.x())/qreal(this->width());
+                //                    int target_data=round(cur_x_min+distance_x*ratio);
+                //                    qreal new_distance_x=distance_x*0.8;
+                //                    int view_centerX=round(target_data-new_distance_x*(ratio-0.5));
+
+                //                    view_center.setX(view_centerX);
+
+                //                    axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
+                //                }
+                //                else if(mode==2){//zoom at the newest
+                //                    qreal new_distance_x=distance_x*0.8;
+                //                    axisX->setRange(cur_x_max-new_distance_x,cur_x_max);
+                //                }
+            }
         }
+
+
         else if(in_out==1){  //zoom out
-            if(mode==0){//zoom at center
-                qreal new_distance_x=distance_x*1.2;
-                axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
-            }
-            else if (mode==1){ //zoom at cursur position
+            if(scale_level<14){
+                scale_level++;
 
-                if(distance_x<max_sample_number){
-                    qreal ratio=qreal(cursor_pos.x())/qreal(this->width());
-                    int target_data=round(cur_x_min+distance_x*ratio);
-                    qreal new_distance_x=distance_x*1.2;
-                    int view_centerX=round(target_data-new_distance_x*(ratio-0.5));
-
-                    view_center.setX(view_centerX);
-
+                if(mode==0){//zoom at center
+                    qreal new_distance_x=x_scales[scale_level];
                     axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
                 }
+                else if (mode==1){ //zoom at cursur position
+                    if(distance_x<max_sample_number){
+                        qreal ratio=qreal(cursor_pos.x())/qreal(this->width());
+                        int target_data=round(cur_x_min+distance_x*ratio);
+                        qreal new_distance_x=x_scales[scale_level];
+                        int view_centerX=round(target_data-new_distance_x*(ratio-0.5));
+
+                        view_center.setX(view_centerX);
+                        axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
+                    }
+
+                }
+                else if(mode==2){//zoom at the newest
+                    qreal new_distance_x=x_scales[scale_level];
+                    axisX->setRange(0,x_scales[scale_level]);
+                }
 
             }
-            else if(mode==2){//zoom at the newest
-                qreal new_distance_x=distance_x*1.2;
-                axisX->setRange(cur_x_max-new_distance_x,cur_x_max);
-            }
-
         }
+        qDebug()<<x_scales[scale_level];
         if(axisX->min()<0){
-            axisX->setRange(0,axisX->max());
+            axisX->setRange(0,x_scales[scale_level]);
         }
         if(axisX->max()>max_sample_number){
             axisX->setRange(axisX->min(),max_sample_number);

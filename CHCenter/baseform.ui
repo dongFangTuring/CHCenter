@@ -462,10 +462,16 @@ color: black;
       </item>
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
+        <property name="styleSheet">
+         <string notr="true">QStackedWidget{background-color:rgb(250,250,250);}</string>
+        </property>
         <property name="currentIndex">
          <number>0</number>
         </property>
         <widget class="QWidget" name="PageData">
+         <property name="styleSheet">
+          <string notr="true">background-color:rgb(250,250,250);</string>
+         </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QScrollArea" name="PageDataScroll">

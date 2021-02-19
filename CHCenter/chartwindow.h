@@ -74,7 +74,7 @@ public:
     ~ChartWindow() override;
 
     CusChartView *m_chartView;   //因為佈局時其它函式會訪問這個畫布，所以設為public
-    void updateChart(float *);
+    void updateLineData(float *);
     void init();
 
 
@@ -119,6 +119,8 @@ private:
 
     QChart * m_chart;     //圖表元件，可理解為畫筆，用它畫曲線
     QList<QLineSeries *> m_serieslist;   //曲線列表
+
+
     QList<QPointF> point_X;
     QList<QPointF> point_Y;
     QList<QPointF> point_Z;
