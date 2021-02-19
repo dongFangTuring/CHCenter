@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
 
     QSurfaceFormat fmt;
-    fmt.setSamples(4);
+    fmt.setSamples(6);
     QSurfaceFormat::setDefaultFormat(fmt);
 
     a.setWindowIcon(QIcon(":/images/mainicon.png"));

@@ -3,8 +3,8 @@
 QADI::QADI(QWidget *parent)
     : QOpenGLWidget(parent)
 {
-    m_sizeMin = 150;
-    m_sizeMax = 150;
+    m_sizeMin = 180;
+    m_sizeMax = 180;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
 
@@ -41,13 +41,13 @@ void QADI::resizeGL()
 
 void QADI::paintGL()
 {
-//    QTime t;
-//    t.start();
+    //    QTime t;
+    //    t.start();
 
     QPainter painter(this);
 
-    QBrush bgSky(QColor(142,198,221));
-    QBrush bgGround(QColor(140,99,55));
+    QBrush bgSky(QColor(134,181,225));
+    QBrush bgGround(QColor(130,110,95));
 
     QPen   whitePen(Qt::white);
     QPen   blackPen(Qt::black);
@@ -111,19 +111,19 @@ void QADI::paintGL()
         qreal p, r;
         int ll = m_size/8, l;
 
-        int fontSize = 10;
+        int fontSize = 11;
         QString s;
 
         pitchPen.setWidth(2);
 
-        QFont font_pitch=QFont("", fontSize);
+        QFont font_pitch=QFont("Arial", fontSize);
 
         font_pitch.setWeight(QFont::Bold);
         painter.setFont(font_pitch);
 
 
         // draw lines
-        for(short i=-9; i<=9; i=i+3) {
+        for(short i=-9; i<=9; i=i++) {
             p = i*10;
 
             s = QString("%1").arg(p);
@@ -196,7 +196,7 @@ void QADI::paintGL()
     {
         int     nRollLines = 12;
         qreal   rotAng = 360.0 / nRollLines;
-        int     rollLineLeng = m_size/25;
+        int     rollLineLeng = m_size/10;
         qreal   fx1, fy1, fx2, fy2;
         int     fontSize = 10;
         QString s;
@@ -258,7 +258,7 @@ void QADI::paintGL()
     }
 
 
-//    qDebug()<<t.elapsed();
+    //  qDebug()<<t.elapsed();
 }
 
 
@@ -270,8 +270,8 @@ QCompass::QCompass(QWidget *parent)
     : QOpenGLWidget(parent)
 {
 
-    m_sizeMin = 150;
-    m_sizeMax = 150;
+    m_sizeMin = 180;
+    m_sizeMax = 180;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
 
@@ -316,7 +316,7 @@ void QCompass::paintGL()
     QPen   blackPen(Qt::black);
     QPen   redPen(materialred);
 
-    whitePen.setWidth(1);
+    whitePen.setWidth(2);
     blackPen.setWidth(2);
     redPen.setWidth(2);
 
@@ -338,12 +338,12 @@ void QCompass::paintGL()
     {
         int     nyawLines = 12;
         qreal   rotAng = 360.0 / nyawLines;
-        int     yawLineLeng = m_size/25;
+        int     yawLineLeng = m_size/10;
         qreal  fx1, fy1, fx2, fy2;
-        int     fontSize = 10;
+        int     fontSize = 11;
         QString s;
 
-        QFont font_yaw=QFont("", fontSize);
+        QFont font_yaw=QFont("Arial", fontSize);
         font_yaw.setWeight(QFont::Bold);
         painter.setPen(whitePen);
 
@@ -399,7 +399,7 @@ void QCompass::paintGL()
 
     // draw S/N arrow
     {
-        int     arrowWidth = m_size/6;
+        int     arrowWidth = m_size/5;
         qreal  fx1, fy1, fx2, fy2, fx3, fy3;
 
         painter.rotate(-m_yaw);
