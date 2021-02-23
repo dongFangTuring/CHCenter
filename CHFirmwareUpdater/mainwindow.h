@@ -30,6 +30,8 @@ private slots:
     void on_btn_program_clicked();
     void slt_update_progress_bar(int precent);
 
+    void on_btn_test_clicked();
+
 signals:
 
 private:

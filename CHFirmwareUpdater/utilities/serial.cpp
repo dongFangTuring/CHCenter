@@ -20,7 +20,7 @@ QList<QString> serial::refreshSerialPort()
     QSerialPort TmpSerial;
 
     //搜索串口
-    foreach (const QSerialPortInfo &info,QSerialPortInfo::availablePorts())
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
     {
         QString status;
         QString msg;

@@ -10,6 +10,8 @@
 
 #include "utilities/test2.h"
 
+#include "mdbus_dialog.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -23,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //test2 tes22;
     //test2 * mtest = new test2(3);
+
 
 
 }
@@ -148,6 +151,7 @@ void MainWindow::on_btn_open_file_clicked()
                 ui->textEdit->insertPlainText(QString("ADDR:0x%1\n").arg(this->start_addr, 8, 16, QLatin1Char('0')).toUpper());
 
             }
+
             file.close();
         }
     }
@@ -237,5 +241,15 @@ void MainWindow::on_btn_program_clicked()
     }
 
     download_ui_reset_action(true);
+
+}
+
+void MainWindow::on_btn_test_clicked()
+{
+    mdbus_Dialog *diag = new mdbus_Dialog(this);
+
+    diag->setWindowFlag(Qt::Window,true);           //将窗体设置为窗口属性
+    diag->setWindowTitle("mdbus test");                  //设置新窗体的标题
+    diag->show();
 
 }

@@ -12,18 +12,14 @@ class test2:public QObject
         test2();
         test2(int a);
 
+        float aa = 5;
+        float get_x() {return 3;}
 //        void send()
 //        {
 //            emit newPaper("dwasds");
 //        }
 
-//    signals:
-//        void newPaper(const QString &name);
 
-        void send()
-        {
-            emit sig_test();
-        }
 
 signals:
     void sig_test();
