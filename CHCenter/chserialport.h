@@ -74,9 +74,13 @@ private:
     uint m_frame_received=0;
 
 private slots:
+    //count Hz
     void countFrameRate();
+
+    //if device is connected but 0Hz, check if it is still available
     void checkPortStatus();
 
+    //control of the second thread
     void on_thread_started();
     void on_thread_stopped();
     void initThreadReading();
@@ -84,6 +88,9 @@ private slots:
 
     //handle all data from serial
     void handleData();
+    void protocol_0x5A(QByteArray);
+    void protocol_ASC2(QByteArray);
+
 
     //write to serial, a cross thread command
     void getsigWriteData(QString);

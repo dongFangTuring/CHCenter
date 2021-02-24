@@ -168,92 +168,191 @@ void CHSerialport::handleData()
     {
         long long NumberOfBytesToRead=CH_serial->bytesAvailable();
 
-        QByteArray arr = CH_serial->readAll();
-
-
-        for (int i=0;i<NumberOfBytesToRead;i++) {
-            uint8_t c=arr[i];
-            packet_decode(c);
-        }
+        QByteArray raw_data = CH_serial->readAll();
 
         mutex_writing.lock();
 
         if(Is_msgMode){
-            bool is_hexdata=0;
-
-            for (int i=0;i<NumberOfBytesToRead;i++) {
-                uint8_t c=arr[i];
-                if(c == 0x5A){
-                    is_hexdata=1;
-                }
-            }
-            if(is_hexdata==1){
-                m_IMUmsg=QString(arr.toHex()).toUpper();
-                emit sigSendIMUmsg(m_IMUmsg);
-                m_IMUmsg="";
-            }
-            else{
-
-                m_IMUmsg+=arr;
-                QStringList list1 = m_IMUmsg.split("\r\n");
-                if(list1.lastIndexOf("OK")>=0){
-                    emit sigSendIMUmsg(m_IMUmsg);
-                    m_IMUmsg="";
-                }
-                else if(list1.lastIndexOf("ERR")>=0){
-                    emit sigSendIMUmsg(m_IMUmsg);
-                    m_IMUmsg="";
-                }
-                if(m_IMUmsg.size()>300){
-                    emit sigSendIMUmsg(m_IMUmsg);
-                    m_IMUmsg="";
-                }
-            }
+            protocol_ASC2(raw_data);
         }
-
-        if(m_frame_received!=frame_count){
-
-
-            if(receive_gwsol.tag == KItemDongle || receive_gwsol.tag == KItemDongleRaw)
-            {
-                //if switch from single IMU module
-                if(m_is_gwsol==0){
-                    m_is_gwsol=1;
-                    emit sigUpdateDongleNodeList(true,receive_gwsol);
-                }
-
-                //if the new numbers of nodes isn't equal to the list
-                if(!(m_number_of_node==receive_gwsol.n)){
-                    m_number_of_node=receive_gwsol.n;
-                    emit sigUpdateDongleNodeList(true,receive_gwsol);
-                }
-
-                emit sigSendDongle(receive_gwsol);
-
-            }
-            else{
-                if(m_is_gwsol==1){
-                    m_is_gwsol=0;
-                    emit sigUpdateDongleNodeList(false,receive_gwsol);
-                }
-
-                emit sigSendIMU(receive_imusol);
-
-            }
-
-
-            if(Content_bits!=bitmap){
-                Content_bits=bitmap;
-                sigSendBitmap(Content_bits);
-            }
-            m_frame_received=frame_count;
-
+        else{
+            protocol_0x5A(raw_data);
         }
 
         mutex_writing.unlock();
+
+
+        //        if(Is_msgMode){
+        //            bool is_hexdata=0;
+
+        //            for (int i=0;i<NumberOfBytesToRead;i++) {
+        //                uint8_t c=raw_data[i];
+        //                if(c == 0x5A){
+        //                    is_hexdata=1;
+        //                }
+        //            }
+        //            if(is_hexdata==1){
+        //                m_IMUmsg=QString(raw_data.toHex()).toUpper();
+        //                emit sigSendIMUmsg(m_IMUmsg);
+        //                m_IMUmsg="";
+        //            }
+        //            else{
+
+        //                m_IMUmsg+=arr;
+        //                QStringList list1 = m_IMUmsg.split("\r\n");
+        //                if(list1.lastIndexOf("OK")>=0){
+        //                    emit sigSendIMUmsg(m_IMUmsg);
+        //                    m_IMUmsg="";
+        //                }
+        //                else if(list1.lastIndexOf("ERR")>=0){
+        //                    emit sigSendIMUmsg(m_IMUmsg);
+        //                    m_IMUmsg="";
+        //                }
+        //                if(m_IMUmsg.size()>300){
+        //                    emit sigSendIMUmsg(m_IMUmsg);
+        //                    m_IMUmsg="";
+        //                }
+        //            }
+        //        }
+
+        //        if(m_frame_received!=frame_count){
+
+
+        //            if(receive_gwsol.tag == KItemDongle || receive_gwsol.tag == KItemDongleRaw)
+        //            {
+        //                //if switch from single IMU module
+        //                if(m_is_gwsol==0){
+        //                    m_is_gwsol=1;
+        //                    emit sigUpdateDongleNodeList(true,receive_gwsol);
+        //                }
+
+        //                //if the new numbers of nodes isn't equal to the list
+        //                if(!(m_number_of_node==receive_gwsol.n)){
+        //                    m_number_of_node=receive_gwsol.n;
+        //                    emit sigUpdateDongleNodeList(true,receive_gwsol);
+        //                }
+
+        //                emit sigSendDongle(receive_gwsol);
+
+        //            }
+        //            else{
+        //                if(m_is_gwsol==1){
+        //                    m_is_gwsol=0;
+        //                    emit sigUpdateDongleNodeList(false,receive_gwsol);
+        //                }
+
+        //                emit sigSendIMU(receive_imusol);
+
+        //            }
+
+
+        //            if(Content_bits!=bitmap){
+        //                Content_bits=bitmap;
+        //                sigSendBitmap(Content_bits);
+        //            }
+        //            m_frame_received=frame_count;
+
+        //        }
+
+        //        mutex_writing.unlock();
     }
 
 
+}
+
+void CHSerialport::protocol_0x5A(QByteArray binary_data)
+{
+    for (int i=0;i<binary_data.length();i++) {
+        uint8_t c=binary_data[i];
+        packet_decode(c);
+    }
+
+    //if there is new frame, send signal with the new frame to baseform and other classes.
+    if(m_frame_received!=frame_count){
+
+
+        if(receive_gwsol.tag == KItemDongle || receive_gwsol.tag == KItemDongleRaw)
+        {
+            //if switch from single IMU module
+            if(m_is_gwsol==0){
+                m_is_gwsol=1;
+                emit sigUpdateDongleNodeList(true,receive_gwsol);
+            }
+
+            //if the new numbers of nodes isn't equal to the list
+            if(!(m_number_of_node==receive_gwsol.n)){
+                m_number_of_node=receive_gwsol.n;
+                emit sigUpdateDongleNodeList(true,receive_gwsol);
+            }
+
+            emit sigSendDongle(receive_gwsol);
+
+        }
+        else{
+            if(m_is_gwsol==1){
+                m_is_gwsol=0;
+                emit sigUpdateDongleNodeList(false,receive_gwsol);
+            }
+
+            emit sigSendIMU(receive_imusol);
+
+        }
+
+
+        if(Content_bits!=bitmap){
+            Content_bits=bitmap;
+            sigSendBitmap(Content_bits);
+        }
+        m_frame_received=frame_count;
+
+    }
+}
+
+void CHSerialport::protocol_ASC2(QByteArray asc2_data)
+{
+    int rst=asc2_data.indexOf(0x5A);
+
+    //has found 0x5A
+    if(rst!=-1){
+        m_IMUmsg=QString(asc2_data.toHex()).toUpper();
+        emit sigSendIMUmsg(m_IMUmsg);
+        m_IMUmsg="";
+    }
+
+    //no found of 0x5A, meaning that the device sent ACS2
+    else{
+        m_IMUmsg+=asc2_data;
+        if(m_IMUmsg.indexOf("OK")!=-1)
+        {
+            emit sigSendIMUmsg(m_IMUmsg);
+            m_IMUmsg="";
+        }
+        else if(m_IMUmsg.indexOf("ERR")!=-1){
+            emit sigSendIMUmsg(m_IMUmsg);
+            m_IMUmsg="";
+        }
+        else{
+            if(m_IMUmsg.size()>300){
+                emit sigSendIMUmsg(tr("Data decoded error! Please connect the device with the right Baudrate!"));
+                m_IMUmsg="";
+            }
+
+        }
+        //        QStringList list1 = m_IMUmsg.split("\r\n");
+        //        if(list1.lastIndexOf("OK")>=0){
+        //            emit sigSendIMUmsg(m_IMUmsg);
+        //            m_IMUmsg="";
+        //        }
+        //        else if(list1.lastIndexOf("ERR")>=0){
+        //            emit sigSendIMUmsg(m_IMUmsg);
+        //            m_IMUmsg="";
+        //        }
+        //        if(m_IMUmsg.size()>300){
+        //            emit sigSendIMUmsg(m_IMUmsg);
+        //            m_IMUmsg="";
+        //        }
+
+    }
 }
 
 void CHSerialport::writeData(QString ATcmd)
