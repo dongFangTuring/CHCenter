@@ -10,22 +10,27 @@ void kptl_callback(kptl_t *pkt)
     resp_cnt++;
 }
 
-kboot_protocol::kboot_protocol(QSerialPort *mserial)
+kboot_protocol::kboot_protocol()
 {
-    this->mserial = mserial;
     static kptl_t rx_pkt;
     this->dec.pkt = &rx_pkt;
     this->dec.cb = kptl_callback;
     kptl_decode_init(&this->dec);
 
     emit sig_download_progress(0);
-
 }
 
 kboot_protocol::~kboot_protocol()
 {
 
 }
+
+void kboot_protocol::slt_serial_data_recv(QByteArray &ba)
+{
+    this->brx.append(ba);
+}
+
+
 
 void kboot_protocol::delay(uint32_t ms)
 {
@@ -37,25 +42,19 @@ void kboot_protocol::delay(uint32_t ms)
 /* expected_len: if recv data count within timeout == expected_len, return:true */
 bool kboot_protocol::serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout)
 {
-    this->mserial->clear(QSerialPort::Input);
-    //qDebug("serial_send_then_recv:" + tx.toHex(',') + '\n');
-
-    this->mserial->write(tx);
-    this->mserial->waitForBytesWritten();
-    //this->mserial->waitForReadyRead(20);
+    emit sig_send_data(tx);
 
     rx.clear();
+    brx.clear();
 
-    while(rx.size() < expected_len && timeout)
+    while(this->brx.size() < expected_len && timeout)
     {
-        QByteArray ba = this->mserial->readAll();
-        rx.append(ba);
         delay(1);
         timeout--;
     }
 
+    rx.append(brx);
     return (rx.size() == expected_len);
-
 }
 
 
