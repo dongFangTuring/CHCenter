@@ -23,8 +23,12 @@ MainWindow::MainWindow(QWidget *parent)
     mserial = new serial();
     scan_port();
 
+    mdbus_diag = new mdbus_Dialog(this);
+    this->kboot = new kboot_protocol();
+
     //test2 tes22;
     //test2 * mtest = new test2(3);
+
 
 
 
@@ -60,6 +64,18 @@ void MainWindow:: slt_update_progress_bar(int precent)
     ui->progressBar->setValue(precent);
 }
 
+void MainWindow:: slt_serial_send(QByteArray &ba)
+{
+    this->mserial->write(ba);
+    //  this->mserial->clear(QSerialPort::Input);
+    //qDebug("serial_send_then_recv:" + tx.toHex(',') + '\n');
+
+    //  this->mserial->write(tx);
+    //  this->mserial->waitForBytesWritten();
+    //this->mserial->waitForReadyRead(20);
+}
+
+
 void MainWindow::on_btn_serial_open_clicked()
 {
     if(ui->btn_serial_open->text() == tr("Open"))
@@ -74,13 +90,17 @@ void MainWindow::on_btn_serial_open_clicked()
             ui->btn_serial_open->setText(tr("Close"));
             ui->groupBox_2->setEnabled(true);
 
-            // 當下位機中有數據發送過來時就會響應這個槽函數
-
             this->setWindowTitle(QString("HIPNUC Updater - %1,%2").arg(portname).arg(ui->comboBox_baud->currentText()));
             ui->textEdit->insertPlainText(QString("Open serial port OK\n"));
-            kboot = new kboot_protocol(mserial);
-            connect(kboot, &kboot_protocol::sig_download_progress, this, &MainWindow::slt_update_progress_bar);
+
+            /* connect serial interface */
             connect(mserial, &QSerialPort::errorOccurred, this, &MainWindow::slt_serial_error);
+            connect(mserial, &QSerialPort::readyRead, this, &MainWindow::slt_serial_read_data );
+
+            /* connect kboot interface */
+            connect(this, &MainWindow::sig_serial_data_push, this->kboot, &kboot_protocol::slt_serial_data_recv);
+            connect(this->kboot, &kboot_protocol::sig_download_progress, this, &MainWindow::slt_update_progress_bar);
+            connect(this->kboot, &kboot_protocol::sig_send_data, this, &MainWindow::slt_serial_send);
         }
         else
         {
@@ -105,8 +125,21 @@ void MainWindow::serial_close_ui_action()
     this->setWindowTitle(tr("HIPNUC Updater"));
 }
 
+void MainWindow::slt_serial_read_data(void)
+{
+    QByteArray ba;
+    ba = mserial->readAll();
+
+     emit sig_serial_data_push(ba);
+
+
+  }
+
+
+
 void MainWindow::slt_serial_error(QSerialPort::SerialPortError error) // 讀取從自定義序列埠類獲得的數據
 {
+
     if(error == QSerialPort::ResourceError)
     {
         qDebug("SerialPortError:%d\r\n", error);
@@ -177,13 +210,13 @@ void MainWindow::on_btn_program_clicked()
     ui->progressBar->setValue(0);
 
     ba = QByteArray::fromRawData("AT+RST\r\n", 8);
-    kboot->serial_send_then_recv(ba, ba, 9999, 50);
+    this->kboot->serial_send_then_recv(ba, ba, 9999, 50);
 
     uint8_t ver_major;
     uint8_t ver_minor;
     uint8_t ver_bugfix;
 
-    if(kboot->ping(ver_bugfix, ver_minor, ver_major) == false)
+    if(this->kboot->ping(ver_bugfix, ver_minor, ver_major) == false)
     {
         ui->textEdit->insertPlainText(QString("CONNECT ERR\r\n"));
         download_ui_reset_action(true);
@@ -196,12 +229,12 @@ void MainWindow::on_btn_program_clicked()
 
 
     /* version */
-    ba = kboot->cmd_get_property(0x01);
+    ba = this->kboot->cmd_get_property(0x01);
     ui->textEdit->insertPlainText(QString("%1.%2.%3\n").arg(uint8_t(ba.at(2))).arg(uint8_t(ba[1])).arg(uint8_t(ba[0])));
 
 
     /* get max packet size */
-    ba = kboot->cmd_get_property(0x0B);
+    ba = this->kboot->cmd_get_property(0x0B);
     if(ba.size() == 4)
     {
         this->max_packet_size = qFromLittleEndian<int>(ba.data());
@@ -209,21 +242,21 @@ void MainWindow::on_btn_program_clicked()
     }
 
     /* flash size */
-    ba = kboot->cmd_get_property(0x04);
+    ba = this->kboot->cmd_get_property(0x04);
     if(ba.size() == 4)
     {
         ui->textEdit->insertPlainText(QString("FLASH SIZE:%1KB\n").arg(qFromLittleEndian<int>(ba.data()) / 1024));
     }
 
     //SDID
-    ba = kboot->cmd_get_property(0x10);
+    ba = this->kboot->cmd_get_property(0x10);
     if(ba.size() == 4)
     {
         ui->textEdit->insertPlainText("SDID:" + ba.toHex() + '\n');
     }
 
     //Flash Sector Size
-    ba = kboot->cmd_get_property(0x05);
+    ba = this->kboot->cmd_get_property(0x05);
     if(ba.size() == 4)
     {
         ui->textEdit->insertPlainText(QString("SECTOR:%1\n").arg(qFromLittleEndian<int>(ba.data())));
@@ -231,7 +264,7 @@ void MainWindow::on_btn_program_clicked()
 
     ui->textEdit->insertPlainText("Connect OK\n");
 
-    if(!kboot->download(ba_image, hex2bin::start_addr(), this->max_packet_size))
+    if(!this->kboot->download(ba_image, hex2bin::start_addr(), this->max_packet_size))
     {
         ui->textEdit->insertPlainText(QString("Download failed\n"));
     }
@@ -246,10 +279,7 @@ void MainWindow::on_btn_program_clicked()
 
 void MainWindow::on_btn_test_clicked()
 {
-    mdbus_Dialog *diag = new mdbus_Dialog(this);
-
-    diag->setWindowFlag(Qt::Window,true);           //将窗体设置为窗口属性
-    diag->setWindowTitle("mdbus test");                  //设置新窗体的标题
-    diag->show();
-
+    mdbus_diag->setWindowModality(Qt::WindowModal);
+    mdbus_diag->setWindowTitle("mdbus test");                  //设置新窗体的标题
+    mdbus_diag->show();
 }

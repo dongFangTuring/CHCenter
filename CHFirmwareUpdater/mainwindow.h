@@ -9,6 +9,7 @@
 #include "utilities/serial.h"
 #include "utilities/hex2bin.h"
 
+#include "mdbus_dialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,15 +27,20 @@ private slots:
     void on_btn_open_file_clicked();
 
     void slt_serial_error(QSerialPort::SerialPortError);
+    void slt_serial_read_data(void);
     void on_btn_reflash_com_clicked();
     void on_btn_program_clicked();
-    void slt_update_progress_bar(int precent);
-
     void on_btn_test_clicked();
 
-signals:
+    void slt_update_progress_bar(int precent);
+    void slt_serial_send(QByteArray &ba);
 
+
+signals:
+    void sig_serial_data_push(QByteArray &ba);
 private:
+    mdbus_Dialog *mdbus_diag;
+
     QByteArray ba_image;
     serial *mserial;
     kboot_protocol *kboot;

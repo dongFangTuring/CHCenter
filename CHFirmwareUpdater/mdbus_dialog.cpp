@@ -15,5 +15,5 @@ mdbus_Dialog::~mdbus_Dialog()
 
 void mdbus_Dialog::on_pushButton_clicked()
 {
-    this->hide();
+    this->close();
 }
