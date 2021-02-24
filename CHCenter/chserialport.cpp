@@ -100,8 +100,30 @@ void CHSerialport::countFrameRate()
     Frame_rate=frame_count;
     frame_count=0;
     mutex_writing.unlock();
+    if(Frame_rate==0){
+        checkPortStatus();
+    }
 
 }
+
+void CHSerialport::checkPortStatus()
+{
+    QSerialPortInfo *info = new QSerialPortInfo;
+    QList<QSerialPortInfo> list = info->availablePorts();
+    bool port_still_available = false;
+
+    for (QSerialPortInfo &port : list) {
+        if (port.portName() == CH_serial->portName())
+            port_still_available = true;
+    }
+    if (!port_still_available) {
+        qDebug() << "Selected COM-port," << CH_serial->portName() << ", no longer available!";
+        closePort();
+        emit errorOpenPort();
+    }
+}
+
+
 
 void CHSerialport::on_thread_started()
 {

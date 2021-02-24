@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QSerialPort>
+#include <QSerialPortInfo>
 #include <QString>
 #include <QByteArray>
 #include <QObject>
@@ -8,6 +9,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QMutex>
+
 
 #include "packet/packet.h"
 #include "packet/imu_data_decode.h"
@@ -73,6 +75,8 @@ private:
 
 private slots:
     void countFrameRate();
+    void checkPortStatus();
+
     void on_thread_started();
     void on_thread_stopped();
     void initThreadReading();

@@ -8,6 +8,7 @@
  *
  */
 
+QString sf_version="1.0.2";//major.minor.bugix
 
 BaseForm::BaseForm(QWidget *parent)
     : QMainWindow(parent)
@@ -17,7 +18,7 @@ BaseForm::BaseForm(QWidget *parent)
     ui->setupUi(this);
 
 
-    QString sf_version="1.0.2";//major.minor.bugix
+
 
 
     this->setWindowTitle(tr("CH Center"));
@@ -423,7 +424,7 @@ void BaseForm::getsigPortClosed()
     statusbar_msg.baudrate="";
     statusbar_msg.port="";
     statusbar_msg.current_status=tr("Unconnected");
-    statusbar_msg.sw_version=tr("Software Version: ")+QString::number(0.1);
+    statusbar_msg.sw_version=tr("Software Version : %1").arg(sf_version);
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
     update_BTNConnect_state();
