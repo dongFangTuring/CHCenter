@@ -28,10 +28,10 @@ QList<QString> serial::refreshSerialPort()
         {
             status = info.isBusy() ? "BUSY  " : "IDLE  ";
             msg = info.portName() +
-                  "(" +
-                  status + info.description() +
-                  ")" +
-                  " " + info.manufacturer();
+                    "(" +
+                    status + info.description() +
+                    ")" +
+                    " " + info.manufacturer();
             tmp.append(msg);
         }
 

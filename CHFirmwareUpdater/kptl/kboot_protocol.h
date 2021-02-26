@@ -2,7 +2,6 @@
 #define KBOOT_PROTOCOL_H
 
 #include <QtCore>
-#include <QSerialPort>
 #include "kptl/kptl.h"
 
 
@@ -13,26 +12,45 @@ class kboot_protocol:public QObject
 public:
     kboot_protocol();
     ~kboot_protocol();
-    bool serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout = 400);
-    bool ping(uint8_t &bugfix, uint8_t &minor, uint8_t &major);
-    QByteArray cmd_get_property(uint8_t property_code);
-    bool download(QByteArray image, int start_addr, int max_packet_size, int retry = 3);
 
+    void delay(uint32_t ms);
+    bool connect();
+    bool download(QByteArray image, int start_addr, int retry = 3);
+
+    int max_packet_size() const { return _max_packet_size; }
+    int flash_size() const { return _flash_size;}
+    int flash_sec_size() const { return _flash_sec_size;}
+    QString sdid() const { return _sdid; }
+    int ver_bugfix() const {return _bugfix;}
+    int ver_minor() const {return _minor;}
+    int ver_major() const {return _major;}
 public slots:
-    void slt_serial_data_recv(QByteArray &ba);
+    void slt_serial_read(QByteArray &ba);
+
 signals:
     void sig_download_progress(int precent);
-    void sig_send_data(QByteArray &ba);
+    void sig_serial_send(QByteArray &ba);
 
 private:
+    int _max_packet_size;
+    int _flash_size;
+    int _flash_sec_size;
+    QString _sdid;
+
+    uint8_t _bugfix;
+    uint8_t _minor;
+    uint8_t _major;
+
     pkt_dec_t dec;
-    void delay(uint32_t ms);
     QByteArray brx;
+
+    bool serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout = 400);
     QByteArray cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len);
     bool cmd_flash_erase_region(uint32_t addr, uint32_t len);
     bool cmd_flash_write_memory(uint32_t addr, uint32_t len);
     bool cmd_send_data_packet(QByteArray &buf, bool is_last);
     bool cmd_reset();
+    QByteArray cmd_get_property(uint8_t property_code);
 };
 
 #endif // KBOOT_PROTOCOL_H

@@ -17,7 +17,6 @@ kboot_protocol::kboot_protocol()
     this->dec.cb = kptl_callback;
     kptl_decode_init(&this->dec);
 
-    emit sig_download_progress(0);
 }
 
 kboot_protocol::~kboot_protocol()
@@ -25,12 +24,10 @@ kboot_protocol::~kboot_protocol()
 
 }
 
-void kboot_protocol::slt_serial_data_recv(QByteArray &ba)
+void kboot_protocol::slt_serial_read(QByteArray &ba)
 {
     this->brx.append(ba);
 }
-
-
 
 void kboot_protocol::delay(uint32_t ms)
 {
@@ -42,7 +39,7 @@ void kboot_protocol::delay(uint32_t ms)
 /* expected_len: if recv data count within timeout == expected_len, return:true */
 bool kboot_protocol::serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout)
 {
-    emit sig_send_data(tx);
+    emit sig_serial_send(tx);
 
     rx.clear();
     brx.clear();
@@ -58,40 +55,6 @@ bool kboot_protocol::serial_send_then_recv(QByteArray &tx, QByteArray &rx, int e
 }
 
 
-bool kboot_protocol::ping(uint8_t &bugfix, uint8_t &minor, uint8_t &major)
-{
-    QByteArray btx, brx;
-
-    /* 5A A6 PING */
-    packet_ping_t ping;
-    kptl_create_ping(&ping);
-
-    btx.clear();
-    btx.append(reinterpret_cast<char *>(&ping), sizeof(packet_ping_t));
-
-    serial_send_then_recv(btx, brx, 10);
-
-    /* check if data recv ok */
-    resp_cnt = 0;
-    for(int i=0; i<brx.size(); i++)
-    {
-        kptl_decode(&this->dec, brx.at(i));
-    }
-
-    if(resp_cnt)
-    {
-        uint8_t * buf = reinterpret_cast<uint8_t*>(brx.data());
-        if(buf[0] == 0x5A && buf[1] == 0xA7)
-        {
-            bugfix = buf[2];
-            minor  = buf[3];
-            major  = buf[4];
-            return true;
-        }
-    }
-
-    return false;
-}
 
 QByteArray kboot_protocol::cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len)
 {
@@ -176,7 +139,6 @@ bool kboot_protocol::cmd_reset()
 }
 
 
-
 bool kboot_protocol::cmd_send_data_packet(QByteArray &buf, bool is_last)
 {
     kptl_t fp;
@@ -209,7 +171,93 @@ bool kboot_protocol::cmd_send_data_packet(QByteArray &buf, bool is_last)
     return false;
 }
 
-bool kboot_protocol::download(QByteArray image, int start_addr, int max_packet_size, int retry)
+
+
+
+bool kboot_protocol::connect()
+{
+    QByteArray btx, brx;
+
+    /* 5A A6 PING */
+    packet_ping_t ping;
+    kptl_create_ping(&ping);
+
+    btx.clear();
+    btx.append(reinterpret_cast<char *>(&ping), sizeof(packet_ping_t));
+
+    serial_send_then_recv(btx, brx, 10);
+
+    /* check if data recv ok */
+    resp_cnt = 0;
+    for(int i=0; i<brx.size(); i++)
+    {
+        kptl_decode(&this->dec, brx.at(i));
+    }
+
+    if(resp_cnt)
+    {
+        uint8_t * buf = reinterpret_cast<uint8_t*>(brx.data());
+        if(buf[0] == 0x5A && buf[1] == 0xA7)
+        {
+            _bugfix = buf[2];
+            _minor  = buf[3];
+            _major  = buf[4];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /* version */
+    brx = cmd_get_property(0x01);
+    if(brx.size() == 4)
+    {
+        this->_major = brx.at(2);
+        this->_minor = brx.at(1);
+        this->_bugfix = brx.at(0);
+    }
+    else
+        return false;
+
+    /* get max packet size */
+    brx = cmd_get_property(0x0B);
+    if(brx.size() == 4)
+    {
+        this->_max_packet_size = (brx.at(0) | (brx.at(1)<<8) | brx.at(2)<<16 | brx.at(3)<<24);
+    }
+    else return false;
+
+    /* flash size */
+    brx = this->cmd_get_property(0x04);
+    if(brx.size() == 4)
+    {
+        this->_flash_size = (brx.at(0) | (brx.at(1)<<8) | brx.at(2)<<16 | brx.at(3)<<24) / 1024;
+    }
+    else return false;
+
+    //SDID
+    brx = this->cmd_get_property(0x10);
+    if(brx.size() == 4)
+    {
+        this->_sdid = brx.toHex();
+    }
+    else return false;
+
+    //Flash Sector Size
+    brx = this->cmd_get_property(0x05);
+    if(brx.size() == 4)
+    {
+        this->_flash_sec_size = (brx.at(0) | (brx.at(1)<<8) | brx.at(2)<<16 | brx.at(3)<<24);
+    }
+    else return false;
+
+    return true;
+}
+
+
+
+bool kboot_protocol::download(QByteArray image, int start_addr, int retry)
 {
 
     if(!cmd_flash_erase_region(start_addr, image.size()))
@@ -227,13 +275,13 @@ bool kboot_protocol::download(QByteArray image, int start_addr, int max_packet_s
 
     while(i < sz)
     {
-        int pkt_len = (sz - i) > max_packet_size?(max_packet_size):(sz - 1);
+        int pkt_len = (sz - i) > _max_packet_size?(this->_max_packet_size):(sz - 1);
 
         QByteArray slice = image.mid(i, pkt_len);
 
         while(retry)
         {
-            if(cmd_send_data_packet(slice, (slice.size() == max_packet_size)?(false):(true)))
+            if(cmd_send_data_packet(slice, (slice.size() == this->_max_packet_size)?(false):(true)))
             {
                 i += slice.size();
                 break;

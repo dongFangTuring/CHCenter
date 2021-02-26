@@ -55,19 +55,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="btn_test">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>测试</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="btn_serial_open">
            <property name="minimumSize">
             <size>
@@ -235,17 +222,17 @@
      <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menu">
     <property name="title">
-     <string>File</string>
+     <string>打开</string>
     </property>
-    <addaction name="actionOpen"/>
+    <addaction name="actionModbus"/>
    </widget>
-   <addaction name="menuFile"/>
+   <addaction name="menu"/>
   </widget>
-  <action name="actionOpen">
+  <action name="actionModbus">
    <property name="text">
-    <string>Open1</string>
+    <string>Modbus</string>
    </property>
   </action>
  </widget>

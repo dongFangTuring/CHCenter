@@ -16,9 +16,9 @@ SOURCES += \
     kptl/kptl.c \
     main.cpp \
     mainwindow.cpp \
+    mdbus/mdbus.cpp \
     mdbus_dialog.cpp \
     utilities/hex2bin.cpp \
-    utilities/mdbus.cpp \
     utilities/serial.cpp \
     utilities/test2.cpp
 
@@ -26,9 +26,9 @@ HEADERS += \
     kptl/kboot_protocol.h \
     kptl/kptl.h \
     mainwindow.h \
+    mdbus/mdbus.h \
     mdbus_dialog.h \
     utilities/hex2bin.h \
-    utilities/mdbus.h \
     utilities/serial.h \
     utilities/test2.h
 
