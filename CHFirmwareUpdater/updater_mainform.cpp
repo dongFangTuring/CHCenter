@@ -236,7 +236,7 @@ void MainWindow::on_btn_program_clicked()
     ba = QByteArray::fromRawData("AT+RST\r\n", 8);
     this->mserial->write(ba);
     this->mserial->waitForBytesWritten();
-    this->kboot->delay(100);
+    this->kboot->delay(50);
 
 
     if(this->ba_image.size() == 0)
