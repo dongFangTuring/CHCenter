@@ -13,7 +13,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     this->setStyleSheet("background-color:#424242; color:white;");
 
     m_chart = new QChart;
-    movingwindow_timer.setInterval(20);
+    movingwindow_timer.setInterval(1000/60);
     connect(&movingwindow_timer, SIGNAL(timeout(void)), this, SLOT(updateMovingWindow(void)), Qt::DirectConnection);
     movingwindow_timer.start();
 
@@ -700,17 +700,22 @@ void CusChartView::mouseMoveEvent(QMouseEvent *event)
         }
 
         //move X
-        int move_x=m_lastMousePos.x()-event->pos().x();
-        this->chart()->scroll(move_x,0);
-        QValueAxis *axisX= (QValueAxis*)(this->chart()->axisX());
+        if(zoom_mode==1){
+            int move_x=m_lastMousePos.x()-event->pos().x();
+            this->chart()->scroll(move_x,0);
+            QValueAxis *axisX= (QValueAxis*)(this->chart()->axisX());
 
-        if(axisX->min()<0){
-            qreal error = 0-axisX->min();
-            axisX->setRange(axisX->min()+error,axisX->max()+error);
+            if(axisX->min()<0){
+                qreal error = 0-axisX->min();
+                axisX->setRange(axisX->min()+error,axisX->max()+error);
+            }
+            if(axisX->max()>max_sample_number){
+                qreal error = axisX->max()-max_sample_number;
+                axisX->setRange(axisX->min()-error,axisX->max()-error);
+            }
         }
-        if(axisX->max()>max_sample_number){
-            qreal error = axisX->max()-max_sample_number;
-            axisX->setRange(axisX->min()-error,axisX->max()-error);
+        else if(zoom_mode==2){
+            //pass
         }
         m_lastMousePos = event->pos();
 
