@@ -33,7 +33,7 @@ private slots:
     void slt_serial_read(void);
     void slt_update_progress_bar(int precent);
     void slt_serial_send(QByteArray &ba);
-
+    void slt_kptl_frame_recv(QByteArray &ba);
 signals:
     void sig_serial_send(QByteArray &ba);
 

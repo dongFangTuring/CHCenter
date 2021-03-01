@@ -24,12 +24,14 @@ public:
     int ver_bugfix() const {return _bugfix;}
     int ver_minor() const {return _minor;}
     int ver_major() const {return _major;}
+
 public slots:
     void slt_serial_read(QByteArray &ba);
 
 signals:
-    void sig_download_progress(int precent);
-    void sig_serial_send(QByteArray &ba);
+    void sig_download_progress(int precent);    /* notify download progess */
+    void sig_serial_send(QByteArray &ba);       /* when need to send serial data */
+    void sig_frame_recv(QByteArray &ba);        /* notify when a kptl frame has been recvived */
 
 private:
     int _max_packet_size;
@@ -43,14 +45,15 @@ private:
 
     pkt_dec_t dec;
     QByteArray brx;
-
     bool serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout = 400);
     QByteArray cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len);
     bool cmd_flash_erase_region(uint32_t addr, uint32_t len);
     bool cmd_flash_write_memory(uint32_t addr, uint32_t len);
     bool cmd_send_data_packet(QByteArray &buf, bool is_last);
     bool cmd_reset();
+    void crc16(uint16_t *currectCrc, const uint8_t *src, uint32_t lengthInBytes);
     QByteArray cmd_get_property(uint8_t property_code);
+
 };
 
 #endif // KBOOT_PROTOCOL_H

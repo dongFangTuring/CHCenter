@@ -41,20 +41,7 @@ typedef struct
 
 /* ping packet, ack packet, nak packet are only contain 2 bytes */
 typedef packet_hr_t packet_ping_t;
-typedef packet_hr_t packet_ack_t;
-typedef packet_hr_t packet_nak_t;
 
-typedef struct
-{
-    packet_hr_t     hr;
-    uint8_t         bug_fix;
-    uint8_t         ver_minor;
-    uint8_t         ver_major;
-    uint8_t         protocol_name;
-    uint8_t         option_low;
-    uint8_t         option_high;
-    uint8_t         crc16[2];
-}ping_resp_packet_t;
 
 typedef struct
 {
@@ -117,9 +104,6 @@ uint32_t kptl_frame_packet_begin(kptl_t *pkt, uint8_t type);
 uint32_t kptl_frame_packet_final(kptl_t *pkt);
 uint32_t kptl_get_frame_size(kptl_t *p);
 
-/* resp packet, resp packet is a speical form of command packet */
-uint32_t kptl_create_generic_resp_packet(kptl_t *pkt, uint32_t status_code, uint32_t cmd_tag);
-uint32_t kptl_create_property_resp_packet(kptl_t *p, uint8_t param_cnt, uint32_t *param);
 
 /* command packet, command packet must be waprred in frame packet */
 void kptl_create_cmd_packet(kptl_t *fp, cmd_hdr_t *cp, uint32_t *param);
@@ -127,9 +111,6 @@ uint32_t kptl_cmd_packet_get_size(cmd_hdr_t *cp);
 
 /* ping and ping resp packet */
 void kptl_create_ping(packet_ping_t *p);
-void kptl_create_ack(packet_ack_t *p);
-void kptl_create_nak(packet_nak_t *p);
-void kptl_create_ping_resp_packet(ping_resp_packet_t *p, uint8_t major, uint8_t minor, uint8_t bugfix, uint8_t opt_low, uint8_t opt_high);
 
 /* packet decode API */
 int kptl_decode_init(pkt_dec_t *d);

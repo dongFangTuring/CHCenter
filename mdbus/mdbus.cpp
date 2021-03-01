@@ -127,7 +127,6 @@ bool mdbus::read_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16
 {
     this->slv_addr = dev_addr;
 
-
     /* create req */
     QByteArray tba;
     tba.append(dev_addr);
@@ -237,12 +236,13 @@ bool mdbus:: write_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint
     return this->recv_ok;
 }
 
-
+/* warp into a single read read/write API */
 bool mdbus::read_reg(uint8_t dev_addr, uint16_t reg_addr, uint32_t &val, uint32_t timeout)
 {
     return read_data(dev_addr, reg_addr, &val, 1, timeout);
 }
 
+/* warp into a single read read/write API */
 bool mdbus::write_reg(uint8_t dev_addr, uint16_t reg_addr, uint32_t val, uint32_t timeout)
 {
     return write_data(dev_addr, reg_addr, &val, 1, timeout);

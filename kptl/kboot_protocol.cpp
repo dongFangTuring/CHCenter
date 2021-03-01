@@ -7,6 +7,7 @@ static uint8_t resp_cnt = 0;
 void kptl_callback(kptl_t *pkt)
 {
     Q_UNUSED(pkt);
+
     resp_cnt++;
 }
 
@@ -138,6 +139,27 @@ bool kboot_protocol::cmd_reset()
     return true;
 }
 
+void kboot_protocol::crc16(uint16_t *currectCrc, const uint8_t *src, uint32_t lengthInBytes)
+{
+    uint32_t crc = *currectCrc;
+    uint32_t j;
+    for (j=0; j < lengthInBytes; ++j)
+    {
+        uint32_t i;
+        uint32_t byte = src[j];
+        crc ^= byte << 8;
+        for (i = 0; i < 8; ++i)
+        {
+            uint32_t temp = crc << 1;
+            if (crc & 0x8000)
+            {
+                temp ^= 0x1021;
+            }
+            crc = temp;
+        }
+    }
+    *currectCrc = crc;
+}
 
 bool kboot_protocol::cmd_send_data_packet(QByteArray &buf, bool is_last)
 {

@@ -54,18 +54,6 @@ void kptl_create_ping(packet_ping_t *p)
     p->packet_type = kFramingPacketType_Ping;
 }
 
-void kptl_create_ack(packet_ack_t *p)
-{
-    p->start_byte = kFramingPacketStartByte;
-    p->packet_type = kFramingPacketType_Ack;
-}
-
-void kptl_create_nak(packet_nak_t *p)
-{
-    p->start_byte = kFramingPacketStartByte;
-    p->packet_type = kFramingPacketType_Nak;
-}
-    
 void kptl_create_cmd_packet(kptl_t *fp, cmd_hdr_t *cp, uint32_t *param)
 {
     int i;
@@ -79,60 +67,7 @@ void kptl_create_cmd_packet(kptl_t *fp, cmd_hdr_t *cp, uint32_t *param)
     kptl_frame_packet_final(fp);
 }
 
-uint32_t kptl_cmd_packet_get_size(cmd_hdr_t *cp)
-{
-    return 4 + cp->param_cnt*sizeof(uint32_t); 
-}
 
-uint32_t kptl_create_generic_resp_packet(kptl_t *fp, uint32_t status_code, uint32_t cmd_tag)
-{
-    uint32_t param[2];
-    cmd_hdr_t cp;
-    
-    cp.tag = kCommandTag_GenericResponse;
-    cp.flags = 0x00;
-    cp.param_cnt = 2;
-    cp.reserved = 0x00;
-    
-    param[0] = status_code;
-    param[1] = cmd_tag;
-    kptl_create_cmd_packet(fp, &cp, param);
-
-    return CH_OK;
-}
-
-uint32_t kptl_create_property_resp_packet(kptl_t *p, uint8_t param_cnt, uint32_t *param)
-{
-    cmd_hdr_t cp;
-    cp.tag = kCommandTag_GetPropertyResponse;
-    cp.flags = 0x00;
-    cp.reserved = 0x00;
-    cp.param_cnt = param_cnt;
-
-    kptl_create_cmd_packet(p, &cp, param);
-
-    return CH_OK;
-}
-
-void kptl_create_ping_resp_packet(ping_resp_packet_t *p, uint8_t major, uint8_t minor, uint8_t bugfix, uint8_t opt_low, uint8_t opt_high)
-{
-    p->hr.start_byte = kFramingPacketStartByte;
-    p->hr.packet_type = kFramingPacketType_PingResponse;
-    
-    p->bug_fix = bugfix;
-    p->ver_minor = minor;
-    p->ver_major  = major;
-    p->protocol_name = 'P';
-    p->option_low = opt_low;
-    p->option_high = opt_high;
-    
-    /* crc */
-    uint16_t crc;
-    crc = 0;
-    crc16_update(&crc, (uint8_t*)&p->hr, 8);
-    p->crc16[0] = (crc & 0x00FF)>>0;
-    p->crc16[1] = (crc & 0xFF00)>>8;
-}
 
 uint32_t kptl_frame_packet_begin(kptl_t *p, uint8_t frame_type)
 {

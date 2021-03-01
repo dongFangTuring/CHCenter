@@ -92,7 +92,7 @@ void MainWindow:: slt_serial_send(QByteArray &ba)
     //qDebug("serial_send_then_recv:" + tx.toHex(',') + '\n');
 
     //  this->mserial->write(tx);
-    //  this->mserial->waitForBytesWritten();
+      this->mserial->waitForBytesWritten();
     //this->mserial->waitForReadyRead(20);
 }
 
@@ -118,9 +118,13 @@ void MainWindow::on_btn_serial_open_clicked()
             connect(mserial, &QSerialPort::errorOccurred, this, &MainWindow::slt_serial_error);
             connect(mserial, &QSerialPort::readyRead, this, &MainWindow::slt_serial_read);
 
-            /* connect kboot decoder to serial */
+            /* connect kboot paser to serial */
             connect(this, &MainWindow::sig_serial_send, this->kboot, &kboot_protocol::slt_serial_read);
             connect(this->kboot, &kboot_protocol::sig_serial_send, this, &MainWindow::slt_serial_send);
+
+            /* connect kboot paser to imu_paser */
+            connect(this->kboot, &kboot_protocol::sig_frame_recv, this, &MainWindow::slt_kptl_frame_recv);
+
 
             /* connect kboot download progress */
             connect(this->kboot, &kboot_protocol::sig_download_progress, this, &MainWindow::slt_update_progress_bar);
@@ -139,6 +143,12 @@ void MainWindow::on_btn_serial_open_clicked()
         serial_close_ui_action();
     }
 
+}
+
+
+void MainWindow::slt_kptl_frame_recv(QByteArray &ba)
+{
+    qDebug()<<ba.size();
 }
 
 void MainWindow::serial_close_ui_action()
@@ -236,7 +246,7 @@ void MainWindow::on_btn_program_clicked()
     ba = QByteArray::fromRawData("AT+RST\r\n", 8);
     this->mserial->write(ba);
     this->mserial->waitForBytesWritten();
-    this->kboot->delay(50);
+    this->kboot->delay(20);
 
 
     if(this->ba_image.size() == 0)
