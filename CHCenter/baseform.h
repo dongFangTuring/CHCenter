@@ -35,7 +35,7 @@ protected:
 
 
 signals:
-    void sigUpdateBaseFormChart(receive_imusol_packet_t, uchar);
+    void sigUpdateBaseFormChart(receive_imusol_packet_t);
     void sigSendIMUtoThreeD(receive_imusol_packet_t);
 
 
@@ -70,8 +70,8 @@ private slots:
     ///stackwidget page1 content:data, chart and attitude indicator///
     void updateBaseForm();
     void addADI();
-    void updateIMUTable(receive_imusol_packet_t, uchar, uchar);
-    void updateBaseFormChart(receive_imusol_packet_t, uchar);
+    void updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bits, uchar protocol_tag);
+    void updateBaseFormChart(receive_imusol_packet_t);
 
     ///stackwidget page2 content:///
 

@@ -73,8 +73,8 @@ BaseForm::BaseForm(QWidget *parent)
     m_chartEul=new ChartWindow(nullptr,"eul");
     m_chartQuat=new ChartWindow(nullptr,"quat");
 
-    connect(this, SIGNAL(sigUpdateBaseFormChart(receive_imusol_packet_t, uchar)),
-            this, SLOT(updateBaseFormChart(receive_imusol_packet_t, uchar)));
+    connect(this, SIGNAL(sigUpdateBaseFormChart(receive_imusol_packet_t)),
+            this, SLOT(updateBaseFormChart(receive_imusol_packet_t)), Qt::DirectConnection);
 
 
     //page 2 widget initialize : 3D widget
@@ -446,7 +446,7 @@ void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 
     mutex_writing.unlock();
 
-    emit sigUpdateBaseFormChart(imu_data, ch_serialport->Content_bits);
+    emit sigUpdateBaseFormChart(imu_data);
     emit sigSendIMUtoThreeD(imu_data);
 
 }
@@ -469,7 +469,7 @@ void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
 
         mutex_writing.unlock();
 
-        emit sigUpdateBaseFormChart(imu_data, ch_serialport->Content_bits);
+        emit sigUpdateBaseFormChart(imu_data);
         emit sigSendIMUtoThreeD(imu_data);
     }
     //No node is connected.
@@ -546,6 +546,7 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
     else{
         if(ui->LabelID->isVisible())
             ui->LabelID->setVisible(false);
+
     }
     if(content_bits & BIT_VALID_ACC){
         if(!ui->LabelGPAcc->isVisible()){
@@ -560,7 +561,6 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
         if(ui->LabelGPAcc->isVisible()){
             ui->LabelGPAcc->setVisible(false);
         }
-
     }
     if(content_bits & BIT_VALID_GYR){
         if(!ui->LabelGPGyro->isVisible())
@@ -632,34 +632,34 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
 
 }
 
-void BaseForm::updateBaseFormChart(receive_imusol_packet_t imu_data, uchar content_bits)
+void BaseForm::updateBaseFormChart(receive_imusol_packet_t imu_data)
 {
 
-    if(content_bits & BIT_VALID_ACC){
+    if(m_contentbits & BIT_VALID_ACC){
         m_chartAcc->updateLineData(imu_data.acc);
     }
     else{
         m_chartAcc->setVisible(false);
     }
-    if(content_bits & BIT_VALID_GYR){
+    if(m_contentbits & BIT_VALID_GYR){
         m_chartGyr->updateLineData(imu_data.gyr);
     }
     else{
         m_chartGyr->setVisible(false);
     }
-    if(content_bits & BIT_VALID_MAG){
+    if(m_contentbits & BIT_VALID_MAG){
         m_chartMag->updateLineData(imu_data.mag);
     }
     else{
         m_chartMag->setVisible(false);
     }
-    if(content_bits & BIT_VALID_EUL){
+    if(m_contentbits & BIT_VALID_EUL){
         m_chartEul->updateLineData(imu_data.eul);
     }
     else{
         m_chartEul->setVisible(false);
     }
-    if(content_bits & BIT_VALID_QUAT){
+    if(m_contentbits & BIT_VALID_QUAT){
         m_chartQuat->updateLineData(imu_data.quat);
     }
     else{

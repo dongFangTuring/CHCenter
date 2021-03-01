@@ -56,3 +56,4 @@ compile_commands.json
 
 # QtCreator local machine specific files for imported projects
 *creator.user*
+CHFirmwareUpdater/atf413_hi229_b0_32k_modbus.hex

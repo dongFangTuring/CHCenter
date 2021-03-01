@@ -92,19 +92,14 @@ public slots:
 private slots:
     void updateMovingWindow();
 
-    void on_SliderSample_valueChanged(int value);
-
-    void on_BTNSampleZoomIn_clicked();
-
-    void on_BTNSampleZoomOut_clicked();
-
-    void on_SliderValue_valueChanged(int value);
-
-    void on_BTNValueZoomIn_clicked();
-
-    void on_BTNValueZoomOut_clicked();
-
-    void on_BNTValueReset_clicked();
+    //obsolete control BTN
+//    void on_SliderSample_valueChanged(int value);
+//    void on_BTNSampleZoomIn_clicked();
+//    void on_BTNSampleZoomOut_clicked();
+//    void on_SliderValue_valueChanged(int value);
+//    void on_BTNValueZoomIn_clicked();
+//    void on_BTNValueZoomOut_clicked();
+//    void on_BNTValueReset_clicked();
 
 private:
     Ui::ChartWindow *ui;

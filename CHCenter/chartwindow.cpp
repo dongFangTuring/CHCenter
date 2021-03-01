@@ -13,8 +13,8 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     this->setStyleSheet("background-color:#424242; color:white;");
 
     m_chart = new QChart;
-    movingwindow_timer.setInterval(30);
-    connect(&movingwindow_timer, SIGNAL(timeout(void)), this, SLOT(updateMovingWindow(void)));
+    movingwindow_timer.setInterval(20);
+    connect(&movingwindow_timer, SIGNAL(timeout(void)), this, SLOT(updateMovingWindow(void)), Qt::DirectConnection);
     movingwindow_timer.start();
 
     //create default axes first, so we can add series later.
@@ -87,14 +87,22 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
     }
 
+
+
     //the max and min of Y axis
     valueRange[0]=valueRange[0]*2;
     valueRange[1]=valueRange[1]*2;
 
     sample_counter=0;
 
+    point_W.reserve(50000);
+    point_X.reserve(50000);
+    point_Y.reserve(50000);
+    point_Z.reserve(50000);
+
+
     axisX->setLabelFormat("%d");
-    axisX->setTitleText("Sample");
+    axisX->setTitleText("Samples");
 
     axisY->setTickAnchor(0);
     axisY->setTickCount(11);
@@ -106,6 +114,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
     m_chart->legend()->setVisible(true);  //設定圖例可見
 
+
     connectMarkers();  //將曲線與圖例連線起來，可以勾選進行顯示與隱藏
 
     //sync max and min value to cuschart class
@@ -114,17 +123,16 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     m_chartView->valueRange[1]=valueRange[1];
     m_chartView->max_sample_number=max_sample_number;
 
-    m_chartView->setRenderHint(QPainter::Antialiasing);
+    m_chartView->setRenderHints(QPainter::Antialiasing);
+    m_chartView->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
+    //m_chartView->setCacheMode(QGraphicsView::CacheBackground);
+    m_chartView->setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
+    //m_chart->setCacheMode(QGraphicsItem::ItemCoordinateCache,QSize(2000,2000));
+
     //m_chartView->setRubberBand(QChartView::RectangleRubberBand);  //整體縮放
 
     ui->LayoutChart->addWidget(m_chartView);
 
-    ui->SliderSample->setPageStep(1000);
-    ui->SliderSample->setSingleStep(100);
-
-    ui->SliderValue->setRange(valueRange[0]*100,valueRange[1]*100);
-    ui->SliderValue->setPageStep(100);
-    ui->SliderValue->setSingleStep(10);
 
     init();
 
@@ -136,12 +144,12 @@ ChartWindow::~ChartWindow()
 
 void ChartWindow::updateLineData(float *array){
 
-    //m_chartView->setFocus();
+    m_chartView->setFocus();
     if(this->isVisible()){
-
+        //        if(!movingwindow_timer.isActive())
+        //            movingwindow_timer.start();
         if(sample_counter>=max_sample_number){
             sample_counter=0;
-
         }
 
         else{
@@ -153,10 +161,12 @@ void ChartWindow::updateLineData(float *array){
                     point_Z.replace(sample_counter , QPointF(sample_counter, array[3]));
                 }
                 else{
+
                     point_W.append(QPointF(sample_counter,array[0]));
                     point_X.append(QPointF(sample_counter,array[1]));
                     point_Y.append(QPointF(sample_counter,array[2]));
                     point_Z.append(QPointF(sample_counter,array[3]));
+
                 }
 
             }
@@ -175,39 +185,41 @@ void ChartWindow::updateLineData(float *array){
             sample_counter++;
         }
 
-
+        //updateMovingWindow();
     }
     else{
-
+        //        if(movingwindow_timer.isActive())
+        //            movingwindow_timer.stop();
     }
+
+
 }
 void ChartWindow::updateMovingWindow()
 {
     if(this->isVisible()){
+        //m_chartV->setUpdatesEnabled(false);
 
         //定位拉條
-        qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
-        qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
-        qreal cur_y_min = axisY->min();
-        qreal cur_y_max = axisY->max();
+        //        qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
+        //        qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
+        //        qreal cur_y_min = axisY->min();
+        //        qreal cur_y_max = axisY->max();
 
-        qreal distance_x=abs(cur_x_max-cur_x_min);
-        qreal distance_y=abs(cur_y_max-cur_y_min);
-        QPointF view_center=QPointF((cur_x_max+cur_x_min)/2,(cur_y_max+cur_y_min)/2);
-        axisX->setTitleText(tr("%1 Sample").arg(round(distance_x)));
+        //        qreal distance_x=abs(cur_x_max-cur_x_min);
+        //        qreal distance_y=abs(cur_y_max-cur_y_min);
+        //        QPointF view_center=QPointF((cur_x_max+cur_x_min)/2,(cur_y_max+cur_y_min)/2);
+        //        axisX->setTitleText(tr("%1 Sample").arg(round(distance_x)));
 
-        ui->SliderSample->setRange(round(0+distance_x/2),round(max_sample_number-distance_x/2));
-        ui->SliderValue->setRange(round((valueRange[0]+distance_y/2)*100),round((valueRange[1]-distance_y/2)*100));
 
-        ui->SliderSample->setValue(view_center.x());
-        ui->SliderValue->setValue(round(-view_center.y()*100));
+        //        ui->SliderSample->setRange(round(0+distance_x/2),round(max_sample_number-distance_x/2));
+        //        ui->SliderValue->setRange(round((valueRange[0]+distance_y/2)*100),round((valueRange[1]-distance_y/2)*100));
+
+        //        ui->SliderSample->setValue(view_center.x());
+        //        ui->SliderValue->setValue(round(-view_center.y()*100));
 
 
         //for following mode
         if(ui->BTNFollowingMode->isChecked()){
-            QElapsedTimer timer;
-            timer.start();
-
 
             qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
             qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
@@ -257,9 +269,8 @@ void ChartWindow::updateMovingWindow()
 
             axisX->setRange(0,distance_x);
 
-            //qDebug() << "The slow operation took" << timer.elapsed() << "milliseconds";
-
-            m_chartView->zoom_mode=2;  //zoom at the newest
+            if(m_chartView->zoom_mode!=2)
+                m_chartView->zoom_mode=2;  //zoom at the newest
         }
         //for free mode
         else{
@@ -276,9 +287,11 @@ void ChartWindow::updateMovingWindow()
                 m_serieslist.at(2)->replace(point_Z);
 
             }
-
-            m_chartView->zoom_mode=1;  //zoom at the cursor pos
+            if(m_chartView->zoom_mode!=1)
+                m_chartView->zoom_mode=1;  //zoom at the cursor pos
         }
+
+
 
     }
 
@@ -422,81 +435,81 @@ void ChartWindow::handleMarkerClicked()
 
 
 
-void ChartWindow::on_SliderSample_valueChanged(int value)
-{
+//void ChartWindow::on_SliderSample_valueChanged(int value)
+//{
 
 
-    qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
-    qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
+//    qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
+//    qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
 
 
-    qreal distance_x=abs(cur_x_max-cur_x_min);
+//    qreal distance_x=abs(cur_x_max-cur_x_min);
 
-    axisX->setRange(value-distance_x/2,value+distance_x/2);
+//    axisX->setRange(value-distance_x/2,value+distance_x/2);
 
-    if(axisX->min()<0){
-        qreal error = 0-cur_x_min;
-        axisX->setRange(cur_x_min+error,cur_x_max+error);
-    }
-    if(axisX->max()>max_sample_number){
-        qreal error = cur_x_max-max_sample_number;
-        axisX->setRange(cur_x_min-error,cur_x_max-error);
-    }
+//    if(axisX->min()<0){
+//        qreal error = 0-cur_x_min;
+//        axisX->setRange(cur_x_min+error,cur_x_max+error);
+//    }
+//    if(axisX->max()>max_sample_number){
+//        qreal error = cur_x_max-max_sample_number;
+//        axisX->setRange(cur_x_min-error,cur_x_max-error);
+//    }
 
-}
+//}
 
-void ChartWindow::on_BTNSampleZoomIn_clicked()
-{
-    m_chartView->zoom(0,0,0);
+//void ChartWindow::on_BTNSampleZoomIn_clicked()
+//{
+//    m_chartView->zoom(0,0,0);
 
-}
+//}
 
-void ChartWindow::on_BTNSampleZoomOut_clicked()
-{
-    m_chartView->zoom(1,0,0);
-}
+//void ChartWindow::on_BTNSampleZoomOut_clicked()
+//{
+//    m_chartView->zoom(1,0,0);
+//}
 
-void ChartWindow::on_SliderValue_valueChanged(int value)
-{
-    float f_value=float(-value)/100.0f;
+//void ChartWindow::on_SliderValue_valueChanged(int value)
+//{
+//    float f_value=float(-value)/100.0f;
 
 
-    qreal cur_y_min = axisY->min();
-    qreal cur_y_max = axisY->max();
+//    qreal cur_y_min = axisY->min();
+//    qreal cur_y_max = axisY->max();
 
-    qreal distance_y=abs(cur_y_max-cur_y_min);
-    axisY->setRange(f_value-distance_y/2,f_value+distance_y/2);
+//    qreal distance_y=abs(cur_y_max-cur_y_min);
+//    axisY->setRange(f_value-distance_y/2,f_value+distance_y/2);
 
-    if(axisY->min()<valueRange[0]){
-        qreal error = valueRange[0]-cur_y_min;
-        axisY->setRange(cur_y_min+error,cur_y_max+error);
-    }
-    if(axisY->max()>valueRange[1]){
-        qreal error = cur_y_max-valueRange[1];
-        axisY->setRange(cur_y_min-error,cur_y_max-error);
-    }
-}
+//    if(axisY->min()<valueRange[0]){
+//        qreal error = valueRange[0]-cur_y_min;
+//        axisY->setRange(cur_y_min+error,cur_y_max+error);
+//    }
+//    if(axisY->max()>valueRange[1]){
+//        qreal error = cur_y_max-valueRange[1];
+//        axisY->setRange(cur_y_min-error,cur_y_max-error);
+//    }
+//}
 
-void ChartWindow::on_BTNValueZoomIn_clicked()
-{
-    m_chartView->zoom(0,1,0);
-    //qDebug()<<"zoomin";
-}
+//void ChartWindow::on_BTNValueZoomIn_clicked()
+//{
+//    m_chartView->zoom(0,1,0);
+//    //qDebug()<<"zoomin";
+//}
 
-void ChartWindow::on_BTNValueZoomOut_clicked()
-{
-    m_chartView->zoom(1,1,0);
-    //qDebug()<<"zoomout";
-}
-void ChartWindow::on_BNTValueReset_clicked()
-{
-    qreal cur_y_min = axisY->min();
-    qreal cur_y_max = axisY->max();
-    qreal distance_y=abs(cur_y_max-cur_y_min);
+//void ChartWindow::on_BTNValueZoomOut_clicked()
+//{
+//    m_chartView->zoom(1,1,0);
+//    //qDebug()<<"zoomout";
+//}
+//void ChartWindow::on_BNTValueReset_clicked()
+//{
+//    qreal cur_y_min = axisY->min();
+//    qreal cur_y_max = axisY->max();
+//    qreal distance_y=abs(cur_y_max-cur_y_min);
 
-    axisY->setRange(0-distance_y/2,0+distance_y/2);
+//    axisY->setRange(0-distance_y/2,0+distance_y/2);
 
-}
+//}
 
 
 
@@ -509,6 +522,7 @@ CusChartView::CusChartView(QChart* chart, QWidget *parent)
 {
     setDragMode(QGraphicsView::NoDrag);
     this->setMouseTracking(true);
+    this->setTransformationAnchor(QGraphicsView::NoAnchor);
 }
 
 
@@ -618,6 +632,7 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
             axisX->setRange(axisX->min(),max_sample_number);
         }
 
+
     }
     else if(x_y==1){ //y
 
@@ -643,6 +658,7 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
     }
 
 
+    this->update();
 
 
 }
