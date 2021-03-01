@@ -9,12 +9,13 @@ ThreeDForm::ThreeDForm(QWidget *parent) :
 
     timer=new QTimer(this);
     connect(timer, SIGNAL(timeout(void)), this, SLOT(objectReplot(void)));
-    timer->setInterval(40);
+    timer->setInterval(30);
+
     obj_filepath="objModel/jet.obj";
     m_cam_scale[0]=100;
     m_cam_scale[1]=45;
     m_cam_scale[2]=225;
-
+    initView();
 }
 
 
@@ -26,11 +27,6 @@ ThreeDForm::~ThreeDForm()
 }
 int ThreeDForm::initView()
 {
-
-    // check if path exists and if yes: Is it a file and no directory?
-    bool fileExists = QFileInfo::exists(obj_filepath) && QFileInfo(obj_filepath).isFile();
-    if(fileExists!=1)
-        return -1;
 
     view = new Qt3DExtras::Qt3DWindow();
 
@@ -47,9 +43,34 @@ int ThreeDForm::initView()
     rootEntity = new Qt3DCore::QEntity;
     customObj = new Qt3DCore::QEntity(rootEntity);
 
-    //add obj component
-    loadobj(obj_filepath);
+    //set transformation
+    objTransform = new Qt3DCore::QTransform();
+    objTransform->setScale(5.0f);
+    objTransform->setTranslation(QVector3D(0.0f, 0.0f, 0.0f));
 
+    //set obj material
+    objMaterial = new Qt3DExtras::QPhongMaterial();
+    objMaterial->setDiffuse(QColor(100, 100, 100));
+    objMaterial->setAmbient(QColor(255, 255,255));
+    objMaterial->setSpecular(QColor(255,255,255));
+    objMaterial->setShininess(150.0f);
+
+    //set obj material
+    customObjMesh = new Qt3DRender::QMesh();
+
+    //add .obj file
+    int rst=loadobj(obj_filepath);
+    if(rst==-1){
+        //        QMessageBox msgBox;
+        //        msgBox.setText(tr("No file exists or wrong path!"));
+        //        msgBox.setWindowTitle(tr("Error"));
+        //        msgBox.exec();
+    }
+
+    //load .obj file to customObj
+    customObj->addComponent(customObjMesh);
+    customObj->addComponent(objMaterial);
+    customObj->addComponent(objTransform);
 
     camera = view->camera();
     camera->lens()->setPerspectiveProjection(60.0f, 16.0f/9.0f, 1.0f,700.0f);
@@ -97,7 +118,6 @@ int ThreeDForm::initView()
 
 int ThreeDForm::loadobj(QString file)
 {
-    customObj->deleteLater();
     // check if path exists and if yes: Is it a file and no directory?
     bool fileExists = QFileInfo::exists(file) && QFileInfo(file).isFile();
     if(fileExists!=1)
@@ -105,27 +125,8 @@ int ThreeDForm::loadobj(QString file)
     QUrl url =QUrl::fromLocalFile(file);
 
     //load obj mesh
-    Qt3DRender::QMesh *customObjMesh = new Qt3DRender::QMesh();
     customObjMesh->setMeshName("myPlane");
     customObjMesh->setSource(url);
-
-    //set obj material
-    Qt3DExtras::QPhongMaterial *objMaterial = new Qt3DExtras::QPhongMaterial();
-    objMaterial->setDiffuse(QColor(100, 100, 100));
-    objMaterial->setAmbient(QColor(255, 255,255));
-    objMaterial->setSpecular(QColor(255,255,255));
-    objMaterial->setShininess(150.0f);
-
-    //set transformation
-    objTransform = new Qt3DCore::QTransform();
-    objTransform->setScale(5.0f);
-    objTransform->setTranslation(QVector3D(0.0f, 0.0f, 0.0f));
-
-    //load to customObj
-    customObj = new Qt3DCore::QEntity(rootEntity);
-    customObj->addComponent(customObjMesh);
-    customObj->addComponent(objMaterial);
-    customObj->addComponent(objTransform);
 
     return 0;
 }
@@ -194,33 +195,18 @@ void ThreeDForm::objectReplot()
     ui->LabelXnumber->setText(QString::number(m_euler[0],'f',2));
     ui->LabelYnumber->setText(QString::number(m_euler[1],'f',2));
     ui->LabelZnumber->setText(QString::number(m_euler[2],'f',2));
-
 }
 
 void ThreeDForm::startThreeDPlot()
 {
-    int rst=initView();
-    if(rst==-1){
-        QMessageBox msgBox;
-        msgBox.setText(tr("No file exists or wrong path!"));
-        msgBox.setWindowTitle(tr("Error"));
-        msgBox.exec();
-    }
-    else{
-        timer->start();
-    }
+    timer->start();
+
 }
 
 void ThreeDForm::stopThreeDPlot()
 {
     if(timer->isActive()){
         timer->stop();
-        container->deleteLater();
-        view->deleteLater();
-        objTransform->deleteLater();
-        camera->deleteLater();
-        customObj->deleteLater();
-        rootEntity->deleteLater();
     }
 }
 
@@ -235,7 +221,6 @@ void ThreeDForm::on_BNTLoad_clicked()
     qDebug()<<file;
     if(QFile(file).exists()){
         obj_filepath=file;
-        startThreeDPlot();
     }
 }
 
@@ -303,3 +288,4 @@ void ThreeDForm::on_SliderLeftRight_sliderMoved(int theta)
 
     m_cam_scale[2]=theta;
 }
+

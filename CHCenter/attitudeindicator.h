@@ -2,9 +2,6 @@
 #define ATTITUDEINDICATOR_H
 
 #include <QWidget>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>

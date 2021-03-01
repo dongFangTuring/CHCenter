@@ -44,6 +44,7 @@ public:
     float max_sample_number;
     uint sample_counter;
     int zoom_mode=0;
+    bool isFreeMode=false;
 
     void zoom(bool in_out, bool x_y, int mode);
 
@@ -52,6 +53,7 @@ protected:
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *event) override;
@@ -60,6 +62,9 @@ private:
     QPoint m_lastMousePos;
     bool key_ctrl_pressed=false;
     QPoint cursor_pos;
+
+    uchar scale_level=5;
+    ushort x_scales[15]={50,100,200,500,1000,2000,5000,7500,10000,12500,15000,17500,20000,30000,50000};
 
 };
 
@@ -104,12 +109,13 @@ private slots:
 private:
     Ui::ChartWindow *ui;
 
+    //Y and X axis range
     int valueRange[2];
     const float max_sample_number=50000;
-    //紀錄圖表資料種類
+    //record the type of chart, such as quat, acc..
     QString m_type;
 
-    QList<QTime> timelist;
+
     QTimer movingwindow_timer;
 
     QChart * m_chart;     //圖表元件，可理解為畫筆，用它畫曲線
@@ -120,6 +126,8 @@ private:
     QList<QPointF> point_Y;
     QList<QPointF> point_Z;
     QList<QPointF> point_W;
+    QList<QPointF> point_RFLine;
+    QList<QPointF> point_norm;
 
 
     uint sample_counter;
@@ -128,7 +136,6 @@ private:
     QValueAxis *axisX;
     QValueAxis *axisY;
 
-    QThread *m_thread;
 
 
 };

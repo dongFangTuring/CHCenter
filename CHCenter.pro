@@ -24,6 +24,7 @@ SOURCES += \
     CHCenter/threedform.cpp \
     packet/imu_data_decode.cpp \
     packet/packet.cpp \
+    mdbus/mdbus.cpp \
 
 HEADERS += \
     CHCenter/aboutform.h \
@@ -36,7 +37,8 @@ HEADERS += \
     CHCenter/csvlogform.h \
     CHCenter/threedform.h \
     packet/imu_data_decode.h \
-    packet/packet.h
+    packet/packet.h \
+    mdbus/mdbus.h
 
 FORMS += \
     CHCenter/aboutform.ui \

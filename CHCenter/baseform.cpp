@@ -8,7 +8,7 @@
  *
  */
 
-QString sf_version="1.0.2";//major.minor.bugix
+QString sf_version="1.1.0";//major.minor.bugix
 
 BaseForm::BaseForm(QWidget *parent)
     : QMainWindow(parent)

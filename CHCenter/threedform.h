@@ -14,7 +14,6 @@
 #include <QTimer>
 #include <QMessageBox>
 
-#include "packet/packet.h"
 #include "packet/imu_data_decode.h"
 
 namespace Ui {
@@ -52,12 +51,17 @@ private slots:
 private:
     Ui::ThreeDForm *ui;
     QWidget *container;
+
+
     Qt3DExtras::Qt3DWindow *view;
     Qt3DCore::QTransform *objTransform;
     Qt3DRender::QCamera *camera;
 
     Qt3DCore::QEntity *customObj;
     Qt3DCore::QEntity *rootEntity;
+
+    Qt3DRender::QMesh *customObjMesh;
+    Qt3DExtras::QPhongMaterial *objMaterial;
 
     QTimer *timer;
     QMutex mutex_writing;

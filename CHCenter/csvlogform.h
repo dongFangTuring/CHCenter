@@ -11,7 +11,6 @@
 #include <QTimer>
 #include <QThread>
 
-#include "packet/packet.h"
 #include "packet/imu_data_decode.h"
 
 namespace Ui {

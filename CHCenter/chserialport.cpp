@@ -166,8 +166,6 @@ void CHSerialport::handleData()
 
     if(CH_serial->bytesAvailable() > 0 && CH_serial->isReadable())
     {
-        long long NumberOfBytesToRead=CH_serial->bytesAvailable();
-
         QByteArray raw_data = CH_serial->readAll();
 
         mutex_writing.lock();

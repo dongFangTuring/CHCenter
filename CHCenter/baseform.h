@@ -7,7 +7,7 @@
 #include <QCloseEvent>
 
 #include "packet/imu_data_decode.h"
-#include "packet/packet.h"
+
 #include "chcomform.h"
 #include "chserialport.h"
 #include "attitudeindicator.h"
