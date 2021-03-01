@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "updater_mainform.h"
+#include "ui_updater_mainform.h"
 #include <QSerialPortInfo>
 #include <QLCDNumber>
 #include <QThread>

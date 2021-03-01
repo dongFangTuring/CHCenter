@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef UPDATER_MAINFORM_H
+#define UPDATER_MAINFORM_H
 
 #include <QMainWindow>
 
@@ -52,4 +52,4 @@ private:
     void serial_close_ui_action();
     Ui::MainWindow *ui;
 };
-#endif // MAINWINDOW_H
+#endif // UPDATER_MAINFORM_H

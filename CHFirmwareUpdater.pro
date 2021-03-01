@@ -1,5 +1,5 @@
 QT       += core gui serialport
-RC_FILE = exe_ico.rc
+RC_FILE = CHFirmwareUpdater/updater_ico.rc
 
 # 支持QCustomPlot
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
@@ -14,27 +14,29 @@ QMAKE_CXXFLAGS += /utf-8
 SOURCES += \
     kptl/kboot_protocol.cpp \
     kptl/kptl.c \
-    main.cpp \
-    mainwindow.cpp \
-    mdbus/mdbus.cpp \
-    mdbus_dialog.cpp \
+    mdbus/mdbus.cpp \ 
     utilities/hex2bin.cpp \
     utilities/serial.cpp \
-    utilities/test2.cpp
+    utilities/test2.cpp \
+    CHFirmwareUpdater/mdbus_dialog.cpp \
+    CHFirmwareUpdater/updater_main.cpp \
+    CHFirmwareUpdater/updater_mainform.cpp \
+
 
 HEADERS += \
     kptl/kboot_protocol.h \
     kptl/kptl.h \
-    mainwindow.h \
     mdbus/mdbus.h \
-    mdbus_dialog.h \
     utilities/hex2bin.h \
     utilities/serial.h \
-    utilities/test2.h
+    utilities/test2.h \
+    CHFirmwareUpdater/updater_mainform.h \
+    CHFirmwareUpdater/mdbus_dialog.h \
+
 
 FORMS += \
-    mainwindow.ui \
-    mdbus_dialog.ui
+    CHFirmwareUpdater/mdbus_dialog.ui \
+    CHFirmwareUpdater/updater_mainform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

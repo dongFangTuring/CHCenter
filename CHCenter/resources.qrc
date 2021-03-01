@@ -1,19 +1,19 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/refreshing.png</file>
-        <file>images/ok.png</file>
+        <file>images/bluesquare.png</file>
         <file>images/cancel.png</file>
+        <file>images/clear_text.png</file>
+        <file>images/greensquare.png</file>
+        <file>images/line-chart.png</file>
+        <file>images/mainicon.png</file>
+        <file>images/ok.png</file>
+        <file>images/redsquare.png</file>
+        <file>images/refreshing.png</file>
+        <file>images/send.png</file>
+        <file>images/zoomin.png</file>
+        <file>images/zoomout.png</file>
         <file>CHCenter_cn.qm</file>
         <file>CHCenter_en_US.qm</file>
         <file>CHCenter_tc.qm</file>
-        <file>images/mainicon.png</file>
-        <file>images/clear_text.png</file>
-        <file>images/send.png</file>
-        <file>images/bluesquare.png</file>
-        <file>images/greensquare.png</file>
-        <file>images/redsquare.png</file>
-        <file>images/zoomin.png</file>
-        <file>images/zoomout.png</file>
-        <file>images/line-chart.png</file>
     </qresource>
 </RCC>
