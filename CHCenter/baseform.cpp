@@ -65,7 +65,7 @@ BaseForm::BaseForm(QWidget *parent)
     //a timer to update baseform
     baseform_timer=new QTimer(this);
     connect(baseform_timer, SIGNAL(timeout(void)), this, SLOT(updateBaseForm(void)));
-    baseform_timer->setInterval(40);
+    baseform_timer->setInterval(50);
 
     m_chartAcc=new ChartWindow(nullptr,"acc");
     m_chartGyr=new ChartWindow(nullptr,"gyr");

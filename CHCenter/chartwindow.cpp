@@ -15,7 +15,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     m_chart = new QChart;
     movingwindow_timer.setInterval(1000/60);
     connect(&movingwindow_timer, SIGNAL(timeout(void)), this, SLOT(updateMovingWindow(void)), Qt::DirectConnection);
-    movingwindow_timer.start();
+    //movingwindow_timer.start();
 
     //create default axes first, so we can add series later.
     axisX = new QValueAxis;
@@ -185,7 +185,7 @@ void ChartWindow::updateLineData(float *array){
             sample_counter++;
         }
 
-        //updateMovingWindow();
+        updateMovingWindow();
     }
     else{
         //        if(movingwindow_timer.isActive())
