@@ -24,9 +24,13 @@ ThreeDForm::~ThreeDForm()
     stopThreeDPlot();
     delete ui;
 }
-void ThreeDForm::initView()
+int ThreeDForm::initView()
 {
-    //timer to update a new rotation
+
+    // check if path exists and if yes: Is it a file and no directory?
+    bool fileExists = QFileInfo::exists(obj_filepath) && QFileInfo(obj_filepath).isFile();
+    if(fileExists!=1)
+        return -1;
 
     view = new Qt3DExtras::Qt3DWindow();
 
@@ -44,13 +48,8 @@ void ThreeDForm::initView()
     customObj = new Qt3DCore::QEntity(rootEntity);
 
     //add obj component
-    int rst=loadobj(obj_filepath);
-    if(rst==-1){
-        QMessageBox msgBox;
-        msgBox.setText(tr("No file exists or wrong path!"));
-        msgBox.setWindowTitle(tr("Error"));
-        msgBox.exec();
-    }
+    loadobj(obj_filepath);
+
 
     camera = view->camera();
     camera->lens()->setPerspectiveProjection(60.0f, 16.0f/9.0f, 1.0f,700.0f);
@@ -93,13 +92,12 @@ void ThreeDForm::initView()
     on_SliderZoom_sliderMoved(m_cam_scale[0]);
     on_SliderUpDown_sliderMoved(m_cam_scale[1]);
     on_SliderLeftRight_sliderMoved(m_cam_scale[2]);
-
+    return 0;
 }
 
 int ThreeDForm::loadobj(QString file)
 {
     customObj->deleteLater();
-
     // check if path exists and if yes: Is it a file and no directory?
     bool fileExists = QFileInfo::exists(file) && QFileInfo(file).isFile();
     if(fileExists!=1)
@@ -201,8 +199,16 @@ void ThreeDForm::objectReplot()
 
 void ThreeDForm::startThreeDPlot()
 {
-    initView();
-    timer->start();
+    int rst=initView();
+    if(rst==-1){
+        QMessageBox msgBox;
+        msgBox.setText(tr("No file exists or wrong path!"));
+        msgBox.setWindowTitle(tr("Error"));
+        msgBox.exec();
+    }
+    else{
+        timer->start();
+    }
 }
 
 void ThreeDForm::stopThreeDPlot()
@@ -228,16 +234,8 @@ void ThreeDForm::on_BNTLoad_clicked()
 
     qDebug()<<file;
     if(QFile(file).exists()){
-
         obj_filepath=file;
-        int rst=loadobj(obj_filepath);
-
-        if(rst==-1){
-            QMessageBox msgBox;
-            msgBox.setText(tr("No file exists or wrong path!"));
-            msgBox.setWindowTitle(tr("Error"));
-            msgBox.exec();
-        }
+        startThreeDPlot();
     }
 }
 

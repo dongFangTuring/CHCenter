@@ -18,7 +18,7 @@ QStringList loadsetting(QString setting){
 int main(int argc, char *argv[])
 {
 
-    QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+    QApplication::setAttribute(Qt::AA_UseOpenGLES);
     QApplication a(argc, argv);
 
     //register type for passing value between signal/slot

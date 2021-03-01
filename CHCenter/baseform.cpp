@@ -190,7 +190,7 @@ void BaseForm::on_SideBarBTN4_clicked()
  */
 void BaseForm::SideBar_toggled(int index)
 {
-    if(ui->SideBarBTN4->isEnabled()==0){
+    if(ui->SideBarBTN4->isEnabled()==false){
         ch_settingform->settingConfig_leave();
     }
 

@@ -1,4 +1,4 @@
-﻿#ifndef THREEDFORM_H
+#ifndef THREEDFORM_H
 #define THREEDFORM_H
 
 #include <QWidget>
@@ -66,7 +66,7 @@ private:
 
     float m_euler[3]={}; //x, y, z
 
-    void initView();
+    int initView();
     void drawLine(const QVector3D& start, const QVector3D& end, const QColor& color, Qt3DCore::QEntity *_rootEntity);
 
     int m_cam_scale[3];  //zoom, up/down, left/right

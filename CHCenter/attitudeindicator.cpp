@@ -4,7 +4,7 @@ QADI::QADI(QWidget *parent)
     : QOpenGLWidget(parent)
 {
     m_sizeMin = 180;
-    m_sizeMax = 180;
+    m_sizeMax = 200;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
 
@@ -16,6 +16,7 @@ QADI::QADI(QWidget *parent)
 
     m_roll  = 0.0;
     m_pitch = 0.0;
+    this->setStyleSheet("border:none;");
 }
 
 QADI::~QADI()
@@ -30,7 +31,8 @@ void QADI::canvasReplot_slot(void)
 
 void QADI::initializeGL()
 {
-    glClearColor(1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1);
+    //glClearColor(1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1);
+
 }
 
 
@@ -44,7 +46,12 @@ void QADI::paintGL()
     //    QTime t;
     //    t.start();
 
+
     QPainter painter(this);
+
+    QBrush bgWhite(QColor(250,250,250));
+    painter.setBrush(bgWhite);
+    painter.drawRect(-1, -1, m_sizeMax+2, m_sizeMax+2);
 
     QBrush bgSky(QColor(134,181,225));
     QBrush bgGround(QColor(130,110,95));
@@ -296,7 +303,7 @@ void QCompass::canvasReplot_slot(void)
 
 void QCompass::initializeGL()
 {
-    glClearColor(1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1);
+    //glClearColor(1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1.0f/255.0f*250.0f,1);
 }
 
 void QCompass::resizeGL()
@@ -306,8 +313,11 @@ void QCompass::resizeGL()
 
 void QCompass::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     QPainter painter(this);
+    QBrush bgWhite(QColor(250,250,250));
+    painter.setBrush(bgWhite);
+    painter.drawRect(-1, -1, m_sizeMax+2, m_sizeMax+2);
 
     QBrush bgGround(QColor(41,45,46));
 
