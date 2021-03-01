@@ -184,8 +184,13 @@ void ChartWindow::updateLineData(float *array){
             }
             sample_counter++;
         }
+        uint update_interval=framerate/30;
+        if(update_interval<1)
+            update_interval=1;
 
-        updateMovingWindow();
+        if(sample_counter%update_interval==0)
+            updateMovingWindow();
+
     }
     else{
         //        if(movingwindow_timer.isActive())

@@ -17,10 +17,6 @@ BaseForm::BaseForm(QWidget *parent)
 
     ui->setupUi(this);
 
-
-
-
-
     this->setWindowTitle(tr("CH Center"));
 
 
@@ -205,7 +201,7 @@ void BaseForm::SideBar_toggled(int index)
         baseform_timer->start();
     }
     else{
-        baseform_timer->stop();
+        //baseform_timer->stop();
     }
 
     if(index==2){
@@ -446,6 +442,8 @@ void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
 
     mutex_writing.unlock();
 
+
+    //updateBaseForm();
     emit sigUpdateBaseFormChart(imu_data);
     emit sigSendIMUtoThreeD(imu_data);
 
@@ -485,6 +483,21 @@ void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
  */
 void BaseForm::updateBaseForm()
 {
+//    static u_int sample_counter=0;
+//    uint update_interval=ch_serialport->Frame_rate/30;
+//    update_interval=update_interval*2;
+//    if(update_interval<1)
+//        update_interval=1;
+
+//    if(sample_counter%update_interval==0){
+
+//        updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
+//        m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
+//        m_Compass->setYaw(m_imu_data.eul[2]);
+//        m_protocol_tag=0;
+//    }
+
+//    sample_counter++;
 
     updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
     m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
@@ -637,34 +650,40 @@ void BaseForm::updateBaseFormChart(receive_imusol_packet_t imu_data)
 
     if(m_contentbits & BIT_VALID_ACC){
         m_chartAcc->updateLineData(imu_data.acc);
+        m_chartAcc->framerate=ch_serialport->Frame_rate;
     }
     else{
         m_chartAcc->setVisible(false);
     }
     if(m_contentbits & BIT_VALID_GYR){
         m_chartGyr->updateLineData(imu_data.gyr);
+        m_chartGyr->framerate=ch_serialport->Frame_rate;
     }
     else{
         m_chartGyr->setVisible(false);
     }
     if(m_contentbits & BIT_VALID_MAG){
         m_chartMag->updateLineData(imu_data.mag);
+        m_chartMag->framerate=ch_serialport->Frame_rate;
     }
     else{
         m_chartMag->setVisible(false);
     }
     if(m_contentbits & BIT_VALID_EUL){
         m_chartEul->updateLineData(imu_data.eul);
+        m_chartEul->framerate=ch_serialport->Frame_rate;
     }
     else{
         m_chartEul->setVisible(false);
     }
     if(m_contentbits & BIT_VALID_QUAT){
         m_chartQuat->updateLineData(imu_data.quat);
+        m_chartQuat->framerate=ch_serialport->Frame_rate;
     }
     else{
         m_chartQuat->setVisible(false);
     }
+
 
 }
 

@@ -45,7 +45,6 @@ public:
     uint sample_counter;
     int zoom_mode=0;
 
-
     void zoom(bool in_out, bool x_y, int mode);
 
 protected:
@@ -74,6 +73,7 @@ public:
     ~ChartWindow() override;
 
     CusChartView *m_chartView;   //因為佈局時其它函式會訪問這個畫布，所以設為public
+    uint framerate;
     void updateLineData(float *);
     void init();
 

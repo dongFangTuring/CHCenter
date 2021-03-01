@@ -9,7 +9,7 @@ ThreeDForm::ThreeDForm(QWidget *parent) :
 
     timer=new QTimer(this);
     connect(timer, SIGNAL(timeout(void)), this, SLOT(objectReplot(void)));
-    timer->setInterval(30);
+    timer->setInterval(40);
     obj_filepath="objModel/jet.obj";
     m_cam_scale[0]=100;
     m_cam_scale[1]=45;
