@@ -2,7 +2,6 @@
 #define KBOOT_PROTOCOL_H
 
 #include <QtCore>
-#include "kptl/kptl.h"
 
 
 class kboot_protocol:public QObject
@@ -15,7 +14,7 @@ public:
 
     void delay(uint32_t ms);
     bool connect();
-    bool download(QByteArray image, int start_addr, int retry = 3);
+    bool download(QByteArray image, int start_addr, int retry = 2);
 
     int max_packet_size() const { return _max_packet_size; }
     int flash_size() const { return _flash_size;}
@@ -46,19 +45,21 @@ private:
 
     /* rx state */
     int state;              /* receive state machine */
-    QByteArray brx;
+    QByteArray rx_raw;
     int rx_feame_len;
     QByteArray rx_payload;
     void decode(QByteArray &brx);
+    bool resp_flag;
 
 
-    bool serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout = 400);
-    QByteArray cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len);
+    bool serial_send_and_wait_resp(QByteArray &tx, int timeout = 1000);
+    bool cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param);
     bool cmd_flash_erase_region(uint32_t addr, uint32_t len);
     bool cmd_flash_write_memory(uint32_t addr, uint32_t len);
-    bool cmd_send_data_packet(QByteArray &buf, bool is_last);
+    bool cmd_send_data_packet(QByteArray &buf);
     bool cmd_reset();
     void crc16(uint16_t *currectCrc, const uint8_t *src, uint32_t lengthInBytes);
+    uint16_t do_crc_check(QByteArray &ba);
     QByteArray cmd_get_property(uint8_t property_code);
 
 };

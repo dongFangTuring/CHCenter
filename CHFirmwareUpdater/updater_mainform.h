@@ -4,7 +4,6 @@
 #include <QMainWindow>
 
 
-#include "kptl/kptl.h"
 #include "kptl/kboot_protocol.h"
 #include "utilities/serial.h"
 #include "utilities/hex2bin.h"

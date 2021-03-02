@@ -13,7 +13,6 @@ QMAKE_CXXFLAGS += /utf-8
 
 SOURCES += \
     kptl/kboot_protocol.cpp \
-    kptl/kptl.c \
     mdbus/mdbus.cpp \ 
     utilities/hex2bin.cpp \
     utilities/serial.cpp \
@@ -25,7 +24,6 @@ SOURCES += \
 
 HEADERS += \
     kptl/kboot_protocol.h \
-    kptl/kptl.h \
     mdbus/mdbus.h \
     utilities/hex2bin.h \
     utilities/serial.h \

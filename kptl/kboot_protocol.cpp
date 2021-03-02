@@ -2,8 +2,6 @@
 
 /* processing bootloder protocol */
 
-static uint8_t resp_cnt = 0;
-
 enum status
 {
     kStatus_Idle,
@@ -16,18 +14,59 @@ enum status
 };
 
 
-//void kptl_callback(kptl_t *pkt)
-//{
-//    Q_UNUSED(pkt);
+/* packet type */
+enum
+{
+    kFramingPacketStartByte         = 0x5A,
+    kFramingPacketType_Ack          = 0xA1,
+    kFramingPacketType_Nak          = 0xA2,
+    kFramingPacketType_AckAbort     = 0xA3,
+    kFramingPacketType_Command      = 0xA4,
+    kFramingPacketType_Data         = 0xA5,
+    kFramingPacketType_Ping         = 0xA6,
+    kFramingPacketType_PingResponse = 0xA7
+};
 
-//    resp_cnt++;
-//}
+/* command tag */
+enum
+{
+    kCommandTag_GenericResponse             = 0xa0,
+    kCommandTag_FlashEraseAll               = 0x01,
+    kCommandTag_FlashEraseRegion            = 0x02,
+    kCommandTag_ReadMemory                  = 0x03,
+    kCommandTag_ReadMemoryResponse          = 0xa3,
+    kCommandTag_WriteMemory                 = 0x04,
+    kCommandTag_FillMemory                  = 0x05,
+    kCommandTag_FlashSecurityDisable        = 0x06,
+    kCommandTag_GetProperty                 = 0x07,
+    kCommandTag_GetPropertyResponse         = 0xa7,
+    kCommandTag_ReceiveSbFile               = 0x08,
+    kCommandTag_Execute                     = 0x09,
+    kCommandTag_Call                        = 0x0a,
+    kCommandTag_Reset                       = 0x0b,
+    kCommandTag_SetProperty                 = 0x0c,
+    kCommandTag_FlashEraseAllUnsecure       = 0x0d,
+    kCommandTag_FlashProgramOnce            = 0x0e,
+    kCommandTag_FlashReadOnce               = 0x0f,
+    kCommandTag_FlashReadOnceResponse       = 0xaf,
+    kCommandTag_FlashReadResource           = 0x10,
+    kCommandTag_FlashReadResourceResponse   = 0xb0,
+    kCommandTag_ConfigureQuadSpi            = 0x11,
+
+    kFirstCommandTag                    = kCommandTag_FlashEraseAll,
+
+    //! Maximum linearly incrementing command tag value, excluding the response commands.
+    kLastCommandTag                     = kCommandTag_ConfigureQuadSpi,
+
+    kResponseCommandHighNibbleMask = 0xa0           //!< Mask for the high nibble of a command tag that identifies it as a response command.
+};
 
 kboot_protocol::kboot_protocol()
 {
 
     this->state = kStatus_Idle;
     this->rx_feame_len = 0;
+    this->resp_flag = false;
 }
 
 kboot_protocol::~kboot_protocol()
@@ -39,14 +78,13 @@ void kboot_protocol::decode(QByteArray &ba)
 {
 //    if(ba.size())
 //    {
-//        qDebug()<<"kptl rx:"<<brx.toHex(',');
-//        //qDebug()<<"mdbus rx size:"<<brx.size();
+//        qDebug()<<"ktpl rx:"<<ba.toHex(',');
 //    }
 
     for(int i =0; i<ba.size(); i++)
     {
         uint8_t c = ba.at(i);
-
+        this->rx_payload.append(c);
         switch (this->state)
         {
         case kStatus_Idle:
@@ -58,7 +96,6 @@ void kboot_protocol::decode(QByteArray &ba)
             }
             break;
         case kStatus_Cmd:
-            this->rx_payload.append(c);
             switch(c)
             {
             case kFramingPacketType_Command:
@@ -68,11 +105,12 @@ void kboot_protocol::decode(QByteArray &ba)
                 this->state = kStatus_LenLow;
                 break;
             case kFramingPacketType_Ping:
-                resp_cnt++;
+                this->resp_flag = true;
                 this->state = kStatus_Idle;
                 break;
             case kFramingPacketType_PingResponse:
                 this->rx_feame_len = (8+2);
+                this->resp_flag = true;
                 this->state = kStatus_Data;
                 break;
             case kFramingPacketType_Ack:
@@ -82,20 +120,16 @@ void kboot_protocol::decode(QByteArray &ba)
             }
             break;
         case kStatus_LenLow:
-            this->rx_payload.append(c);
             this->state = kStatus_LenHigh;
             break;
         case kStatus_LenHigh:
-            this->rx_payload.append(c);
             this->state = kStatus_CRCLow;
             break;
         case kStatus_CRCLow:
-            this->rx_payload.append(c);
             this->state = kStatus_CRCHigh;
             break;
         case kStatus_CRCHigh:
-            this->rx_payload.append(c);
-            this->rx_feame_len  = (this->rx_payload[2] | (this->rx_payload[3]<<8)) + 6;
+            this->rx_feame_len  = (this->rx_payload.at(2) | (this->rx_payload.at(3)<<8)) + 6;
             if(this->rx_feame_len < 2048)
             {
                 this->state = kStatus_Data;
@@ -107,22 +141,22 @@ void kboot_protocol::decode(QByteArray &ba)
 
             break;
         case kStatus_Data:
-            this->rx_payload.append(c);
-
-            if(this->rx_payload.size() == this->rx_feame_len) /* PingResponse special */
+            if(this->rx_payload.size() == this->rx_feame_len)
             {
-                resp_cnt++;
+//                qDebug()<<"kptl rx:"<<rx_payload.toHex(',');
 
-                qDebug()<<"kptl rx:"<<rx_payload.toHex(',');
-
-                uint16_t crc_calculated = 0;
-                uint16_t crc_save = this->rx_payload[4] + (this->rx_payload[5]<<8);
-
+                /* CRC */
+                uint16_t crc_calculated = do_crc_check(rx_payload);
                 uint8_t *p = reinterpret_cast<uint8_t*>(rx_payload.data());
-                crc16(&crc_calculated, &p[0], 4);
-                crc16(&crc_calculated, &p[6], this->rx_feame_len-6);
+                uint16_t crc_save = (p[4] | (p[5]<<8));
 
-                qDebug()<<" len:"<<this->rx_feame_len<<"crc_calculated:"<<crc_calculated<<"crc_save:"<<crc_save;
+                /* CRC match */
+                if(crc_calculated == crc_save)
+                {
+                    emit sig_frame_recv(this->rx_payload);
+                    this->resp_flag = true;
+                }
+
                 this->state = kStatus_Idle;
             }
 
@@ -131,12 +165,13 @@ void kboot_protocol::decode(QByteArray &ba)
 
     }
 
-
 }
 
 void kboot_protocol::slt_serial_read(QByteArray &ba)
 {
-    this->brx.append(ba);
+    this->rx_raw.append(ba);
+    this->decode(this->rx_raw);
+    this->rx_raw.clear();
 }
 
 void kboot_protocol::delay(uint32_t ms)
@@ -147,156 +182,113 @@ void kboot_protocol::delay(uint32_t ms)
 }
 
 /* expected_len: if recv data count within timeout == expected_len, return:true */
-bool kboot_protocol::serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout)
+bool kboot_protocol::serial_send_and_wait_resp(QByteArray &tx, int timeout)
 {
     emit sig_serial_send(tx);
-
-    rx.clear();
-    brx.clear();
-
-    while(this->brx.size() < expected_len && timeout)
+    this->resp_flag = false;
+    while(!resp_flag && timeout)
     {
-        delay(1);
+        this->delay(1);
         timeout--;
     }
 
-    rx.append(brx);
-    return (rx.size() == expected_len);
+    return this->resp_flag;
 }
 
-
-QByteArray kboot_protocol::cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len)
+bool kboot_protocol::cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param)
 {
     int i;
     uint8_t rev = 0;
     uint8_t flags = 0;
 
-    QByteArray btx;
-    btx.resize(6);
-    btx[0] = 0x5A;
-    btx[1] = 0xA4; /* CMD packet */
-    btx.append(QByteArray((const char*)&tag, 1));
-    btx.append(QByteArray((const char*)&flags, 1));
-    btx.append(QByteArray((const char*)&rev, 1));
-    btx.append(QByteArray((const char*)&param_cnt, 1));
+    QByteArray ba;
+    ba.resize(6);
+    ba[0] = (uint8_t)0x5A;
+    ba[1] = (uint8_t)0xA4; /* CMD packet */
+    ba.append(QByteArray((const char*)&tag, 1));
+    ba.append(QByteArray((const char*)&flags, 1));
+    ba.append(QByteArray((const char*)&rev, 1));
+    ba.append(QByteArray((const char*)&param_cnt, 1));
 
     for(i=0; i<param_cnt; i++)
     {
-        btx.append(QByteArray((const char*)&param[i], 4));
+        ba.append(QByteArray((const char*)&param[i], 4));
     }
 
     /* add size */
-    uint32_t payload_sz = btx.size() - 6;
-    btx[2] = ((payload_sz>>0) & 0xFF);
-    btx[3] = ((payload_sz>>8) & 0xFF);
+    uint32_t payload_sz = ba.size() - 6;
+    ba[2] = ((payload_sz>>0) & 0xFF);
+    ba[3] = ((payload_sz>>8) & 0xFF);
 
-    uint16_t crc = 0;
+    /* mark CRC */
+    uint16_t crc = do_crc_check(ba);
+    ba[4] = ((crc>>0) & 0xFF);
+    ba[5] = ((crc>>8) & 0xFF);
 
-    QByteArray qcrc = btx;
-    qcrc.remove(4,2);
-    uint8_t *crc_cont = reinterpret_cast<uint8_t*>(qcrc.data());
-    this->crc16(&crc, crc_cont, qcrc.size());
-    btx[4] = ((crc>>0) & 0xFF);
-    btx[5] = ((crc>>8) & 0xFF);
+    return serial_send_and_wait_resp(ba);
 
-    //    qDebug()<<btx.toHex(',');
-    //    qDebug()<<"CRC"<<crc;
-
-    QByteArray brx;
-    brx.clear();
-
-    serial_send_then_recv(btx, brx, expected_len);
-
-    /* check if data recv ok */
-    resp_cnt = 0;
-    this->decode(this->brx);
-
-    if(resp_cnt == 0)
-    {
-        brx.clear();
-    }
-
-    return brx;
+   // qDebug()<<"cmd_packet rx_payload:"<<this->rx_payload.size();
+   // return this->rx_payload;
 }
 
 
 QByteArray kboot_protocol::cmd_get_property(uint8_t property_code)
 {
-    QByteArray brx;
     uint32_t tx_param = property_code;
     uint8_t param_cnt = 1;
-    brx = cmd_packet(kCommandTag_GetProperty, param_cnt, &tx_param, 20);
-    if(brx.size() == 20)
+    if(cmd_packet(kCommandTag_GetProperty, param_cnt, &tx_param))
     {
-        brx.remove(0, 8);
-        brx.remove(0, 8);
-        return brx;
+        this->rx_payload.remove(0, 6);
+        this->rx_payload.remove(0, 8);
+        return this->rx_payload;
+
     }
 
-    brx.clear();
-    return brx;
+    return this->rx_payload;;
 }
 
 bool kboot_protocol::cmd_flash_erase_region(uint32_t addr, uint32_t len)
 {
-    QByteArray ba;
-
     uint32_t param[2];
 
     param[0] = addr;
     param[1] = len;
-    ba = cmd_packet(kCommandTag_FlashEraseRegion, 2, param, 20);
-    return (ba.size() == 20);
-
+    return cmd_packet(kCommandTag_FlashEraseRegion, 2, param);
 }
 
 bool kboot_protocol::cmd_flash_write_memory(uint32_t addr, uint32_t len)
 {
-    QByteArray ba;
     uint32_t param[2];
 
     param[0] = addr;
     param[1] = len;
-    ba = cmd_packet(kCommandTag_WriteMemory, 2, param, 20);
-    return (ba.size() == 20);
+    return  cmd_packet(kCommandTag_WriteMemory, 2, param);
 
 }
 
 bool kboot_protocol::cmd_reset()
 {
-    cmd_packet(kCommandTag_Reset, 0, NULL, 2);
+    cmd_packet(kCommandTag_Reset, 0, NULL);
     return true;
 }
 
-void kboot_protocol::crc16(uint16_t *currectCrc, const uint8_t *src, uint32_t lengthInBytes)
+uint16_t kboot_protocol::do_crc_check(QByteArray &ba)
 {
-    uint32_t crc = *currectCrc;
-    uint32_t j;
-    for (j=0; j < lengthInBytes; ++j)
-    {
-        uint32_t i;
-        uint32_t byte = src[j];
-        crc ^= byte << 8;
-        for (i = 0; i < 8; ++i)
-        {
-            uint32_t temp = crc << 1;
-            if (crc & 0x8000)
-            {
-                temp ^= 0x1021;
-            }
-            crc = temp;
-        }
-    }
-    *currectCrc = crc;
+    uint16_t crc = 0;
+    uint8_t *p = reinterpret_cast<uint8_t*>(ba.data());
+    this->crc16(&crc, &p[0], 4);
+    this->crc16(&crc, &p[6], ba.size() - 6);
+    return crc;
 }
 
-bool kboot_protocol::cmd_send_data_packet(QByteArray &buf, bool is_last)
+
+bool kboot_protocol::cmd_send_data_packet(QByteArray &buf)
 {
     QByteArray ba;
 
     ba.resize(6);
-    ba[0] = 0x5A;
-    ba[1] = 0xA5; /* CMD packet */
+    ba[0] = (uint8_t)0x5A;
+    ba[1] = (uint8_t)0xA5; /* CMD packet */
     ba.append(buf);
 
     /* add size */
@@ -304,58 +296,45 @@ bool kboot_protocol::cmd_send_data_packet(QByteArray &buf, bool is_last)
     ba[2] = ((payload_sz>>0) & 0xFF);
     ba[3] = ((payload_sz>>8) & 0xFF);
 
-    uint16_t crc = 0;
-
-    QByteArray qcrc = ba;
-    qcrc.remove(4,2);
-    uint8_t *crc_cont = reinterpret_cast<uint8_t*>(qcrc.data());
-    this->crc16(&crc, crc_cont, qcrc.size());
+    /* mark CRC */
+    uint16_t crc = do_crc_check(ba);
     ba[4] = ((crc>>0) & 0xFF);
     ba[5] = ((crc>>8) & 0xFF);
 
-
     //qDebug(ba.toHex(','));
-    if(is_last)
+
+    this->rx_payload.clear();
+    emit sig_serial_send(ba);
+
+    uint32_t timeout = 100;
+    while(timeout)
     {
-        serial_send_then_recv(ba, ba, 20);
-        if(ba.size() == 20)
+        if(this->rx_payload.size() == 2 || this->rx_payload.size() == 18)
         {
             return true;
         }
-    }
-    else
-    {
-        serial_send_then_recv(ba, ba, 2);
-        if(ba.size() == 2)
-        {
-            return true;
-        }
+        this->delay(1);
+        timeout--;
     }
 
     return false;
 }
 
 
-
-
 bool kboot_protocol::connect()
 {
-    QByteArray btx, brx;
+    QByteArray ba;
 
     /* 5A A6 PING */
-    btx.resize(2);
-    btx[0] = 0x5A;
-    btx[1] = 0xA6;
+    ba.resize(2);
+    ba[0] = (uint8_t)0x5A;
+    ba[1] = (uint8_t)0xA6;
 
-    serial_send_then_recv(btx, brx, 10);
+    serial_send_and_wait_resp(ba);
 
-    /* check if data recv ok */
-    resp_cnt = 0;
-    decode(this->brx);
-
-    if(resp_cnt)
+    if(resp_flag)
     {
-        uint8_t * buf = reinterpret_cast<uint8_t*>(brx.data());
+        uint8_t * buf = reinterpret_cast<uint8_t*>(this->rx_payload.data());
         if(buf[0] == 0x5A && buf[1] == 0xA7)
         {
             _bugfix = buf[2];
@@ -369,45 +348,45 @@ bool kboot_protocol::connect()
     }
 
     /* version */
-    brx = cmd_get_property(0x01);
-    if(brx.size() == 4)
+    ba = cmd_get_property(0x01);
+    if(ba.size() == 4)
     {
-        this->_major = brx.at(2);
-        this->_minor = brx.at(1);
-        this->_bugfix = brx.at(0);
+        this->_major = ba.at(2);
+        this->_minor = ba.at(1);
+        this->_bugfix = ba.at(0);
     }
     else
         return false;
 
     /* get max packet size */
-    brx = cmd_get_property(0x0B);
-    if(brx.size() == 4)
+    ba = cmd_get_property(0x0B);
+    if(ba.size() == 4)
     {
-        this->_max_packet_size = (brx.at(0) | (brx.at(1)<<8) | brx.at(2)<<16 | brx.at(3)<<24);
+        this->_max_packet_size = (ba.at(0) | (ba.at(1)<<8) | ba.at(2)<<16 | ba.at(3)<<24);
     }
     else return false;
 
     /* flash size */
-    brx = this->cmd_get_property(0x04);
-    if(brx.size() == 4)
+    ba = this->cmd_get_property(0x04);
+    if(ba.size() == 4)
     {
-        this->_flash_size = (brx.at(0) | (brx.at(1)<<8) | brx.at(2)<<16 | brx.at(3)<<24) / 1024;
+        this->_flash_size = (ba.at(0) | (ba.at(1)<<8) | ba.at(2)<<16 | ba.at(3)<<24) / 1024;
     }
     else return false;
 
     //SDID
-    brx = this->cmd_get_property(0x10);
-    if(brx.size() == 4)
+    ba = this->cmd_get_property(0x10);
+    if(ba.size() == 4)
     {
-        this->_sdid = brx.toHex();
+        this->_sdid = ba.toHex();
     }
     else return false;
 
     //Flash Sector Size
-    brx = this->cmd_get_property(0x05);
-    if(brx.size() == 4)
+    ba = this->cmd_get_property(0x05);
+    if(ba.size() == 4)
     {
-        this->_flash_sec_size = (brx.at(0) | (brx.at(1)<<8) | brx.at(2)<<16 | brx.at(3)<<24);
+        this->_flash_sec_size = (ba.at(0) | (ba.at(1)<<8) | ba.at(2)<<16 | ba.at(3)<<24);
     }
     else return false;
 
@@ -439,7 +418,7 @@ bool kboot_protocol::download(QByteArray image, int start_addr, int retry)
 
         while(retry)
         {
-            if(cmd_send_data_packet(blob, (blob.size() == this->_max_packet_size)?(false):(true)))
+            if(cmd_send_data_packet(blob))
             {
                 i += blob.size();
                 break;
@@ -464,4 +443,24 @@ bool kboot_protocol::download(QByteArray image, int start_addr, int retry)
 
 
 
-
+void kboot_protocol::crc16(uint16_t *currectCrc, const uint8_t *src, uint32_t lengthInBytes)
+{
+    uint32_t crc = *currectCrc;
+    uint32_t j;
+    for (j=0; j < lengthInBytes; ++j)
+    {
+        uint32_t i;
+        uint32_t byte = src[j];
+        crc ^= byte << 8;
+        for (i = 0; i < 8; ++i)
+        {
+            uint32_t temp = crc << 1;
+            if (crc & 0x8000)
+            {
+                temp ^= 0x1021;
+            }
+            crc = temp;
+        }
+    }
+    *currectCrc = crc;
+}

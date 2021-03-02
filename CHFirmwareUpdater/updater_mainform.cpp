@@ -148,7 +148,7 @@ void MainWindow::on_btn_serial_open_clicked()
 
 void MainWindow::slt_kptl_frame_recv(QByteArray &ba)
 {
-    qDebug()<<ba.size();
+    qDebug()<<"slt_kptl_frame_recv:"<<ba.size();
 }
 
 void MainWindow::serial_close_ui_action()
@@ -164,8 +164,7 @@ void MainWindow::serial_close_ui_action()
 
 void MainWindow::slt_serial_read(void)
 {
-    QByteArray ba;
-    ba = mserial->readAll();
+    QByteArray ba = mserial->readAll();
     emit sig_serial_send(ba);
 }
 
