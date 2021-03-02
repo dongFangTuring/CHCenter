@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     scan_port();
 
-
     connect(ui->actionModbus, &QAction::triggered, [=]()
     {
 //        mdbus_diag->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
@@ -88,10 +87,8 @@ void MainWindow:: slt_serial_send(QByteArray &ba)
 {
     this->mserial->write(ba);
 
-    //  this->mserial->clear(QSerialPort::Input);
-    //qDebug("serial_send_then_recv:" + tx.toHex(',') + '\n');
+//    this->mserial->clear(QSerialPort::Input);
 
-    //  this->mserial->write(tx);
       this->mserial->waitForBytesWritten();
     //this->mserial->waitForReadyRead(20);
 }

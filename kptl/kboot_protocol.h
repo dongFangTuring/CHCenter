@@ -12,10 +12,13 @@ public:
     kboot_protocol();
     ~kboot_protocol();
 
+    /* general API */
     void delay(uint32_t ms);
+
+
+    /* bl related */
     bool connect();
     bool download(QByteArray image, int start_addr, int retry = 2);
-
     int max_packet_size() const { return _max_packet_size; }
     int flash_size() const { return _flash_size;}
     int flash_sec_size() const { return _flash_sec_size;}

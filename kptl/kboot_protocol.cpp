@@ -249,11 +249,14 @@ QByteArray kboot_protocol::cmd_get_property(uint8_t property_code)
 
 bool kboot_protocol::cmd_flash_erase_region(uint32_t addr, uint32_t len)
 {
+    bool ret;
     uint32_t param[2];
 
     param[0] = addr;
     param[1] = len;
-    return cmd_packet(kCommandTag_FlashEraseRegion, 2, param);
+    ret = cmd_packet(kCommandTag_FlashEraseRegion, 2, param);
+    delay(500);
+    return ret;
 }
 
 bool kboot_protocol::cmd_flash_write_memory(uint32_t addr, uint32_t len)
@@ -303,13 +306,20 @@ bool kboot_protocol::cmd_send_data_packet(QByteArray &buf)
 
     //qDebug(ba.toHex(','));
 
-    this->rx_payload.clear();
-    emit sig_serial_send(ba);
 
-    uint32_t timeout = 100;
+    emit sig_serial_send(ba);
+    this->resp_flag = false;
+    this->rx_payload.clear();
+
+    uint32_t timeout = 200;
     while(timeout)
     {
-        if(this->rx_payload.size() == 2 || this->rx_payload.size() == 18)
+        if((uint8_t)this->rx_payload.at(0) == (uint8_t)0x5A && (uint8_t)this->rx_payload.at(1) == (uint8_t)0xA1)
+        {
+            return true;
+        }
+
+        if(this->resp_flag)
         {
             return true;
         }
@@ -317,6 +327,7 @@ bool kboot_protocol::cmd_send_data_packet(QByteArray &buf)
         timeout--;
     }
 
+    qDebug()<<"timeout!!"<<rx_payload.size()<<rx_payload.toHex(',');
     return false;
 }
 
