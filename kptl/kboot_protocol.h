@@ -45,6 +45,7 @@ private:
 
     pkt_dec_t dec;
     QByteArray brx;
+
     bool serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout = 400);
     QByteArray cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len);
     bool cmd_flash_erase_region(uint32_t addr, uint32_t len);

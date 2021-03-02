@@ -56,20 +56,43 @@ bool kboot_protocol::serial_send_then_recv(QByteArray &tx, QByteArray &rx, int e
 }
 
 
-
 QByteArray kboot_protocol::cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len)
 {
-    kptl_t fp;
-    cmd_hdr_t cp;
+    int i;
+    uint8_t rev = 0;
+    uint8_t flags = 0;
 
-    cp.tag = tag;
-    cp.param_cnt = param_cnt;
-    cp.reserved = 0;
-    cp.flags = 0;
+    QByteArray btx;
+    btx.resize(6);
+    btx[0] = 0x5A;
+    btx[1] = 0xA4; /* CMD packet */
+    btx.append(QByteArray((const char*)&tag, 1));
+    btx.append(QByteArray((const char*)&flags, 1));
+    btx.append(QByteArray((const char*)&rev, 1));
+    btx.append(QByteArray((const char*)&param_cnt, 1));
 
-    kptl_create_cmd_packet(&fp, &cp, param);
+    for(i=0; i<param_cnt; i++)
+    {
+        btx.append(QByteArray((const char*)&param[i], 4));
+    }
 
-    QByteArray btx((const char*)&fp, kptl_get_frame_size(&fp));
+    /* add size */
+    uint32_t payload_sz = btx.size() - 6;
+    btx[2] = ((payload_sz>>0) & 0xFF);
+    btx[3] = ((payload_sz>>8) & 0xFF);
+
+    uint16_t crc = 0;
+
+    QByteArray qcrc = btx;
+    qcrc.remove(4,2);
+    uint8_t *crc_cont = reinterpret_cast<uint8_t*>(qcrc.data());
+    this->crc16(&crc, crc_cont, qcrc.size());
+    btx[4] = ((crc>>0) & 0xFF);
+    btx[5] = ((crc>>8) & 0xFF);
+
+//    qDebug()<<btx.toHex(',');
+//    qDebug()<<"CRC"<<crc;
+
     QByteArray brx;
     brx.clear();
 
@@ -163,14 +186,27 @@ void kboot_protocol::crc16(uint16_t *currectCrc, const uint8_t *src, uint32_t le
 
 bool kboot_protocol::cmd_send_data_packet(QByteArray &buf, bool is_last)
 {
-    kptl_t fp;
-
-    kptl_frame_packet_begin(&fp, kFramingPacketType_Data);
-    kptl_frame_packet_add(&fp, buf.data(), buf.size());
-    kptl_frame_packet_final(&fp);
-
     QByteArray ba;
-    ba.append((const char*)&fp, kptl_get_frame_size(&fp));
+
+    ba.resize(6);
+    ba[0] = 0x5A;
+    ba[1] = 0xA5; /* CMD packet */
+    ba.append(buf);
+
+    /* add size */
+    uint32_t payload_sz = ba.size() - 6;
+    ba[2] = ((payload_sz>>0) & 0xFF);
+    ba[3] = ((payload_sz>>8) & 0xFF);
+
+    uint16_t crc = 0;
+
+    QByteArray qcrc = ba;
+    qcrc.remove(4,2);
+    uint8_t *crc_cont = reinterpret_cast<uint8_t*>(qcrc.data());
+    this->crc16(&crc, crc_cont, qcrc.size());
+    ba[4] = ((crc>>0) & 0xFF);
+    ba[5] = ((crc>>8) & 0xFF);
+
 
     //qDebug(ba.toHex(','));
     if(is_last)
@@ -201,11 +237,9 @@ bool kboot_protocol::connect()
     QByteArray btx, brx;
 
     /* 5A A6 PING */
-    packet_ping_t ping;
-    kptl_create_ping(&ping);
-
-    btx.clear();
-    btx.append(reinterpret_cast<char *>(&ping), sizeof(packet_ping_t));
+    btx.resize(2);
+    btx[0] = 0x5A;
+    btx[1] = 0xA6;
 
     serial_send_then_recv(btx, brx, 10);
 
@@ -298,14 +332,13 @@ bool kboot_protocol::download(QByteArray image, int start_addr, int retry)
     while(i < sz)
     {
         int pkt_len = (sz - i) > _max_packet_size?(this->_max_packet_size):(sz - 1);
-
-        QByteArray slice = image.mid(i, pkt_len);
+        QByteArray blob = image.mid(i, pkt_len);
 
         while(retry)
         {
-            if(cmd_send_data_packet(slice, (slice.size() == this->_max_packet_size)?(false):(true)))
+            if(cmd_send_data_packet(blob, (blob.size() == this->_max_packet_size)?(false):(true)))
             {
-                i += slice.size();
+                i += blob.size();
                 break;
             }
             else

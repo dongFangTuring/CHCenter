@@ -169,8 +169,8 @@ bool mdbus::read_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16
     {
         for(int i=0; i<this->rx_payload.size() / 4; i++)
         {
-            QByteArray test = this->rx_payload.mid(i*4, 4);
-            uint32_t *val = reinterpret_cast<uint32_t*>(test.data());
+            QByteArray qval = this->rx_payload.mid(i*4, 4);
+            uint32_t *val = reinterpret_cast<uint32_t*>(qval.data());
             buf[i] = qFromBigEndian(val[0]);
         }
     }

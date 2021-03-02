@@ -39,17 +39,6 @@ typedef struct
     uint8_t             status;
 }pkt_dec_t;
 
-/* ping packet, ack packet, nak packet are only contain 2 bytes */
-typedef packet_hr_t packet_ping_t;
-
-
-typedef struct
-{
-    uint8_t tag;            //!< A command tag.
-    uint8_t flags;          //!< Combination of packet flags.
-    uint8_t reserved;       //!< Reserved, helpful for alignment, set to zero.
-    uint8_t param_cnt;      //!< Number of parameters that follow in buffer.
-} cmd_hdr_t;
 
 /* packet type */
 enum
@@ -65,7 +54,7 @@ enum
 };
 
 /* command tag */
-enum 
+enum
 {
     kCommandTag_GenericResponse             = 0xa0,
     kCommandTag_FlashEraseAll               = 0x01,
@@ -98,19 +87,8 @@ enum
     kResponseCommandHighNibbleMask = 0xa0           //!< Mask for the high nibble of a command tag that identifies it as a response command.
 };
 
-/* frame packet API: data and command packet need to warpped in frame packet */
-uint32_t kptl_frame_packet_add(kptl_t *pkt, void *buf, uint16_t len);
-uint32_t kptl_frame_packet_begin(kptl_t *pkt, uint8_t type);
-uint32_t kptl_frame_packet_final(kptl_t *pkt);
-uint32_t kptl_get_frame_size(kptl_t *p);
 
 
-/* command packet, command packet must be waprred in frame packet */
-void kptl_create_cmd_packet(kptl_t *fp, cmd_hdr_t *cp, uint32_t *param);
-uint32_t kptl_cmd_packet_get_size(cmd_hdr_t *cp);
-
-/* ping and ping resp packet */
-void kptl_create_ping(packet_ping_t *p);
 
 /* packet decode API */
 int kptl_decode_init(pkt_dec_t *d);
