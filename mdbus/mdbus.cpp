@@ -69,11 +69,18 @@ void mdbus::decode(QByteArray &brx)
         case kStatus_ByteCnt:
             this->rx_byte_cnt = c;
             rx_payload.append(c);
-            if(this->rx_byte_cnt)
-                this->state = kStatus_Data;
+            if(this->rx_byte_cnt <= MAX_PDU_SIZE)
+            {
+                if(this->rx_byte_cnt)
+                    this->state = kStatus_Data;
+                else
+                    this->state = kStatus_CRCLow;
+                break;
+            }
             else
-                this->state = kStatus_CRCLow;
-            break;
+            {
+                this->state = kStatus_Addr;
+            }
         case kStatus_Data:
             rx_payload.append(c);
 
@@ -142,17 +149,15 @@ bool mdbus::read_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16
     tba.append((crc>>8) & 0xFF);
 
 
-
-
     //    qDebug()<<"mdbus tx:"<<tba.toHex(',');
 
     /* paepare for recv */
+    sig_serial_send(tba);
+
     this->brx.clear();
     this->rx_payload.clear();
     this->serial_read_flag = true;
     this->recv_ok = false;
-    sig_serial_send(tba);
-
 
     /* wait for resp data or timeout */
     while(!this->recv_ok && timeout)
@@ -214,13 +219,11 @@ bool mdbus:: write_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint
 
     qDebug()<<"mdbus tx: "<<ba.toHex(',');
 
-    /* paepare for recv */
+    emit sig_serial_send(ba);
     this->brx.clear();
     this->rx_payload.clear();
     this->serial_read_flag = true;
     this->recv_ok = false;
-
-    emit sig_serial_send(ba);
 
     /* wait for resp data or timeout */
     while(!this->recv_ok && timeout)

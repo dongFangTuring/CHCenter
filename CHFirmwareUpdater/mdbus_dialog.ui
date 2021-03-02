@@ -41,7 +41,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -235,17 +235,17 @@
         <string>读取校准参数</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_param">
+      <widget class="QLabel" name="label_param">
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>280</y>
-         <width>321</width>
+         <y>290</y>
+         <width>261</width>
          <height>111</height>
         </rect>
        </property>
-       <property name="readOnly">
-        <bool>true</bool>
+       <property name="text">
+        <string>TextLabel</string>
        </property>
       </widget>
      </widget>

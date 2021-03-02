@@ -122,67 +122,19 @@ void mdbus_Dialog::on_btn_save_clicked()
 
 void mdbus_Dialog::on_btn_read_param_clicked()
 {
-    uint32_t buf[16];
+    uint32_t buf[12];
     QString text;
 
     /* ACC */
     this->bus->read_data(1, 64+3, buf, 12);
 
-    /* 3x3 matrix */
-    ui->plainTextEdit_param->appendPlainText("ACC PARAM:");
+    text = "ACC:\n" +
+            QString("%1 %2 %3\n").arg(QString::number(*(float*)&buf[0], 'f', 4)).arg(QString::number(*(float*)&buf[1], 'f', 4)).arg(QString::number(*(float*)&buf[2], 'f', 4)) +
+            QString("%1 %2 %3\n").arg(QString::number(*(float*)&buf[3], 'f', 4)).arg(QString::number(*(float*)&buf[4], 'f', 4)).arg(QString::number(*(float*)&buf[5], 'f', 4)) +
+            QString("%1 %2 %3\n").arg(QString::number(*(float*)&buf[6], 'f', 4)).arg(QString::number(*(float*)&buf[7], 'f', 4)).arg(QString::number(*(float*)&buf[8], 'f', 4)) +
+            QString("%1 %2 %3\n").arg(QString::number(*(float*)&buf[9], 'f', 4)).arg(QString::number(*(float*)&buf[10], 'f', 4)).arg(QString::number(*(float*)&buf[11], 'f', 4));
 
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[0], 'f', 4)).arg(QString::number(*(float*)&buf[1], 'f', 4)).arg(QString::number(*(float*)&buf[2], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[3], 'f', 4)).arg(QString::number(*(float*)&buf[4], 'f', 4)).arg(QString::number(*(float*)&buf[5], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[6], 'f', 4)).arg(QString::number(*(float*)&buf[7], 'f', 4)).arg(QString::number(*(float*)&buf[8], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    /* bias */
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[9], 'f', 4)).arg(QString::number(*(float*)&buf[10], 'f', 4)).arg(QString::number(*(float*)&buf[11], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
+    ui->label_param->setText(text);
 
 
-
-    /* GYR */
-    this->bus->read_data(1, 80+3, buf, 12);
-
-    /* 3x3 matrix */
-    ui->plainTextEdit_param->appendPlainText("GYR PARAM:");
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[0], 'f', 4)).arg(QString::number(*(float*)&buf[1], 'f', 4)).arg(QString::number(*(float*)&buf[2], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[3], 'f', 4)).arg(QString::number(*(float*)&buf[4], 'f', 4)).arg(QString::number(*(float*)&buf[5], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[6], 'f', 4)).arg(QString::number(*(float*)&buf[7], 'f', 4)).arg(QString::number(*(float*)&buf[8], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    /* bias */
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[9], 'f', 4)).arg(QString::number(*(float*)&buf[10], 'f', 4)).arg(QString::number(*(float*)&buf[11], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-
-
-    /* MAG */
-    this->bus->read_data(1, 96+3, buf, 12);
-
-    /* 3x3 matrix */
-    ui->plainTextEdit_param->appendPlainText("MAG PARAM:");
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[0], 'f', 4)).arg(QString::number(*(float*)&buf[1], 'f', 4)).arg(QString::number(*(float*)&buf[2], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[3], 'f', 4)).arg(QString::number(*(float*)&buf[4], 'f', 4)).arg(QString::number(*(float*)&buf[5], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[6], 'f', 4)).arg(QString::number(*(float*)&buf[7], 'f', 4)).arg(QString::number(*(float*)&buf[8], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
-
-    /* bias */
-    text = QString("%1 %2 %3").arg(QString::number(*(float*)&buf[9], 'f', 4)).arg(QString::number(*(float*)&buf[10], 'f', 4)).arg(QString::number(*(float*)&buf[11], 'f', 4));
-    ui->plainTextEdit_param->appendPlainText(text);
 }

@@ -255,7 +255,6 @@ bool kboot_protocol::cmd_flash_erase_region(uint32_t addr, uint32_t len)
     param[0] = addr;
     param[1] = len;
     ret = cmd_packet(kCommandTag_FlashEraseRegion, 2, param);
-    delay(500);
     return ret;
 }
 
@@ -316,13 +315,10 @@ bool kboot_protocol::cmd_send_data_packet(QByteArray &buf)
     {
         if((uint8_t)this->rx_payload.at(0) == (uint8_t)0x5A && (uint8_t)this->rx_payload.at(1) == (uint8_t)0xA1)
         {
+            delay(10);
             return true;
         }
 
-        if(this->resp_flag)
-        {
-            return true;
-        }
         this->delay(1);
         timeout--;
     }
@@ -448,6 +444,7 @@ bool kboot_protocol::download(QByteArray image, int start_addr, int retry)
         emit sig_download_progress(i*100 / sz);
     }
 
+    delay(50);
     cmd_reset();
     return true;
 }
