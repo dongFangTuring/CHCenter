@@ -76,7 +76,8 @@ BaseForm::BaseForm(QWidget *parent)
 
     //page 2 widget initialize : 3D widget
     ch_threeDform=new ThreeDForm();
-
+    connect(this, SIGNAL(sigSendIMUtoThreeD(receive_imusol_packet_t)),
+            ch_threeDform, SLOT(getIMUData(receive_imusol_packet_t)));
 
 
 
@@ -119,22 +120,15 @@ BaseForm::BaseForm(QWidget *parent)
 
 void BaseForm::closeEvent (QCloseEvent *event)
 {
-    //    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "CH Center",
-    //                                                                tr("Are you sure to exit?\n"),
-    //                                                                QMessageBox::Cancel | QMessageBox::Yes);
-    //    if (resBtn != QMessageBox::Yes) {
-    //        event->ignore();
-    //    } else {
+
     ch_serialport->closePort();
 
     //serial port
-    ch_comform->deleteLater();
-    ch_serialport->deleteLater();
+    ch_comform->close();
 
-
-    ch_settingform->deleteLater();
-    ch_threeDform->deleteLater();
-    ch_csvlogform->deleteLater();
+    ch_settingform->close();
+    ch_threeDform->close();
+    ch_csvlogform->close();
 
     //charts
     m_chartAcc->close();
@@ -468,14 +462,7 @@ void BaseForm::getsigSendATcmd(QString ATcmd)
     ATcmd+="\r\n";
     ch_serialport->writeData(ATcmd);
 }
-///stackwidget page1 content:data, chart and attitude indicator///
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
 
-void BaseForm::addADI()
-{
-
-}
 
 /**
  * @brief BaseForm::updateIMUTable

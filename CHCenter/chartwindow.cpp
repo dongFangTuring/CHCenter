@@ -126,6 +126,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
 
     connectMarkers();  //將曲線與圖例連線起來，可以勾選進行顯示與隱藏
+    //隱藏刷新線圖例
     m_chart->legend()->markers().first()->setVisible(false);
 
     //sync max and min value to cuschart class
@@ -450,31 +451,33 @@ void ChartWindow::handleMarkerClicked()
         // and we don't want it to happen now.
         marker->setVisible(true);
 
-        // Dim the marker, if series is not visible
-        //        qreal alpha = 1.0;
+        //Dim the marker, if series is not visible
+        qreal alpha = 1.0;
 
-        //        if (!marker->series()->isVisible()) {
-        //            alpha = 0.5;
-        //        }
+        if (!marker->series()->isVisible()) {
+            alpha = 0.5;
+        }
 
-        //        QColor color;
-        //        QBrush brush = marker->labelBrush();
-        //        color = brush.color();
-        //        color.setAlphaF(alpha);
-        //        brush.setColor(color);
-        //        marker->setLabelBrush(brush);
+        QColor color;
+        QBrush brush = marker->labelBrush();
+        color = brush.color();
+        color.setAlphaF(alpha);
+        brush.setColor(color);
+        marker->setLabelBrush(brush);
 
-        //        brush = marker->brush();
-        //        color = brush.color();
-        //        color.setAlphaF(alpha);
-        //        brush.setColor(color);
-        //        marker->setBrush(brush);
+        brush = marker->brush();
+        color = brush.color();
+        color.setAlphaF(alpha);
+        brush.setColor(color);
+        marker->setBrush(brush);
 
-        //        QPen pen = marker->pen();
-        //        color = pen.color();
-        //        color.setAlphaF(alpha);
-        //        pen.setColor(color);
-        //        marker->setPen(pen);
+        QPen pen = marker->pen();
+        color = pen.color();
+        color.setAlphaF(alpha);
+        pen.setColor(color);
+        marker->setPen(pen);
+
+        this->update();
 
         break;
     }
@@ -705,10 +708,6 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
         }
     }
 
-
-    this->update();
-
-
 }
 
 void CusChartView::mousePressEvent(QMouseEvent *event)
@@ -761,14 +760,15 @@ void CusChartView::mouseMoveEvent(QMouseEvent *event)
                 qreal error = axisX->max()-max_sample_number;
                 axisX->setRange(axisX->min()-error,axisX->max()-error);
             }
-            this->update();
+
         }
         else if(zoom_mode==2){
             //pass
         }
         m_lastMousePos = event->pos();
-
+        this->update();
         event->accept();
+
     }
 
     QChartView::mouseMoveEvent(event);
@@ -788,11 +788,11 @@ void CusChartView::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        isFreeMode=!isFreeMode;
-        event->accept();
+
     }
     else if(event->button() == Qt::RightButton){
-
+        isFreeMode=!isFreeMode;
+        event->accept();
 
     }
     QChartView::mouseDoubleClickEvent(event);

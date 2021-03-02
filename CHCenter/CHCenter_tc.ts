@@ -39,88 +39,109 @@
         <translation>軟體版本 :</translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="144"/>
-        <location filename="CHCenter/aboutform.ui" line="169"/>
+        <location filename="CHCenter/aboutform.ui" line="189"/>
         <source>1.0.2</source>
         <translation></translation>
     </message>
     <message>
         <location filename="CHCenter/aboutform.ui" line="174"/>
-        <source>-improve chart and graphic performence.</source>
-        <translation></translation>
+        <source>-substantially improve performance of chart, 3D view</source>
+        <oldsource>-improve chart and graphic performence.</oldsource>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="179"/>
+        <location filename="CHCenter/aboutform.ui" line="199"/>
         <source>1.0.1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="184"/>
+        <location filename="CHCenter/aboutform.ui" line="204"/>
         <source>-fix:compass, empty HI221 Dongle</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="189"/>
+        <location filename="CHCenter/aboutform.ui" line="209"/>
         <source>1.0.0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="199"/>
+        <location filename="CHCenter/aboutform.ui" line="219"/>
         <source>0.9.0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="219"/>
+        <location filename="CHCenter/aboutform.ui" line="239"/>
         <source>0.2.0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="229"/>
+        <location filename="CHCenter/aboutform.ui" line="249"/>
         <source>0.1.0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="194"/>
+        <location filename="CHCenter/aboutform.ui" line="214"/>
         <source>-chart : you can track where you want to zoom</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="204"/>
+        <location filename="CHCenter/aboutform.ui" line="144"/>
+        <location filename="CHCenter/aboutform.ui" line="169"/>
+        <source>1.1.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="CHCenter/aboutform.ui" line="179"/>
+        <source>-add : detection of disconnection, wrong Baud</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="CHCenter/aboutform.ui" line="184"/>
+        <source>-ui : able to open multi-windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="CHCenter/aboutform.ui" line="194"/>
+        <source>-improve chart and graphic performance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="CHCenter/aboutform.ui" line="224"/>
         <source>-fix some bugs</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="209"/>
+        <location filename="CHCenter/aboutform.ui" line="229"/>
         <source>-zoom and move chart </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="214"/>
+        <location filename="CHCenter/aboutform.ui" line="234"/>
         <source>-add About, FAQ page</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="224"/>
+        <location filename="CHCenter/aboutform.ui" line="244"/>
         <source>-add chart</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="234"/>
+        <location filename="CHCenter/aboutform.ui" line="254"/>
         <source>-initial release</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="239"/>
+        <location filename="CHCenter/aboutform.ui" line="259"/>
         <source>-logger, setting, 3D, data display</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="244"/>
+        <location filename="CHCenter/aboutform.ui" line="264"/>
         <source>-support all products</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/aboutform.ui" line="264"/>
+        <location filename="CHCenter/aboutform.ui" line="284"/>
         <source>Copy right HiPNUC 2021. GNU GPLv3.</source>
         <translation></translation>
     </message>
@@ -344,18 +365,18 @@
         <translation>關於</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="106"/>
-        <location filename="CHCenter/baseform.cpp" line="385"/>
+        <location filename="CHCenter/baseform.cpp" line="110"/>
+        <location filename="CHCenter/baseform.cpp" line="355"/>
         <source>Unconnected</source>
         <translation>未連接設備</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="273"/>
+        <location filename="CHCenter/baseform.cpp" line="243"/>
         <source>No node is online.</source>
         <translation>無在線節點</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="282"/>
+        <location filename="CHCenter/baseform.cpp" line="252"/>
         <source>Wireless Node ID : %1</source>
         <translation>無線節點 ID : %1</translation>
     </message>
@@ -366,62 +387,62 @@
         <translation>CH Center</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="107"/>
-        <location filename="CHCenter/baseform.cpp" line="386"/>
+        <location filename="CHCenter/baseform.cpp" line="111"/>
+        <location filename="CHCenter/baseform.cpp" line="356"/>
         <source>Software Version : %1</source>
         <translation>版本 : %1</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="332"/>
+        <location filename="CHCenter/baseform.cpp" line="302"/>
         <source>Connecting...</source>
         <translation>連接設備中...</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="350"/>
+        <location filename="CHCenter/baseform.cpp" line="320"/>
         <source>Cannot build connection</source>
         <translation>無法連接設備</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="350"/>
+        <location filename="CHCenter/baseform.cpp" line="320"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="354"/>
+        <location filename="CHCenter/baseform.cpp" line="324"/>
         <source>Cannot build connection. Please check the selected port again</source>
         <translation>無法連接設備。請檢查所選的端口是否正確。</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="367"/>
+        <location filename="CHCenter/baseform.cpp" line="337"/>
         <source>Streaming...</source>
         <translation>數據串流中...</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="481"/>
+        <location filename="CHCenter/baseform.cpp" line="451"/>
         <source>Please restart the device to take effect, and connect with new Baudrate.</source>
         <translation>請重啟模組以生效，並以新的波特率重新連線。</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="485"/>
+        <location filename="CHCenter/baseform.cpp" line="455"/>
         <source>Data decoded error. Check if the Baudrate correct.</source>
         <translation>數據解析錯誤，請檢查連接波特率是否正確。</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="607"/>
+        <location filename="CHCenter/baseform.cpp" line="570"/>
         <source>Data Protocol = %1</source>
         <translation>數據協議 = %1</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="683"/>
-        <location filename="CHCenter/baseform.cpp" line="700"/>
-        <location filename="CHCenter/baseform.cpp" line="718"/>
+        <location filename="CHCenter/baseform.cpp" line="646"/>
+        <location filename="CHCenter/baseform.cpp" line="663"/>
+        <location filename="CHCenter/baseform.cpp" line="681"/>
         <source>Please restart software to activate new language.</source>
         <translation>請重啟本程式以套用新語言。</translation>
     </message>
     <message>
-        <location filename="CHCenter/baseform.cpp" line="683"/>
-        <location filename="CHCenter/baseform.cpp" line="700"/>
-        <location filename="CHCenter/baseform.cpp" line="718"/>
+        <location filename="CHCenter/baseform.cpp" line="646"/>
+        <location filename="CHCenter/baseform.cpp" line="663"/>
+        <location filename="CHCenter/baseform.cpp" line="681"/>
         <source>Information</source>
         <translation>提醒</translation>
     </message>
@@ -704,73 +725,73 @@
 <context>
     <name>CSVLogForm</name>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="20"/>
+        <location filename="CHCenter/csvlogform.ui" line="26"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="32"/>
+        <location filename="CHCenter/csvlogform.ui" line="38"/>
         <source>Save Path</source>
         <translation>檔案儲存路徑</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="52"/>
+        <location filename="CHCenter/csvlogform.ui" line="58"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="91"/>
+        <location filename="CHCenter/csvlogform.ui" line="97"/>
         <source>Control</source>
         <translation>控制面板</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="122"/>
-        <location filename="CHCenter/csvlogform.ui" line="160"/>
+        <location filename="CHCenter/csvlogform.ui" line="128"/>
+        <location filename="CHCenter/csvlogform.ui" line="166"/>
         <source>s</source>
         <translation>秒</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="198"/>
+        <location filename="CHCenter/csvlogform.ui" line="204"/>
         <source>Log for</source>
         <translation>紀錄時長 :</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="233"/>
+        <location filename="CHCenter/csvlogform.ui" line="239"/>
         <source>Start after</source>
         <translation>倒數開始 :</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="248"/>
+        <location filename="CHCenter/csvlogform.ui" line="254"/>
         <source>Start</source>
         <translation>開始</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="264"/>
+        <location filename="CHCenter/csvlogform.ui" line="270"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="291"/>
+        <location filename="CHCenter/csvlogform.ui" line="297"/>
         <source>Logging Status</source>
         <translation>即時紀錄狀態</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="330"/>
+        <location filename="CHCenter/csvlogform.ui" line="336"/>
         <source>Time Remains :</source>
         <translation>剩餘時間 :</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="358"/>
+        <location filename="CHCenter/csvlogform.ui" line="364"/>
         <source>00:00:00.000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="416"/>
+        <location filename="CHCenter/csvlogform.ui" line="422"/>
         <source>Logged Frames :</source>
         <translation>已記錄幀數 :</translation>
     </message>
     <message>
-        <location filename="CHCenter/csvlogform.ui" line="444"/>
+        <location filename="CHCenter/csvlogform.ui" line="450"/>
         <source>0</source>
         <translation></translation>
     </message>
@@ -926,27 +947,27 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/chartwindow.ui" line="82"/>
+        <location filename="CHCenter/chartwindow.ui" line="91"/>
         <source>Left Button : Drag chart</source>
         <translation>滑鼠左鍵 : 拖曳圖表</translation>
     </message>
     <message>
-        <location filename="CHCenter/chartwindow.ui" line="96"/>
+        <location filename="CHCenter/chartwindow.ui" line="98"/>
+        <source>Right Double Click: Follow/FreeDrag mode</source>
+        <translation>右鍵雙擊：跟隨/自由拖曳 模式</translation>
+    </message>
+    <message>
+        <location filename="CHCenter/chartwindow.ui" line="58"/>
         <source>(Ctrl/Right Button) + Wheel: zoom X-axis</source>
         <translation>(Ctrl /滑鼠右鍵)+滾輪：縮放X軸</translation>
     </message>
     <message>
-        <location filename="CHCenter/chartwindow.ui" line="129"/>
-        <source>Left Double Click: Follow/FreeDrag mode</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="CHCenter/chartwindow.ui" line="89"/>
+        <location filename="CHCenter/chartwindow.ui" line="51"/>
         <source>Wheel: zoom Y-axis</source>
         <translation>滾輪滾動 : 縮放Y軸</translation>
     </message>
     <message>
-        <location filename="CHCenter/chartwindow.ui" line="59"/>
+        <location filename="CHCenter/chartwindow.ui" line="28"/>
         <source>Mouse Control</source>
         <translation>圖表控制</translation>
     </message>
@@ -1001,12 +1022,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/chartwindow.cpp" line="278"/>
+        <location filename="CHCenter/chartwindow.cpp" line="279"/>
         <source>Left Double Click: Follow(O)/FreeDrag mode</source>
-        <translation>左鍵雙擊：跟隨(O)/自由拖曳 模式</translation>
+        <translation>右鍵雙擊：跟隨(O)/自由拖曳 模式</translation>
     </message>
     <message>
-        <location filename="CHCenter/chartwindow.cpp" line="311"/>
+        <location filename="CHCenter/chartwindow.cpp" line="312"/>
         <source>Left Double Click: Follow/FreeDrag(O) mode</source>
         <translation>左鍵雙擊：跟隨/自由拖曳(O) 模式</translation>
     </message>
@@ -1014,59 +1035,59 @@
 <context>
     <name>ThreeDForm</name>
     <message>
-        <location filename="CHCenter/threedform.ui" line="20"/>
+        <location filename="CHCenter/threedform.ui" line="26"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="30"/>
+        <location filename="CHCenter/threedform.ui" line="36"/>
         <source>Load Obj File</source>
         <translation>載入 Obj 檔案</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="45"/>
+        <location filename="CHCenter/threedform.ui" line="51"/>
         <source>Zoom In / Zoom Out</source>
         <translation>放大/縮小</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="76"/>
+        <location filename="CHCenter/threedform.ui" line="82"/>
         <source>Rotate Down / Rotate Up</source>
         <translation>向下旋轉/向上旋轉</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="107"/>
+        <location filename="CHCenter/threedform.ui" line="113"/>
         <source>Rotate Left / Rotate Right</source>
         <translation>向左旋轉/向右旋轉</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="135"/>
+        <location filename="CHCenter/threedform.ui" line="141"/>
         <source>Reset Camera</source>
         <translation>預設視角</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="195"/>
+        <location filename="CHCenter/threedform.ui" line="201"/>
         <source>:X(Roll)=</source>
         <translation>:X=</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="220"/>
-        <location filename="CHCenter/threedform.ui" line="268"/>
-        <location filename="CHCenter/threedform.ui" line="316"/>
+        <location filename="CHCenter/threedform.ui" line="226"/>
+        <location filename="CHCenter/threedform.ui" line="274"/>
+        <location filename="CHCenter/threedform.ui" line="322"/>
         <source>?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="249"/>
+        <location filename="CHCenter/threedform.ui" line="255"/>
         <source>:Y(Pitch)=</source>
         <translation>:Y=</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="297"/>
+        <location filename="CHCenter/threedform.ui" line="303"/>
         <source>:Z(Yaw)=</source>
         <translation>:Z=</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.ui" line="347"/>
+        <location filename="CHCenter/threedform.ui" line="353"/>
         <source>PS : Euler Angle needs to be activated in protocol to display 3D model.</source>
         <translation>PS : 需要在協議中啟用歐拉角才能顯示 3D 模型。</translation>
     </message>
@@ -1076,7 +1097,7 @@
         <translation>3D Demo</translation>
     </message>
     <message>
-        <location filename="CHCenter/threedform.cpp" line="217"/>
+        <location filename="CHCenter/threedform.cpp" line="227"/>
         <source>Open .obj model</source>
         <translation>開啟 .obj 模型</translation>
     </message>

@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QFile>
 #include <QCloseEvent>
-
+#include <QGraphicsScene>
 #include "packet/imu_data_decode.h"
 
 #include "chcomform.h"
@@ -69,7 +69,6 @@ private slots:
 
     ///stackwidget page1 content:data, chart and attitude indicator///
     void updateBaseForm();
-    void addADI();
     void updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bits, uchar protocol_tag);
     void updateBaseFormChart(receive_imusol_packet_t);
 
