@@ -10,6 +10,12 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
   <property name="font">
    <font>
     <family>Times New Roman</family>
@@ -323,7 +329,7 @@
             <property name="font">
              <font>
               <family>Times New Roman</family>
-              <pointsize>20</pointsize>
+              <pointsize>15</pointsize>
              </font>
             </property>
             <property name="text">
@@ -351,7 +357,7 @@
             <property name="font">
              <font>
               <family>Times New Roman</family>
-              <pointsize>20</pointsize>
+              <pointsize>15</pointsize>
              </font>
             </property>
             <property name="text">
@@ -409,7 +415,7 @@
             <property name="font">
              <font>
               <family>Times New Roman</family>
-              <pointsize>20</pointsize>
+              <pointsize>15</pointsize>
              </font>
             </property>
             <property name="text">
@@ -437,7 +443,7 @@
             <property name="font">
              <font>
               <family>Times New Roman</family>
-              <pointsize>20</pointsize>
+              <pointsize>15</pointsize>
              </font>
             </property>
             <property name="text">

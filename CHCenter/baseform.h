@@ -46,7 +46,7 @@ private slots:
     void on_SideBarBTN2_clicked();
     void on_SideBarBTN3_clicked();
     void on_SideBarBTN4_clicked();
-    void SideBar_toggled(int index);
+
     void on_BTNConnect_clicked();
     void on_BTNDisconnect_clicked();
     void update_BTNConnect_state();

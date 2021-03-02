@@ -113,13 +113,13 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>150</width>
+               <width>160</width>
                <height>80</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>150</width>
+               <width>160</width>
                <height>80</height>
               </size>
              </property>
@@ -423,8 +423,8 @@ color: black;
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>815</width>
-           <height>762</height>
+           <width>813</width>
+           <height>768</height>
           </rect>
          </property>
          <property name="sizePolicy">

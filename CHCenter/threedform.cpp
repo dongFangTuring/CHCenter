@@ -26,6 +26,16 @@ ThreeDForm::~ThreeDForm()
     stopThreeDPlot();
     delete ui;
 }
+void ThreeDForm::closeEvent(QCloseEvent *event)
+{
+    if (event->spontaneous()) {
+        stopThreeDPlot();
+    } else {
+        QWidget::closeEvent(event);
+    }
+}
+
+
 int ThreeDForm::initView()
 {
 
@@ -262,6 +272,8 @@ void ThreeDForm::on_SliderZoom_sliderMoved(int position)
     camera->setPosition(camPos);
     m_cam_scale[0]=position;
 }
+
+
 void ThreeDForm::on_SliderUpDown_sliderMoved(int theta)
 {
     QVector3D camPos = camera->position();

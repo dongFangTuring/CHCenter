@@ -24,7 +24,8 @@ BaseForm::BaseForm(QWidget *parent)
     this->setStatusBar(nullptr);
 
     //set the stylesheet of baseform
-    ui->LabelStatusMsg->setStyleSheet("background-color:#30302E; color: white; padding:15px 30px 15px 30px;");
+    //ui->LabelStatusMsg->setStyleSheet("background-color:#30302E; color: white; padding:15px 30px 15px 30px;");
+    ui->LabelStatusMsg->setStyleSheet("background-color:white; color: black; padding:10px 25px;");
     ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
     ui->PageDataScroll->setStyleSheet("background-color:rgb(250, 250, 250);");
 
@@ -75,11 +76,13 @@ BaseForm::BaseForm(QWidget *parent)
 
     //page 2 widget initialize : 3D widget
     ch_threeDform=new ThreeDForm();
-    //ui->PageThreeDViewLayout->addWidget(ch_threeDform);
+
+
+
 
     //page 3
     ch_csvlogform=new CSVLogForm();
-    //ui->PageCSVLoggerLayout->addWidget(ch_csvlogform);
+
     connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
             ch_csvlogform, SLOT(getIMUData(receive_imusol_packet_t)));
     connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
@@ -91,7 +94,7 @@ BaseForm::BaseForm(QWidget *parent)
 
     //page 4
     ch_settingform=new CHSettingForm();
-    //ui->PageSettingWidget->addWidget(ch_settingform);
+
     connect(ch_settingform,SIGNAL(sigSendATcmd(QString)), this, SLOT(getsigSendATcmd(QString)));
 
     //about form
@@ -154,53 +157,27 @@ BaseForm::~BaseForm()
 //////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief BaseForm::on_SideBarBTN1/2/3/4_clicked
+ * @brief BaseForm::on_SideBarBTN2/3/4_clicked
  * click to show pages
  */
 
 void BaseForm::on_SideBarBTN2_clicked()
 {
-    SideBar_toggled(2);
     ch_threeDform->show();
+    ch_threeDform->startThreeDPlot();
 
 }
 void BaseForm::on_SideBarBTN3_clicked()
 {
-    SideBar_toggled(3);
     ch_csvlogform->show();
-
 }
 void BaseForm::on_SideBarBTN4_clicked()
 {
-    SideBar_toggled(4);
     ch_settingform->settingConfig_init();
     ch_settingform->show();
 
 }
 
-/**
- * @brief BaseForm::SideBar_toggled
- * highlight the BTN by index
- */
-void BaseForm::SideBar_toggled(int index)
-{
-
-    ui->SideBarBTN2->setEnabled(true);
-    ui->SideBarBTN3->setEnabled(true);
-    ui->SideBarBTN4->setEnabled(true);
-
-    if(index==2){
-        ch_threeDform->startThreeDPlot();
-        connect(this, SIGNAL(sigSendIMUtoThreeD(receive_imusol_packet_t)),
-                ch_threeDform, SLOT(getIMUData(receive_imusol_packet_t)));
-    }
-    else{
-        ch_threeDform->stopThreeDPlot();
-        disconnect(this, SIGNAL(sigSendIMUtoThreeD(receive_imusol_packet_t)),
-                   ch_threeDform, SLOT(getIMUData(receive_imusol_packet_t)));
-    }
-
-}
 
 /**
  * @brief BaseForm::on_BTNConnect_clicked -
@@ -235,7 +212,7 @@ void BaseForm::update_BTNConnect_state()
     bool isOpen=ch_serialport->CH_serial->isOpen();
 
     if(!isOpen){
-        ui->BTNConnect->setFixedWidth(200);
+        ui->BTNConnect->setFixedWidth(190);
         if(ch_comform->isVisible()){
             ui->BTNConnect->setEnabled(false);
         }
@@ -255,7 +232,6 @@ void BaseForm::update_BTNConnect_state()
     ch_threeDform->setEnabled(isOpen);
     ch_csvlogform->setEnabled(isOpen);
     ch_settingform->setEnabled(isOpen);
-
 }
 
 /**

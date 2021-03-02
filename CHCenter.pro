@@ -24,7 +24,7 @@ SOURCES += \
     CHCenter/threedform.cpp \
     packet/imu_data_decode.cpp \
     packet/packet.cpp \
-    mdbus/mdbus.cpp \
+    mdbus/mdbus.cpp
 
 HEADERS += \
     CHCenter/aboutform.h \

@@ -48,6 +48,8 @@ private slots:
 
     void on_SliderZoom_sliderMoved(int theta);
 
+protected:
+    void closeEvent(QCloseEvent *event);
 private:
     Ui::ThreeDForm *ui;
     QWidget *container;
