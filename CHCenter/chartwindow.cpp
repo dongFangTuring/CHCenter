@@ -277,7 +277,7 @@ void ChartWindow::updateMovingWindow()
             if(m_chartView->zoom_mode!=2){
                 ui->LabelChartMode->setText(tr("Left Double Click: Follow(O)/FreeDrag mode"));
                 m_chartView->zoom_mode=2;   //zoom at the newest
-                m_serieslist.at(0)->setVisible(false);
+                m_serieslist.at(0)->setVisible(false); //hide refresh line
             }
         }
         //for free mode

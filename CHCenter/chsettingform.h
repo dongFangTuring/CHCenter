@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTimer>
 #include <QMessageBox>
+#include <QCloseEvent>
 
 namespace Ui {
 class CHSettingForm;
@@ -71,11 +72,15 @@ private slots:
     void on_QuatCheckBox_clicked();
     void on_IDSetBTN_clicked();
     void on_GWIDSetBTN_clicked();
-
+    void on_AdvancedCheckBox_clicked(bool checked);
+    void on_OldPTLCheckBox_clicked(bool checked);
 
 signals:
     void sigSendATcmd(QString);
 
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 private:
     Ui::CHSettingForm *ui;
     QTimer *autoRST;

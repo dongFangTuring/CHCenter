@@ -62,6 +62,7 @@ BaseForm::BaseForm(QWidget *parent)
     baseform_timer=new QTimer(this);
     connect(baseform_timer, SIGNAL(timeout(void)), this, SLOT(updateBaseForm(void)));
     baseform_timer->setInterval(50);
+    baseform_timer->start();
 
     m_chartAcc=new ChartWindow(nullptr,"acc");
     m_chartGyr=new ChartWindow(nullptr,"gyr");
@@ -74,12 +75,12 @@ BaseForm::BaseForm(QWidget *parent)
 
 
     //page 2 widget initialize : 3D widget
-    ch_threeDform=new ThreeDForm(this);
-    ui->PageThreeDViewLayout->addWidget(ch_threeDform);
+    ch_threeDform=new ThreeDForm();
+    //ui->PageThreeDViewLayout->addWidget(ch_threeDform);
 
     //page 3
-    ch_csvlogform=new CSVLogForm(this);
-    ui->PageCSVLoggerLayout->addWidget(ch_csvlogform);
+    ch_csvlogform=new CSVLogForm();
+    //ui->PageCSVLoggerLayout->addWidget(ch_csvlogform);
     connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
             ch_csvlogform, SLOT(getIMUData(receive_imusol_packet_t)));
     connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
@@ -90,8 +91,8 @@ BaseForm::BaseForm(QWidget *parent)
     //            ch_csvlogform, SLOT(stopLogging()));
 
     //page 4
-    ch_settingform=new CHSettingForm(this);
-    ui->PageSettingWidget->addWidget(ch_settingform);
+    ch_settingform=new CHSettingForm();
+    //ui->PageSettingWidget->addWidget(ch_settingform);
     connect(ch_settingform,SIGNAL(sigSendATcmd(QString)), this, SLOT(getsigSendATcmd(QString)));
 
     //about form
@@ -112,6 +113,7 @@ BaseForm::BaseForm(QWidget *parent)
     on_SideBarBTN1_clicked();
     update_BTNConnect_state();
     ui->stackedWidget->setEnabled(false);
+
 }
 
 void BaseForm::closeEvent (QCloseEvent *event)
@@ -167,17 +169,20 @@ void BaseForm::on_SideBarBTN1_clicked()
 void BaseForm::on_SideBarBTN2_clicked()
 {
     SideBar_toggled(2);
-    ui->stackedWidget->setCurrentIndex(1);
+    ch_threeDform->show();
+    //ui->stackedWidget->setCurrentIndex(1);
 }
 void BaseForm::on_SideBarBTN3_clicked()
 {
     SideBar_toggled(3);
-    ui->stackedWidget->setCurrentIndex(2);
+    ch_csvlogform->show();
+    //ui->stackedWidget->setCurrentIndex(2);
 }
 void BaseForm::on_SideBarBTN4_clicked()
 {
     SideBar_toggled(4);
-    ui->stackedWidget->setCurrentIndex(3);
+    ch_settingform->show();
+    //ui->stackedWidget->setCurrentIndex(3);
 }
 
 /**
@@ -186,23 +191,12 @@ void BaseForm::on_SideBarBTN4_clicked()
  */
 void BaseForm::SideBar_toggled(int index)
 {
-    if(ui->SideBarBTN4->isEnabled()==false){
-        ch_settingform->settingConfig_leave();
-    }
-
 
     ui->SideBarBTN1->setEnabled(true);
     ui->SideBarBTN2->setEnabled(true);
     ui->SideBarBTN3->setEnabled(true);
     ui->SideBarBTN4->setEnabled(true);
 
-
-    if(index==1){
-        baseform_timer->start();
-    }
-    else{
-        //baseform_timer->stop();
-    }
 
     if(index==2){
         ch_threeDform->startThreeDPlot();
@@ -220,26 +214,26 @@ void BaseForm::SideBar_toggled(int index)
     case 1: {
         ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
-        ui->SideBarBTN1->setEnabled(false);
+        //ui->SideBarBTN1->setEnabled(false);
         break;
     }
     case 2: {
         ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
-        ui->SideBarBTN2->setEnabled(false);
+        //ui->SideBarBTN2->setEnabled(false);
         break;
     }
     case 3: {
         ch_settingform->StreamATcmd();
         ch_serialport->Is_msgMode=0;
-        ui->SideBarBTN3->setEnabled(false);
+        //ui->SideBarBTN3->setEnabled(false);
         break;
     }
     case 4: {
         getsigSendATcmd("AT+EOUT=0");
         ch_settingform->settingConfig_init();
         ch_serialport->Is_msgMode=1;
-        ui->SideBarBTN4->setEnabled(false);
+        //ui->SideBarBTN4->setEnabled(false);
         break;
     }
     default:

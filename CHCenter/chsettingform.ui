@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
-    <height>881</height>
+    <width>800</width>
+    <height>700</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>600</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -26,6 +32,33 @@
    <property name="verticalSpacing">
     <number>5</number>
    </property>
+   <item row="7" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="AdvancedCheckBox">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>Advanced Settings</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item row="5" column="0">
     <widget class="QGroupBox" name="MsgGB">
      <property name="title">
@@ -71,42 +104,6 @@
      </layout>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QGroupBox" name="ATcmdGB">
-     <property name="title">
-      <string>AT Command</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLineEdit" name="ATcmdInput">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="sendATcmdBTN">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/images/send.png</normaloff>:/images/send.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>30</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
@@ -115,6 +112,9 @@
         <string>Baud</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <widget class="QRadioButton" name="BR9600BTN">
           <property name="text">
@@ -169,12 +169,15 @@
         <string>Quick Function</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <widget class="QPushButton" name="InfoBTN">
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -187,7 +190,7 @@
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -200,7 +203,7 @@
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -213,7 +216,7 @@
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -226,7 +229,7 @@
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -243,6 +246,9 @@
         <string>Frame Rate</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
+        <property name="verticalSpacing">
+         <number>2</number>
+        </property>
         <item row="7" column="0">
          <widget class="QRadioButton" name="FR100BTN">
           <property name="text">
@@ -252,6 +258,12 @@
         </item>
         <item row="9" column="0">
          <widget class="QPushButton" name="FRSetBTN">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>30</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -305,6 +317,16 @@
         <string>Data Protocol</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QCheckBox" name="OldPTLCheckBox">
+          <property name="text">
+           <string>Old Protocol (All)</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QCheckBox" name="IDCheckBox">
           <property name="text">
@@ -363,6 +385,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="ProtocolSetBTN">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>30</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -381,6 +409,9 @@
         <string>ID Setting</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
@@ -402,6 +433,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="IDSetBTN">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -434,6 +471,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="GWIDSetBTN">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -449,6 +492,42 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QGroupBox" name="ATcmdGB">
+     <property name="title">
+      <string>AT Command</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLineEdit" name="ATcmdInput">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendATcmdBTN">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/images/send.png</normaloff>:/images/send.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>
