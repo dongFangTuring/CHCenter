@@ -90,13 +90,6 @@ enum
 
 
 
-/* packet decode API */
-int kptl_decode_init(pkt_dec_t *d);
-uint32_t kptl_decode(pkt_dec_t *d, uint8_t c);
-void crc16_update(uint16_t *currectCrc, const uint8_t *src, uint32_t lengthInBytes);
-
-/* other API */
-uint32_t kptl_get_payload_len(kptl_t *p);
 
 #ifdef __cplusplus
 }

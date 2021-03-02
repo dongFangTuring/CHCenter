@@ -49,6 +49,13 @@ void crc16_update(uint16_t *currectCrc, const uint8_t *src, uint32_t lengthInByt
 }
 
 
+
+/* get total frame packet size */
+uint32_t kptl_get_frame_size(kptl_t *p)
+{
+    return p->len[0] + (p->len[1]<<8) + 6;
+}
+
 enum status
 {
     kStatus_Idle,

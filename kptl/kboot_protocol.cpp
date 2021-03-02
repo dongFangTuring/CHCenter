@@ -4,24 +4,133 @@
 
 static uint8_t resp_cnt = 0;
 
-void kptl_callback(kptl_t *pkt)
+enum status
 {
-    Q_UNUSED(pkt);
+    kStatus_Idle,
+    kStatus_Cmd,
+    kStatus_LenLow,
+    kStatus_LenHigh,
+    kStatus_CRCLow,
+    kStatus_CRCHigh,
+    kStatus_Data,
+};
 
-    resp_cnt++;
-}
+
+//void kptl_callback(kptl_t *pkt)
+//{
+//    Q_UNUSED(pkt);
+
+//    resp_cnt++;
+//}
 
 kboot_protocol::kboot_protocol()
 {
-    static kptl_t rx_pkt;
-    this->dec.pkt = &rx_pkt;
-    this->dec.cb = kptl_callback;
-    kptl_decode_init(&this->dec);
 
+    this->state = kStatus_Idle;
+    this->rx_feame_len = 0;
 }
 
 kboot_protocol::~kboot_protocol()
 {
+
+}
+
+void kboot_protocol::decode(QByteArray &ba)
+{
+//    if(ba.size())
+//    {
+//        qDebug()<<"kptl rx:"<<brx.toHex(',');
+//        //qDebug()<<"mdbus rx size:"<<brx.size();
+//    }
+
+    for(int i =0; i<ba.size(); i++)
+    {
+        uint8_t c = ba.at(i);
+
+        switch (this->state)
+        {
+        case kStatus_Idle:
+            if(c == kFramingPacketStartByte)
+            {
+                this->rx_payload.clear();
+                this->rx_payload.append(c);
+                this->state = kStatus_Cmd;
+            }
+            break;
+        case kStatus_Cmd:
+            this->rx_payload.append(c);
+            switch(c)
+            {
+            case kFramingPacketType_Command:
+                this->state = kStatus_LenLow;
+                break;
+            case kFramingPacketType_Data:
+                this->state = kStatus_LenLow;
+                break;
+            case kFramingPacketType_Ping:
+                resp_cnt++;
+                this->state = kStatus_Idle;
+                break;
+            case kFramingPacketType_PingResponse:
+                this->rx_feame_len = (8+2);
+                this->state = kStatus_Data;
+                break;
+            case kFramingPacketType_Ack:
+            case kFramingPacketType_Nak:
+                this->state = kStatus_Idle;
+                break;
+            }
+            break;
+        case kStatus_LenLow:
+            this->rx_payload.append(c);
+            this->state = kStatus_LenHigh;
+            break;
+        case kStatus_LenHigh:
+            this->rx_payload.append(c);
+            this->state = kStatus_CRCLow;
+            break;
+        case kStatus_CRCLow:
+            this->rx_payload.append(c);
+            this->state = kStatus_CRCHigh;
+            break;
+        case kStatus_CRCHigh:
+            this->rx_payload.append(c);
+            this->rx_feame_len  = (this->rx_payload[2] | (this->rx_payload[3]<<8)) + 6;
+            if(this->rx_feame_len < 2048)
+            {
+                this->state = kStatus_Data;
+            }
+            else
+            {
+                this->state = kStatus_Idle;
+            }
+
+            break;
+        case kStatus_Data:
+            this->rx_payload.append(c);
+
+            if(this->rx_payload.size() == this->rx_feame_len) /* PingResponse special */
+            {
+                resp_cnt++;
+
+                qDebug()<<"kptl rx:"<<rx_payload.toHex(',');
+
+                uint16_t crc_calculated = 0;
+                uint16_t crc_save = this->rx_payload[4] + (this->rx_payload[5]<<8);
+
+                uint8_t *p = reinterpret_cast<uint8_t*>(rx_payload.data());
+                crc16(&crc_calculated, &p[0], 4);
+                crc16(&crc_calculated, &p[6], this->rx_feame_len-6);
+
+                qDebug()<<" len:"<<this->rx_feame_len<<"crc_calculated:"<<crc_calculated<<"crc_save:"<<crc_save;
+                this->state = kStatus_Idle;
+            }
+
+            break;
+        }
+
+    }
+
 
 }
 
@@ -90,8 +199,8 @@ QByteArray kboot_protocol::cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *
     btx[4] = ((crc>>0) & 0xFF);
     btx[5] = ((crc>>8) & 0xFF);
 
-//    qDebug()<<btx.toHex(',');
-//    qDebug()<<"CRC"<<crc;
+    //    qDebug()<<btx.toHex(',');
+    //    qDebug()<<"CRC"<<crc;
 
     QByteArray brx;
     brx.clear();
@@ -100,10 +209,7 @@ QByteArray kboot_protocol::cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *
 
     /* check if data recv ok */
     resp_cnt = 0;
-    for(int i=0; i<brx.size(); i++)
-    {
-        kptl_decode(&this->dec, brx.at(i));
-    }
+    this->decode(this->brx);
 
     if(resp_cnt == 0)
     {
@@ -245,10 +351,7 @@ bool kboot_protocol::connect()
 
     /* check if data recv ok */
     resp_cnt = 0;
-    for(int i=0; i<brx.size(); i++)
-    {
-        kptl_decode(&this->dec, brx.at(i));
-    }
+    decode(this->brx);
 
     if(resp_cnt)
     {

@@ -34,17 +34,23 @@ signals:
     void sig_frame_recv(QByteArray &ba);        /* notify when a kptl frame has been recvived */
 
 private:
+
+    /* bl section */
     int _max_packet_size;
     int _flash_size;
     int _flash_sec_size;
     QString _sdid;
-
     uint8_t _bugfix;
     uint8_t _minor;
     uint8_t _major;
 
-    pkt_dec_t dec;
+    /* rx state */
+    int state;              /* receive state machine */
     QByteArray brx;
+    int rx_feame_len;
+    QByteArray rx_payload;
+    void decode(QByteArray &brx);
+
 
     bool serial_send_then_recv(QByteArray &tx, QByteArray &rx, int expected_len, int timeout = 400);
     QByteArray cmd_packet(uint8_t tag, uint8_t param_cnt, uint32_t *param, int expected_len);
