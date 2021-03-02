@@ -26,7 +26,7 @@ BaseForm::BaseForm(QWidget *parent)
     //set the stylesheet of baseform
     ui->LabelStatusMsg->setStyleSheet("background-color:#30302E; color: white; padding:15px 30px 15px 30px;");
     ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
-    //ui->stackedWidget->setStyleSheet("background-color:rgb(250,250,250);");
+    ui->PageDataScroll->setStyleSheet("background-color:rgb(250, 250, 250);");
 
 
     //initial the HI221GW node choosing widget
@@ -56,7 +56,6 @@ BaseForm::BaseForm(QWidget *parent)
     connect(ch_serialport, SIGNAL(sigSendIMUmsg(QString)), this, SLOT(getIMUmsg(QString)));
 
     //page 1 widget initialize : Attitude indicator
-    addADI();
 
     //a timer to update baseform
     baseform_timer=new QTimer(this);
@@ -110,9 +109,8 @@ BaseForm::BaseForm(QWidget *parent)
 
 
     //set page 1 as the default page
-    on_SideBarBTN1_clicked();
+
     update_BTNConnect_state();
-    ui->stackedWidget->setEnabled(false);
 
 }
 
@@ -125,8 +123,6 @@ void BaseForm::closeEvent (QCloseEvent *event)
     //        event->ignore();
     //    } else {
     ch_serialport->closePort();
-    m_ADI->deleteLater();
-    m_Compass->deleteLater();
 
     //serial port
     ch_comform->deleteLater();
@@ -159,30 +155,27 @@ BaseForm::~BaseForm()
 
 /**
  * @brief BaseForm::on_SideBarBTN1/2/3/4_clicked
- * change page of stackedwidget
+ * click to show pages
  */
-void BaseForm::on_SideBarBTN1_clicked()
-{
-    SideBar_toggled(1);
-    ui->stackedWidget->setCurrentIndex(0);
-}
+
 void BaseForm::on_SideBarBTN2_clicked()
 {
     SideBar_toggled(2);
     ch_threeDform->show();
-    //ui->stackedWidget->setCurrentIndex(1);
+
 }
 void BaseForm::on_SideBarBTN3_clicked()
 {
     SideBar_toggled(3);
     ch_csvlogform->show();
-    //ui->stackedWidget->setCurrentIndex(2);
+
 }
 void BaseForm::on_SideBarBTN4_clicked()
 {
     SideBar_toggled(4);
+    ch_settingform->settingConfig_init();
     ch_settingform->show();
-    //ui->stackedWidget->setCurrentIndex(3);
+
 }
 
 /**
@@ -192,11 +185,9 @@ void BaseForm::on_SideBarBTN4_clicked()
 void BaseForm::SideBar_toggled(int index)
 {
 
-    ui->SideBarBTN1->setEnabled(true);
     ui->SideBarBTN2->setEnabled(true);
     ui->SideBarBTN3->setEnabled(true);
     ui->SideBarBTN4->setEnabled(true);
-
 
     if(index==2){
         ch_threeDform->startThreeDPlot();
@@ -209,36 +200,6 @@ void BaseForm::SideBar_toggled(int index)
                    ch_threeDform, SLOT(getIMUData(receive_imusol_packet_t)));
     }
 
-
-    switch (index) {
-    case 1: {
-        ch_settingform->StreamATcmd();
-        ch_serialport->Is_msgMode=0;
-        //ui->SideBarBTN1->setEnabled(false);
-        break;
-    }
-    case 2: {
-        ch_settingform->StreamATcmd();
-        ch_serialport->Is_msgMode=0;
-        //ui->SideBarBTN2->setEnabled(false);
-        break;
-    }
-    case 3: {
-        ch_settingform->StreamATcmd();
-        ch_serialport->Is_msgMode=0;
-        //ui->SideBarBTN3->setEnabled(false);
-        break;
-    }
-    case 4: {
-        getsigSendATcmd("AT+EOUT=0");
-        ch_settingform->settingConfig_init();
-        ch_serialport->Is_msgMode=1;
-        //ui->SideBarBTN4->setEnabled(false);
-        break;
-    }
-    default:
-        break;
-    }
 }
 
 /**
@@ -271,7 +232,9 @@ void BaseForm::on_BTNDisconnect_clicked()
 
 void BaseForm::update_BTNConnect_state()
 {
-    if(!ch_serialport->CH_serial->isOpen()){
+    bool isOpen=ch_serialport->CH_serial->isOpen();
+
+    if(!isOpen){
         ui->BTNConnect->setFixedWidth(200);
         if(ch_comform->isVisible()){
             ui->BTNConnect->setEnabled(false);
@@ -287,6 +250,12 @@ void BaseForm::update_BTNConnect_state()
         ui->BTNConnect->setEnabled(false);
         ui->BTNDisconnect->show();
     }
+    //enable all pages
+
+    ch_threeDform->setEnabled(isOpen);
+    ch_csvlogform->setEnabled(isOpen);
+    ch_settingform->setEnabled(isOpen);
+
 }
 
 /**
@@ -385,7 +354,7 @@ void BaseForm::geterrorOpenPort()
     statusbar_msg.current_status=tr("Cannot build connection. Please check the selected port again");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
     update_BTNConnect_state();
-    ui->stackedWidget->setEnabled(false);
+
 }
 void BaseForm::getsigPortOpened()
 {
@@ -400,7 +369,7 @@ void BaseForm::getsigPortOpened()
 
     //send at+eout
     ch_settingform->StreamATcmd();
-    ui->stackedWidget->setEnabled(true);
+
 
 }
 
@@ -418,7 +387,7 @@ void BaseForm::getsigPortClosed()
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
     update_BTNConnect_state();
-    ui->stackedWidget->setEnabled(false);
+
 }
 
 /**
@@ -494,8 +463,8 @@ void BaseForm::updateBaseForm()
 //    sample_counter++;
 
     updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
-    m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
-    m_Compass->setYaw(m_imu_data.eul[2]);
+    ui->GLWidgetADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
+    ui->GLWidgetCompass->setYaw(m_imu_data.eul[2]);
     m_protocol_tag=0;
 }
 
@@ -512,6 +481,10 @@ void BaseForm::getIMUmsg(QString str)
         statusbar_msg.current_status=tr("Please restart the device to take effect, and connect with new Baudrate.");
         ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
     }
+    if(str=="Data decoded error."){
+        statusbar_msg.current_status=tr("Data decoded error. Check if the Baudrate correct.");
+        ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+    }
 }
 
 void BaseForm::getsigSendATcmd(QString ATcmd)
@@ -525,11 +498,7 @@ void BaseForm::getsigSendATcmd(QString ATcmd)
 
 void BaseForm::addADI()
 {
-    m_ADI      = new QADI();
-    m_Compass  = new QCompass();
 
-    ui->DataTopBar->addWidget(m_ADI);
-    ui->DataTopBar->addWidget(m_Compass);
 }
 
 /**

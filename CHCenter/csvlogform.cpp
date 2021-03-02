@@ -6,6 +6,7 @@ CSVLogForm::CSVLogForm(QWidget *parent) :
     ui(new Ui::CSVLogForm)
 {
     ui->setupUi(this);
+    this->setWindowTitle(tr("CSV Logger"));
 
     timer_log_period=new QTimer(this);
     connect(timer_log_period, SIGNAL(timeout()), this, SLOT(stopLogging()),Qt::QueuedConnection);
@@ -47,11 +48,41 @@ CSVLogForm::~CSVLogForm()
     delete ui;
 }
 
+void CSVLogForm::closeEvent(QCloseEvent *event)
+{
+
+    if(log_started){
+        QMessageBox msgBox;
+        msgBox.setText(tr("You're still recording data"));
+        msgBox.setInformativeText(tr("Do you really want to stop and exit?"));
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);
+        msgBox.setButtonText(QMessageBox::Yes, tr("Yes"));
+        msgBox.setButtonText(QMessageBox::No, tr("No"));
+
+        int ret = msgBox.exec();
+        switch (ret) {
+        case QMessageBox::Yes:
+            stopLogging();
+            event->accept();
+            break;
+        case QMessageBox::No:
+            event->ignore();
+            break;
+        default:
+            event->ignore();
+            break;
+
+        }
+
+
+    }
+}
 void CSVLogForm::on_BTNPath_clicked()
 {
     QString dir_path = QFileDialog::getSaveFileName(this, tr("Save File"),
-                               current_dir,
-                               tr("csv file (*.csv)"));
+                                                    current_dir,
+                                                    tr("csv file (*.csv)"));
 
     if(!dir_path.isEmpty())
         current_dir=dir_path;
@@ -308,8 +339,6 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
 
                             QString csv_row=imudata2csvrow(imu_data);
 
-
-
                             if(i==dongle_data.n-1){
                                 int ret=csv_row.lastIndexOf(',');
                                 if(ret!=-1)
@@ -317,9 +346,7 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
                             }
 
                             stream<<csv_row;
-
                         }
-
 
                         stream <<"\n";
                         frame_counter++;
@@ -465,7 +492,7 @@ void CSVLogForm::checkIsStarted()
 }
 
 void CSVLogForm::logging_countdown()
-{  
+{
 
     if(countdown_sec<=0){
 
@@ -479,4 +506,5 @@ void CSVLogForm::logging_countdown()
     }
 
 }
+
 

@@ -1,17 +1,20 @@
 #include "chsettingform.h"
 #include "ui_chsettingform.h"
-#include <QDebug>
+
 CHSettingForm::CHSettingForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CHSettingForm)
 {
     ui->setupUi(this);
+    this->setWindowTitle(tr("Device Settings"));
 
     connect(this, SIGNAL(sigSendATcmd(QString)), this, SLOT(displayATcmd(QString)));
     autoRST=new QTimer(this);
 
     settingConfig_init();
     on_AdvancedCheckBox_clicked(false);
+
+
 }
 
 CHSettingForm::~CHSettingForm()
@@ -25,7 +28,7 @@ void CHSettingForm::closeEvent(QCloseEvent *event)
 
 
     if (event->spontaneous()) {
-       settingConfig_leave();
+        settingConfig_leave();
     } else {
         QWidget::closeEvent(event);
     }
@@ -109,6 +112,9 @@ void CHSettingForm::settingConfig_init()
     ui->GWIDInput->setValue(old_ch_config.GWID);
 
     ui->TerminalBox->clear();
+
+    //stop output
+    sigSendATcmd("AT+EOUT=0");
 }
 void CHSettingForm::settingConfig_leave()
 {
@@ -268,7 +274,7 @@ void CHSettingForm::on_ProtocolSetBTN_clicked()
     }
     if(ui->OldPTLCheckBox->isChecked())
     {
-        setptl="AT+SETPTL=90,A0,B0,C0,D0,D1";
+        setptl="AT+SETPTL=90,A0,B0,C0,D0,D1,";
     }
 
     if(ui->IMUSOLCheckBox->isChecked()){
@@ -381,6 +387,7 @@ void CHSettingForm::on_AdvancedCheckBox_clicked(bool checked)
         ui->MagCheckBox->setVisible(true);
         ui->EulerCheckBox->setVisible(true);
         ui->QuatCheckBox->setVisible(true);
+
     }
     else{
         ui->BaudrateGB->setVisible(false);
@@ -393,5 +400,6 @@ void CHSettingForm::on_AdvancedCheckBox_clicked(bool checked)
         ui->MagCheckBox->setVisible(false);
         ui->EulerCheckBox->setVisible(false);
         ui->QuatCheckBox->setVisible(false);
+
     }
 }

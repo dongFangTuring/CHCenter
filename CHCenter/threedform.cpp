@@ -6,6 +6,7 @@ ThreeDForm::ThreeDForm(QWidget *parent) :
     ui(new Ui::ThreeDForm)
 {
     ui->setupUi(this);
+    this->setWindowTitle(tr("3D Demo"));
 
     timer=new QTimer(this);
     connect(timer, SIGNAL(timeout(void)), this, SLOT(objectReplot(void)));

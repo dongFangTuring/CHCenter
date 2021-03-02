@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QThread>
+#include <QCloseEvent>
 
 #include "packet/imu_data_decode.h"
 
@@ -50,7 +51,8 @@ private slots:
     void logging_countdown();
 
 
-
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     Ui::CSVLogForm *ui;

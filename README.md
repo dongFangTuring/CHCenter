@@ -23,9 +23,9 @@ QTranslation:
 2. In QT command line, go to project directory: 
 
    ```
-   lupdate -pro CHCenter.pro -ts CHCenter_en_US.ts
-   lupdate -pro CHCenter.pro -ts CHCenter_tc.ts
-   lupdate -pro CHCenter.pro -ts CHCenter_cn.ts
+   lupdate -pro CHCenter.pro -ts CHCenter_en_US.ts -noobsolete
+   lupdate -pro CHCenter.pro -ts CHCenter_tc.ts -noobsolete
+   lupdate -pro CHCenter.pro -ts CHCenter_cn.ts -noobsolete
    ```
 
 3. use QT linguist to edit .ts file. while finished editing :

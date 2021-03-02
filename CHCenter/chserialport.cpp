@@ -170,12 +170,8 @@ void CHSerialport::handleData()
 
         mutex_writing.lock();
 
-        if(Is_msgMode){
-            protocol_ASC2(raw_data);
-        }
-        else{
-            protocol_0x5A(raw_data);
-        }
+        protocol_ASC2(raw_data);
+        protocol_0x5A(raw_data);
 
         mutex_writing.unlock();
 
@@ -312,9 +308,9 @@ void CHSerialport::protocol_ASC2(QByteArray asc2_data)
 
     //has found 0x5A
     if(rst!=-1){
-        m_IMUmsg=QString(asc2_data.toHex()).toUpper();
-        emit sigSendIMUmsg(m_IMUmsg);
-        m_IMUmsg="";
+//        m_IMUmsg=QString(asc2_data.toHex()).toUpper();
+//        emit sigSendIMUmsg(m_IMUmsg);
+//        m_IMUmsg="";
     }
 
     //no found of 0x5A, meaning that the device sent ACS2
@@ -331,7 +327,7 @@ void CHSerialport::protocol_ASC2(QByteArray asc2_data)
         }
         else{
             if(m_IMUmsg.size()>300){
-                emit sigSendIMUmsg(tr("Data decoded error! Please connect the device with the right Baudrate!"));
+                emit sigSendIMUmsg("Data decoded error.");
                 m_IMUmsg="";
             }
 

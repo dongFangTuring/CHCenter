@@ -141,7 +141,7 @@
         </size>
        </property>
        <property name="text">
-        <string>1.0.2</string>
+        <string>1.1.0</string>
        </property>
       </widget>
      </item>
@@ -166,12 +166,32 @@
      </property>
      <item>
       <property name="text">
+       <string>1.1.0</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>-substantially improve performance of chart, 3D view</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>-add : detection of disconnection, wrong Baud</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>-ui : able to open multi-windows</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>1.0.2</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>-improve chart and graphic performence.</string>
+       <string>-improve chart and graphic performance</string>
       </property>
      </item>
      <item>

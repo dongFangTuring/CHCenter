@@ -42,7 +42,7 @@ signals:
 private slots:
 
     ///In SideBar///
-    void on_SideBarBTN1_clicked();
+
     void on_SideBarBTN2_clicked();
     void on_SideBarBTN3_clicked();
     void on_SideBarBTN4_clicked();

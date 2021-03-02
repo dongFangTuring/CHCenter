@@ -3,7 +3,7 @@
 QADI::QADI(QWidget *parent)
     : QOpenGLWidget(parent)
 {
-    m_sizeMin = 180;
+    m_sizeMin = 160;
     m_sizeMax = 200;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
@@ -38,7 +38,7 @@ void QADI::initializeGL()
 
 void QADI::resizeGL()
 {
-    m_size = qMin(width(),height()) - 2*m_offset;
+
 }
 
 void QADI::paintGL()
@@ -277,7 +277,7 @@ QCompass::QCompass(QWidget *parent)
     : QOpenGLWidget(parent)
 {
 
-    m_sizeMin = 180;
+    m_sizeMin = 160;
     m_sizeMax = 180;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
@@ -308,7 +308,7 @@ void QCompass::initializeGL()
 
 void QCompass::resizeGL()
 {
-    m_size = qMin(width(),height()) - 2*m_offset;
+
 }
 
 void QCompass::paintGL()
