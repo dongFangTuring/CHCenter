@@ -227,12 +227,18 @@
      <string>打开</string>
     </property>
     <addaction name="actionModbus"/>
+    <addaction name="actionDisplay"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <action name="actionModbus">
    <property name="text">
     <string>Modbus</string>
+   </property>
+  </action>
+  <action name="actionDisplay">
+   <property name="text">
+    <string>Display</string>
    </property>
   </action>
  </widget>

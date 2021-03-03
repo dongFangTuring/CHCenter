@@ -34,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->mdbus_diag = new mdbus_Dialog(this);
     this->mdbus_diag->set_interface(this->bus);
 
+    this->disp_diag = new Form_display();
+
+
     scan_port();
 
     connect(ui->actionModbus, &QAction::triggered, [=]()
@@ -44,6 +47,34 @@ MainWindow::MainWindow(QWidget *parent)
         mdbus_diag->show();
     }
     );
+
+    connect(ui->actionDisplay, &QAction::triggered, [=]()
+    {
+        disp_diag->setWindowModality(Qt::WindowModal);
+        disp_diag->setWindowTitle("display test");
+        disp_diag->show();
+    }
+    );
+
+
+    /* connect serial interface to mainwindow*/
+    connect(mserial, &QSerialPort::errorOccurred, this, &MainWindow::slt_serial_error);
+    connect(mserial, &QSerialPort::readyRead, this, &MainWindow::slt_serial_read);
+
+    /* connect kboot paser to serial */
+    connect(this, &MainWindow::sig_serial_send, this->kboot, &kboot_protocol::slt_serial_read);
+    connect(this->kboot, &kboot_protocol::sig_serial_send, this, &MainWindow::slt_serial_send);
+
+
+    /* connect kboot download progress */
+    connect(this->kboot, &kboot_protocol::sig_download_progress, this, &MainWindow::slt_update_progress_bar);
+
+    /* connect modbus decoder to serial */
+    connect(this, &MainWindow::sig_serial_send, this->bus, &mdbus::slt_serial_read);
+    connect(this->bus, &mdbus::sig_serial_send, this, &MainWindow::slt_serial_send);
+
+    /* connect kptl recv to form_display */
+    connect(this->kboot, &kboot_protocol::sig_frame_recv, this->disp_diag, &Form_display::slt_kptl_recv);
 
 }
 
@@ -111,24 +142,6 @@ void MainWindow::on_btn_serial_open_clicked()
             this->setWindowTitle(QString("HIPNUC Updater - %1,%2").arg(portname).arg(ui->comboBox_baud->currentText()));
             ui->textEdit->insertPlainText(QString("Open serial port OK\n"));
 
-            /* connect serial interface to mainwindow*/
-            connect(mserial, &QSerialPort::errorOccurred, this, &MainWindow::slt_serial_error);
-            connect(mserial, &QSerialPort::readyRead, this, &MainWindow::slt_serial_read);
-
-            /* connect kboot paser to serial */
-            connect(this, &MainWindow::sig_serial_send, this->kboot, &kboot_protocol::slt_serial_read);
-            connect(this->kboot, &kboot_protocol::sig_serial_send, this, &MainWindow::slt_serial_send);
-
-            /* connect kboot paser to imu_paser */
-            connect(this->kboot, &kboot_protocol::sig_frame_recv, this, &MainWindow::slt_kptl_frame_recv);
-
-
-            /* connect kboot download progress */
-            connect(this->kboot, &kboot_protocol::sig_download_progress, this, &MainWindow::slt_update_progress_bar);
-
-            /* connect modbus decoder to serial */
-            connect(this, &MainWindow::sig_serial_send, this->bus, &mdbus::slt_serial_read);
-            connect(this->bus, &mdbus::sig_serial_send, this, &MainWindow::slt_serial_send);
         }
         else
         {
@@ -143,10 +156,6 @@ void MainWindow::on_btn_serial_open_clicked()
 }
 
 
-void MainWindow::slt_kptl_frame_recv(QByteArray &ba)
-{
-    qDebug()<<"slt_kptl_frame_recv:"<<ba.size();
-}
 
 void MainWindow::serial_close_ui_action()
 {

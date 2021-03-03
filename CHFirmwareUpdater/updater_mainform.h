@@ -9,6 +9,7 @@
 #include "utilities/hex2bin.h"
 
 #include "mdbus_dialog.h"
+#include "form_display.h"
 #include "mdbus/mdbus.h"
 
 QT_BEGIN_NAMESPACE
@@ -32,12 +33,12 @@ private slots:
     void slt_serial_read(void);
     void slt_update_progress_bar(int precent);
     void slt_serial_send(QByteArray &ba);
-    void slt_kptl_frame_recv(QByteArray &ba);
 signals:
     void sig_serial_send(QByteArray &ba);
 
 private:
     mdbus_Dialog *mdbus_diag;
+    Form_display *disp_diag;
 
     QByteArray ba_image;
     serial *mserial;
