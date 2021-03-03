@@ -108,9 +108,6 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     valueRange[0]=valueRange[0]*2;
     valueRange[1]=valueRange[1]*2;
 
-    sample_counter=0;
-
-
     axisX->setLabelFormat("%d");
     axisX->setTitleText("Samples");
 
@@ -119,15 +116,6 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     axisY->setMinorTickCount(1);
     axisY->setTitleText("Value");
 
-    //axisY->setTickType(QValueAxis::TicksDynamic);
-    //axisY->setTickInterval(10);
-
-    m_chart->legend()->setVisible(true);  //設定圖例可見
-
-
-    connectMarkers();  //將曲線與圖例連線起來，可以勾選進行顯示與隱藏
-    //隱藏刷新線圖例
-    m_chart->legend()->markers().first()->setVisible(false);
 
     //sync max and min value to cuschart class
     m_chartView = new CusChartView(m_chart);
@@ -135,6 +123,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     m_chartView->valueRange[1]=valueRange[1];
     m_chartView->max_sample_number=max_sample_number;
 
+    //tune performance of opengl
     m_chartView->setRenderHints(QPainter::Antialiasing);
     m_chartView->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     //m_chartView->setCacheMode(QGraphicsView::CacheBackground); //no effect to performance
@@ -145,6 +134,11 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
     ui->LayoutChart->addWidget(m_chartView);
 
+
+    m_chart->legend()->setVisible(true);  //設定圖例可見
+    connectMarkers(); //將曲線與圖例連線起來，可以勾選進行顯示與隱藏
+    m_chart->legend()->markers().first()->setVisible(false);//隱藏刷新線圖例
+
     init();
 
 }
@@ -152,6 +146,49 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 ChartWindow::~ChartWindow()
 {
 }
+
+void ChartWindow::init()
+{
+    //default following mode
+    m_chartView->isFreeMode=false;
+
+    //reset sample_counter
+    sample_counter=0;
+
+    //reset zoom
+    axisX->setRange(0,1000);
+    axisY->setRange(valueRange[0], valueRange[1]);
+
+    //clear all lines
+    point_W.clear();
+    point_X.clear();
+    point_Y.clear();
+    point_Z.clear();
+    point_norm.clear();
+    point_RFLine.clear();
+
+    //reserve ram spaces for points
+    point_W.reserve(max_sample_number);
+    point_X.reserve(max_sample_number);
+    point_Y.reserve(max_sample_number);
+    point_Z.reserve(max_sample_number);
+
+    //pre-append data to 50000
+    for(float i=0;i<max_sample_number;i++){
+        point_W.append(QPointF(i,0));
+        point_X.append(QPointF(i,0));
+        point_Y.append(QPointF(i,0));
+        point_Z.append(QPointF(i,0));
+        point_norm.append(QPointF(i,0));
+    }
+
+    //refresh line in free mode
+    point_RFLine.append(QPointF(0,valueRange[0]));
+    point_RFLine.append(QPointF(0,valueRange[1]));
+
+}
+
+
 
 void ChartWindow::updateLineData(float *array){
 
@@ -325,45 +362,6 @@ void ChartWindow::updateMovingWindow()
 
 
 
-void ChartWindow::init()
-{
-    //default following mode
-    m_chartView->isFreeMode=false;
-
-    //reset sample_counter
-    sample_counter=0;
-
-    //reset zoom
-    axisX->setRange(0,1000);
-    axisY->setRange(valueRange[0], valueRange[1]);
-
-    //clear all lines
-    point_W.clear();
-    point_X.clear();
-    point_Y.clear();
-    point_Z.clear();
-    point_norm.clear();
-    point_RFLine.clear();
-
-    //reserve ram spaces for points
-    point_W.reserve(max_sample_number);
-    point_X.reserve(max_sample_number);
-    point_Y.reserve(max_sample_number);
-    point_Z.reserve(max_sample_number);
-
-    //pre-append data to 50000
-    for(float i=0;i<max_sample_number;i++){
-        point_W.append(QPointF(i,0));
-        point_X.append(QPointF(i,0));
-        point_Y.append(QPointF(i,0));
-        point_Z.append(QPointF(i,0));
-        point_norm.append(QPointF(i,0));
-    }
-
-    //refresh line in free mode
-    point_RFLine.append(QPointF(0,valueRange[0]));
-    point_RFLine.append(QPointF(0,valueRange[1]));
-}
 
 
 void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //用於新增曲線
@@ -400,6 +398,36 @@ void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //用�
     }
     else if(legend_title=="Norm"){
         series->setPen(QPen(QColor(249,168,37), 1));
+        auto norm_maker=m_chart->legend()->markers().last();
+        norm_maker->series()->setVisible(false);
+        norm_maker->setVisible(true);
+
+        //Dim the marker, if series is not visible
+        qreal alpha = 1.0;
+
+        if (!norm_maker->series()->isVisible()) {
+            alpha = 0.5;
+        }
+
+        QColor color;
+        QBrush brush = norm_maker->labelBrush();
+        color = brush.color();
+        color.setAlphaF(alpha);
+        brush.setColor(color);
+        norm_maker->setLabelBrush(brush);
+
+        brush = norm_maker->brush();
+        color = brush.color();
+        color.setAlphaF(alpha);
+        brush.setColor(color);
+        norm_maker->setBrush(brush);
+
+        QPen pen = norm_maker->pen();
+        color = pen.color();
+        color.setAlphaF(alpha);
+        pen.setColor(color);
+        norm_maker->setPen(pen);
+        this->update();
     }
 
 
