@@ -708,6 +708,7 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
         }
     }
 
+    this->update();
 }
 
 void CusChartView::mousePressEvent(QMouseEvent *event)
