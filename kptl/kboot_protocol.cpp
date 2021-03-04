@@ -153,7 +153,12 @@ void kboot_protocol::decode(QByteArray &ba)
                 /* CRC match */
                 if(crc_calculated == crc_save)
                 {
-                    emit sig_frame_recv(this->rx_payload);
+                    if((uint8_t)this->rx_payload[1] == (uint8_t)0xA5)
+                    {
+                        this->rx_payload.remove(0, 6);
+                        emit sig_frame_recv(this->rx_payload);
+                    }
+
                     this->resp_flag = true;
                 }
 

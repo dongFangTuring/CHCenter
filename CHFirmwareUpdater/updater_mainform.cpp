@@ -12,7 +12,6 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QToolBar>
-#include "utilities/test2.h"
 
 #include "mdbus_dialog.h"
 

@@ -1,6 +1,171 @@
 #include "imu_parser.h"
+#include <QDebug>
+#include <string.h>
+#include <stdio.h>
+
+typedef enum
+{
+    kItemID =                   0x90,   /* user programed ID   */
+    kItemAccRaw =               0xA0,   /* raw acc             */
+    kItemGyrRaw =               0xB0,   /* raw gyro            */
+    kItemMagRaw =               0xC0,   /* raw mag             */
+    kItemRotationEul =          0xD0,   /* eular angle         */
+    kItemRotationQuat =         0xD1,   /* att q               */
+    kItemPressure =             0xF0,   /* pressure            */
+    kItemEnd =                  0x00,
+    KItemIMUSOL =               0x91,   /* IMUSOL  */
+    KItemDongle =               0x62,   /* RFSOL  */
+    KItemDongleRaw =            0x63,   /* RF Raw acc&gyro  */
+}ItemID_t;
+
+
 
 imu_parser::imu_parser(QObject *parent) : QObject(parent)
 {
+
+}
+
+
+static int stream2int16(int *dest,uint8_t *src)
+{
+    dest[0] = (int16_t)(src[0] | src[1] << 8);
+    dest[1] = (int16_t)(src[2] | src[3] << 8);
+    dest[2] = (int16_t)(src[4] | src[5] << 8);
+    return 0;
+}
+
+
+void imu_parser::parse(QByteArray &ba)
+{
+    int temp[3] = {0};
+    int offset = 0;
+    int len = ba.size();
+    bitmap = 0;
+    // qDebug()<<"size:"<<ba.size();
+    // qDebug()<<"ktpl rx:"<<ba.toHex(',');
+
+    uint8_t *p = reinterpret_cast<uint8_t*>(ba.data());
+
+    for(int i =0; i<len; i++)
+    {
+        while(offset < len)
+        {
+            switch(p[offset])
+            {
+            case kItemID:
+                bitmap |= BIT_VALID_ID;
+                this->dev.id = p[1];
+                offset += 2;
+                break;
+
+            case kItemAccRaw:
+                bitmap |= BIT_VALID_ACC;
+                stream2int16(temp, &p[offset + 1]);
+                this->dev.acc[0] = (float)temp[0] / 1000;
+                this->dev.acc[1] = (float)temp[1] / 1000;
+                this->dev.acc[2] = (float)temp[2] / 1000;
+                offset += 7;
+                break;
+
+            case kItemGyrRaw:
+            case 0xB1:
+                bitmap |= BIT_VALID_GYR;
+                stream2int16(temp, &p[offset + 1]);
+                this->dev.gyr[0] = (float)temp[0] / 10;
+                this->dev.gyr[1] = (float)temp[1] / 10;
+                this->dev.gyr[2] = (float)temp[2] / 10;
+                offset += 7;
+                break;
+
+            case kItemMagRaw:
+                bitmap |= BIT_VALID_MAG;
+                stream2int16(temp, &p[offset + 1]);
+                this->dev.mag[0] = (float)temp[0] / 10;
+                this->dev.mag[1] = (float)temp[1] / 10;
+                this->dev.mag[2] = (float)temp[2] / 10;
+                offset += 7;
+                break;
+
+            case kItemRotationEul:
+                bitmap |= BIT_VALID_EUL;
+                stream2int16(temp, &p[offset + 1]);
+                this->dev.eul[1] = (float)temp[0] / 100;
+                this->dev.eul[0] = (float)temp[1] / 100;
+                this->dev.eul[2] = (float)temp[2] / 10;
+                offset += 7;
+                break;
+
+            case kItemRotationQuat:
+                bitmap |= BIT_VALID_QUAT;
+                memcpy((void*)this->dev.quat, p + offset + 1, sizeof(this->dev.quat));
+                offset += 17;
+                break;
+
+            case kItemPressure:
+                offset += 5;
+                break;
+
+            case KItemIMUSOL:
+                bitmap |= BIT_VALID_ALL;
+                memcpy(&this->dev, &p[offset], sizeof(id0x91_t));
+                offset += 76;
+                break;
+
+            case 0x60:
+                offset += (4*8)+1;
+                break;
+            case KItemDongle:
+
+                //                receive_gwsol.tag = KItemDongle;
+                //                receive_gwsol.gw_id = p[offset + 1];
+                //                receive_gwsol.n = p[offset + 2];
+                //                offset += 8;
+                //                for (int i = 0; i < receive_gwsol.n; i++)
+                //                {
+                //                    bitmap = BIT_VALID_ALL;
+                //                    receive_gwsol.receive_imusol[i].tag = p[offset];
+                //                    receive_gwsol.receive_imusol[i].id = p[offset + 1];
+                //                    memcpy(&receive_gwsol.receive_imusol[i].acc, p + offset + 12 , sizeof(float) * 16);
+
+                //                    offset += 76;
+                //                }
+                break;
+
+            case KItemDongleRaw:
+                //                receive_gwsol.tag = KItemDongleRaw;
+                //                receive_gwsol.gw_id = p[offset + 1];
+                //                receive_gwsol.n = p[offset + 2];
+                //                offset += 8;
+                //                bitmap |= BIT_VALID_ID;
+                //                bitmap |= BIT_VALID_ACC;
+                //                bitmap |= BIT_VALID_GYR;
+
+                //                for (int i = 0; i < receive_gwsol.n; i++)
+                //                {
+
+                //                    receive_gwsol.receive_imusol[i].tag = p[offset];
+                //                    receive_gwsol.receive_imusol[i].id = p[offset + 1];
+
+                //                    offset += 12;
+                //                    stream2int16(temp, p + offset);
+                //                    receive_gwsol.receive_imusol[i].acc[0] = (float)temp[0] / 1000;
+                //                    receive_gwsol.receive_imusol[i].acc[1] = (float)temp[1] / 1000;
+                //                    receive_gwsol.receive_imusol[i].acc[2] = (float)temp[2] / 1000;
+                //                    offset += 6;
+                //                    stream2int16(temp, p + offset);
+                //                    receive_gwsol.receive_imusol[i].gyr[0] = (float)temp[0] / 10;
+                //                    receive_gwsol.receive_imusol[i].gyr[1] = (float)temp[1] / 10;
+                //                    receive_gwsol.receive_imusol[i].gyr[2] = (float)temp[2] / 10;
+                //                    offset += 6;
+                //                }
+                break;
+
+            default:
+                /* offset ==> 0 2 9 16 23 30 47 52 76 */
+                offset++;
+            }
+        }
+    }
+
 
 }

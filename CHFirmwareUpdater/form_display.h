@@ -2,6 +2,7 @@
 #define FORM_DISPLAY_H
 
 #include <QWidget>
+#include "utilities/imu_parser.h"
 
 namespace Ui {
 class Form_display;
@@ -20,6 +21,10 @@ public slots:
     void slt_kptl_recv(QByteArray &ba); /* on kptl frame recv */
 private:
     Ui::Form_display *ui;
+
+    imu_parser *parser;
+private slots:
+    void slt_tmr(void);
 };
 
 #endif // FORM_DISPLAY_H
