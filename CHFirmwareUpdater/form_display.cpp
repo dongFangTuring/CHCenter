@@ -36,6 +36,7 @@ void Form_display::slt_tmr(void)
 
 void Form_display::slt_kptl_recv(QByteArray &ba)
 {
+
     this->parser->parse(ba);
     QString text;
 
@@ -45,38 +46,38 @@ void Form_display::slt_kptl_recv(QByteArray &ba)
 
     if(parser->bitmap & BIT_RF_DONGLE)
     {
-        text.append(QString("GWID:%1, CNT:%2\n").arg(parser->rf.gwid).arg(parser->rf.node_cnt));
+        text.append(QString("GWID:%1, CNT:%2\n").arg(parser->dev_info.gwid).arg(parser->dev_info.node_cnt));
 
     }
 
     if(parser->bitmap & BIT_VALID_ID)
     {
-        text.append(QString("ID:%1\n").arg(parser->dev.id));
+        text.append(QString("ID:%1\n").arg(parser->dev[0].id));
     }
 
     if(parser->bitmap & BIT_VALID_ACC)
     {
-        text.append(QString("ACC:%1,%2,%3\n").arg(parser->dev.acc[0]).arg(parser->dev.acc[1]).arg(parser->dev.acc[2]));
+        text.append(QString("ACC:%1,%2,%3\n").arg(parser->dev[0].acc[0]).arg(parser->dev[0].acc[1]).arg(parser->dev[0].acc[2]));
     }
 
     if(parser->bitmap & BIT_VALID_GYR)
     {
-        text.append(QString("GYR:%1,%2,%3\n").arg(parser->dev.gyr[0]).arg(parser->dev.gyr[1]).arg(parser->dev.gyr[2]));
+        text.append(QString("GYR:%1,%2,%3\n").arg(parser->dev[0].gyr[0]).arg(parser->dev[0].gyr[1]).arg(parser->dev[0].gyr[2]));
     }
 
     if(parser->bitmap & BIT_VALID_MAG)
     {
-        text.append(QString("MAG:%1,%2,%3\n").arg(parser->dev.mag[0]).arg(parser->dev.mag[1]).arg(parser->dev.mag[2]));
+        text.append(QString("MAG:%1,%2,%3\n").arg(parser->dev[0].mag[0]).arg(parser->dev[0].mag[1]).arg(parser->dev[0].mag[2]));
     }
 
     if(parser->bitmap & BIT_VALID_EUL)
     {
-        text.append(QString("EUL:%1,%2,%3\n").arg(parser->dev.eul[0]).arg(parser->dev.eul[1]).arg(parser->dev.eul[2]));
+        text.append(QString("EUL:%1,%2,%3\n").arg(parser->dev[0].eul[0]).arg(parser->dev[0].eul[1]).arg(parser->dev[0].eul[2]));
     }
 
     if(parser->bitmap & BIT_VALID_QUAT)
     {
-        text.append(QString("QUAT:%1,%2,%3,%4\n").arg(parser->dev.quat[0]).arg(parser->dev.quat[1]).arg(parser->dev.quat[2]).arg(parser->dev.quat[3]));
+        text.append(QString("QUAT:%1,%2,%3,%4\n").arg(parser->dev[0].quat[0]).arg(parser->dev[0].quat[1]).arg(parser->dev[0].quat[2]).arg(parser->dev[0].quat[3]));
     }
 
 
