@@ -43,6 +43,12 @@ void Form_display::slt_kptl_recv(QByteArray &ba)
     text.append(QString("bitmap:%1\n").arg(parser->bitmap));
     text.append(QString("frq:%1\n").arg(sample_frq));
 
+    if(parser->bitmap & BIT_RF_DONGLE)
+    {
+        text.append(QString("GWID:%1, CNT:%2\n").arg(parser->rf.gwid).arg(parser->rf.node_cnt));
+
+    }
+
     if(parser->bitmap & BIT_VALID_ID)
     {
         text.append(QString("ID:%1\n").arg(parser->dev.id));
@@ -72,6 +78,8 @@ void Form_display::slt_kptl_recv(QByteArray &ba)
     {
         text.append(QString("QUAT:%1,%2,%3,%4\n").arg(parser->dev.quat[0]).arg(parser->dev.quat[1]).arg(parser->dev.quat[2]).arg(parser->dev.quat[3]));
     }
+
+
 
       ui->label->setText(text);
 

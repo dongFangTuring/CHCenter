@@ -9,8 +9,8 @@ typedef enum
     kItemAccRaw =               0xA0,   /* raw acc             */
     kItemGyrRaw =               0xB0,   /* raw gyro            */
     kItemMagRaw =               0xC0,   /* raw mag             */
-    kItemRotationEul =          0xD0,   /* eular angle         */
-    kItemRotationQuat =         0xD1,   /* att q               */
+    kItemRotationEul =          0xD0,   /* eular               */
+    kItemRotationQuat =         0xD1,   /* quat                */
     kItemPressure =             0xF0,   /* pressure            */
     kItemEnd =                  0x00,
     KItemIMUSOL =               0x91,   /* IMUSOL  */
@@ -106,7 +106,7 @@ void imu_parser::parse(QByteArray &ba)
                 break;
 
             case KItemIMUSOL:
-                bitmap |= BIT_VALID_ALL;
+                bitmap |= (BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
                 memcpy(&this->dev, &p[offset], sizeof(id0x91_t));
                 offset += 76;
                 break;
@@ -115,20 +115,17 @@ void imu_parser::parse(QByteArray &ba)
                 offset += (4*8)+1;
                 break;
             case KItemDongle:
+                bitmap |= (BIT_RF_DONGLE | BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
+                memcpy(&this->rf, &p[offset], 8);
 
-                //                receive_gwsol.tag = KItemDongle;
-                //                receive_gwsol.gw_id = p[offset + 1];
-                //                receive_gwsol.n = p[offset + 2];
-                //                offset += 8;
-                //                for (int i = 0; i < receive_gwsol.n; i++)
-                //                {
-                //                    bitmap = BIT_VALID_ALL;
-                //                    receive_gwsol.receive_imusol[i].tag = p[offset];
-                //                    receive_gwsol.receive_imusol[i].id = p[offset + 1];
-                //                    memcpy(&receive_gwsol.receive_imusol[i].acc, p + offset + 12 , sizeof(float) * 16);
+                offset += 8;
+                for (int i=0; i<this->rf.node_cnt; i++)
+                {
+                    memcpy(&this->rf.node[i], &p[offset+76*i], sizeof(id0x91_t));
+                    offset += 76;
+                }
 
-                //                    offset += 76;
-                //                }
+                this->dev = this->rf.node[0];
                 break;
 
             case KItemDongleRaw:
@@ -161,7 +158,6 @@ void imu_parser::parse(QByteArray &ba)
                 break;
 
             default:
-                /* offset ==> 0 2 9 16 23 30 47 52 76 */
                 offset++;
             }
         }

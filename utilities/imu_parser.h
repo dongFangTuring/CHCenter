@@ -7,16 +7,16 @@ class imu_parser : public QObject
 {
     Q_OBJECT
 
-    #define BIT_VALID_ID     (0x01)
-    #define BIT_VALID_ACC    (0x02)
-    #define BIT_VALID_GYR    (0x04)
-    #define BIT_VALID_MAG    (0x08)
-    #define BIT_VALID_EUL    (0x10)
-    #define BIT_VALID_QUAT   (0x20)
-    #define BIT_VALID_TIME_STAMP  (0x40)
-    #define BIT_VALID_ALL  (BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP)
+#define BIT_VALID_ID          (0x01)
+#define BIT_VALID_ACC         (0x02)
+#define BIT_VALID_GYR         (0x04)
+#define BIT_VALID_MAG         (0x08)
+#define BIT_VALID_EUL         (0x10)
+#define BIT_VALID_QUAT        (0x20)
+#define BIT_VALID_TIME_STAMP  (0x40)
+#define BIT_RF_DONGLE         (0x80)
 
-    #define MAX_NODE_SIZE 16
+#define MAX_NODE_SIZE 16
 
     typedef struct
     {
@@ -43,7 +43,7 @@ class imu_parser : public QObject
 
 public:
     explicit imu_parser(QObject *parent = nullptr);
-    uint8_t bitmap;
+    uint32_t bitmap;
     void parse(QByteArray &ba);
 
     id0x91_t    dev;                /* single node dev */
