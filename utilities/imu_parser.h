@@ -36,18 +36,20 @@ class imu_parser : public QObject
         uint8_t         tag;
         uint8_t         gwid;
         uint8_t         node_cnt;
-        uint8_t         rev[5];
         id0x91_t        node[MAX_NODE_SIZE];
-    }id0x62_t;
+    }id0x62_hdr_t;
 
 
 public:
     explicit imu_parser(QObject *parent = nullptr);
     uint32_t bitmap;
+    uint8_t item_id[16];
+    uint8_t item_id_cnt;
+
     void parse(QByteArray &ba);
 
-    id0x91_t    dev;                /* single node dev */
-    id0x62_t    rf;                 /* rf device node */
+    id0x91_t        dev[16];                  /* dev[0] is filled when single IMU connected */
+    id0x62_hdr_t    dev_info;                 /* rf device node */
 signals:
 
 };

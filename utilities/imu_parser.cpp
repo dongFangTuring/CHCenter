@@ -54,16 +54,16 @@ void imu_parser::parse(QByteArray &ba)
             {
             case kItemID:
                 bitmap |= BIT_VALID_ID;
-                this->dev.id = p[1];
+                this->dev[0].id = p[1];
                 offset += 2;
                 break;
 
             case kItemAccRaw:
                 bitmap |= BIT_VALID_ACC;
                 stream2int16(temp, &p[offset + 1]);
-                this->dev.acc[0] = (float)temp[0] / 1000;
-                this->dev.acc[1] = (float)temp[1] / 1000;
-                this->dev.acc[2] = (float)temp[2] / 1000;
+                this->dev[0].acc[0] = (float)temp[0] / 1000;
+                this->dev[0].acc[1] = (float)temp[1] / 1000;
+                this->dev[0].acc[2] = (float)temp[2] / 1000;
                 offset += 7;
                 break;
 
@@ -71,33 +71,33 @@ void imu_parser::parse(QByteArray &ba)
             case 0xB1:
                 bitmap |= BIT_VALID_GYR;
                 stream2int16(temp, &p[offset + 1]);
-                this->dev.gyr[0] = (float)temp[0] / 10;
-                this->dev.gyr[1] = (float)temp[1] / 10;
-                this->dev.gyr[2] = (float)temp[2] / 10;
+                this->dev[0].gyr[0] = (float)temp[0] / 10;
+                this->dev[0].gyr[1] = (float)temp[1] / 10;
+                this->dev[0].gyr[2] = (float)temp[2] / 10;
                 offset += 7;
                 break;
 
             case kItemMagRaw:
                 bitmap |= BIT_VALID_MAG;
                 stream2int16(temp, &p[offset + 1]);
-                this->dev.mag[0] = (float)temp[0] / 10;
-                this->dev.mag[1] = (float)temp[1] / 10;
-                this->dev.mag[2] = (float)temp[2] / 10;
+                this->dev[0].mag[0] = (float)temp[0] / 10;
+                this->dev[0].mag[1] = (float)temp[1] / 10;
+                this->dev[0].mag[2] = (float)temp[2] / 10;
                 offset += 7;
                 break;
 
             case kItemRotationEul:
                 bitmap |= BIT_VALID_EUL;
                 stream2int16(temp, &p[offset + 1]);
-                this->dev.eul[1] = (float)temp[0] / 100;
-                this->dev.eul[0] = (float)temp[1] / 100;
-                this->dev.eul[2] = (float)temp[2] / 10;
+                this->dev[0].eul[1] = (float)temp[0] / 100;
+                this->dev[0].eul[0] = (float)temp[1] / 100;
+                this->dev[0].eul[2] = (float)temp[2] / 10;
                 offset += 7;
                 break;
 
             case kItemRotationQuat:
                 bitmap |= BIT_VALID_QUAT;
-                memcpy((void*)this->dev.quat, p + offset + 1, sizeof(this->dev.quat));
+                memcpy((void*)this->dev[0].quat, p + offset + 1, sizeof(this->dev[0].quat));
                 offset += 17;
                 break;
 
@@ -116,16 +116,18 @@ void imu_parser::parse(QByteArray &ba)
                 break;
             case KItemDongle:
                 bitmap |= (BIT_RF_DONGLE | BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
-                memcpy(&this->rf, &p[offset], 8);
 
+                /* fill rf hdr */
+                memcpy(&this->dev_info, &p[offset], 8);
                 offset += 8;
-                for (int i=0; i<this->rf.node_cnt; i++)
+
+                /* fill each node */
+                for (int i=0; i<this->dev_info.node_cnt; i++)
                 {
-                    memcpy(&this->rf.node[i], &p[offset+76*i], sizeof(id0x91_t));
+                    memcpy(&this->dev[i], &p[offset+76*i], sizeof(id0x91_t));
                     offset += 76;
                 }
 
-                this->dev = this->rf.node[0];
                 break;
 
             case KItemDongleRaw:
