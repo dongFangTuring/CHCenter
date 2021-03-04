@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->bus, &mdbus::sig_serial_send, this, &MainWindow::slt_serial_send);
 
     /* connect kptl recv to form_display */
-    connect(this->kboot, &kboot_protocol::sig_frame_recv, this->disp_diag, &Form_display::slt_kptl_recv);
+    connect(this->kboot, &kboot_protocol::sig_frame_recv, this->disp_diag, &Form_display::slt_kptl_payload_recv);
 
 }
 

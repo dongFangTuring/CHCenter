@@ -20,7 +20,7 @@ class imu_parser : public QObject
 
     typedef struct
     {
-        uint8_t     tag;                /* data packet tag */
+        uint8_t     tag;                /* 0x91 */
         uint8_t     id;
         uint8_t     rev[6];             /* reserved */
         uint32_t    ts;                 /* timestamp */
@@ -33,23 +33,26 @@ class imu_parser : public QObject
 
     typedef struct
     {
-        uint8_t         tag;
-        uint8_t         gwid;
-        uint8_t         node_cnt;
-        id0x91_t        node[MAX_NODE_SIZE];
+        uint8_t         tag;            /* 0x62 */
+        uint8_t         gwid;           /* network ID */
+        uint8_t         node_cnt;       /* number of RF device */
+        uint8_t         rev[5];
     }id0x62_hdr_t;
 
 
 public:
     explicit imu_parser(QObject *parent = nullptr);
     uint32_t bitmap;
-    uint8_t item_id[16];
-    uint8_t item_id_cnt;
+
 
     void parse(QByteArray &ba);
 
-    id0x91_t        dev[16];                  /* dev[0] is filled when single IMU connected */
+    id0x91_t        dev[MAX_NODE_SIZE];                  /* dev[0] is filled when single IMU connected */
     id0x62_hdr_t    dev_info;                 /* rf device node */
+
+    uint8_t item_id[32];
+    uint8_t item_id_cnt;
+
 signals:
 
 };

@@ -18,7 +18,7 @@ public:
 
 
 public slots:
-    void slt_kptl_recv(QByteArray &ba); /* on kptl frame recv */
+    void slt_kptl_payload_recv(QByteArray &ba); /* on kptl frame recv */
 private:
     Ui::Form_display *ui;
 

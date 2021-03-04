@@ -34,7 +34,7 @@ void Form_display::slt_tmr(void)
 }
 
 
-void Form_display::slt_kptl_recv(QByteArray &ba)
+void Form_display::slt_kptl_payload_recv(QByteArray &ba)
 {
 
     this->parser->parse(ba);
@@ -79,8 +79,6 @@ void Form_display::slt_kptl_recv(QByteArray &ba)
     {
         text.append(QString("QUAT:%1,%2,%3,%4\n").arg(parser->dev[0].quat[0]).arg(parser->dev[0].quat[1]).arg(parser->dev[0].quat[2]).arg(parser->dev[0].quat[3]));
     }
-
-
 
       ui->label->setText(text);
 

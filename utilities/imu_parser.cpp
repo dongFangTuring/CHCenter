@@ -19,12 +19,10 @@ typedef enum
 }ItemID_t;
 
 
-
 imu_parser::imu_parser(QObject *parent) : QObject(parent)
 {
 
 }
-
 
 static int stream2int16(int *dest,uint8_t *src)
 {
@@ -33,7 +31,6 @@ static int stream2int16(int *dest,uint8_t *src)
     dest[2] = (int16_t)(src[4] | src[5] << 8);
     return 0;
 }
-
 
 void imu_parser::parse(QByteArray &ba)
 {
@@ -107,7 +104,7 @@ void imu_parser::parse(QByteArray &ba)
 
             case KItemIMUSOL:
                 bitmap |= (BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
-                memcpy(&this->dev, &p[offset], sizeof(id0x91_t));
+                memcpy(&this->dev[0], &p[offset], 76);
                 offset += 76;
                 break;
 
@@ -124,8 +121,8 @@ void imu_parser::parse(QByteArray &ba)
                 /* fill each node */
                 for (int i=0; i<this->dev_info.node_cnt; i++)
                 {
-                    memcpy(&this->dev[i], &p[offset+76*i], sizeof(id0x91_t));
-                    offset += 76;
+                    memcpy(&this->dev[i], &p[offset+sizeof(id0x91_t)*i], sizeof(id0x91_t));
+                    offset += sizeof(id0x91_t);
                 }
 
                 break;
