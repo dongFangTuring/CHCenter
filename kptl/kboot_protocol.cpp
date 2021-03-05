@@ -129,7 +129,8 @@ void kboot_protocol::decode(QByteArray &ba)
             this->state = kStatus_CRCHigh;
             break;
         case kStatus_CRCHigh:
-            this->rx_feame_len  = (this->rx_payload.at(2) | (this->rx_payload.at(3)<<8)) + 6;
+            this->rx_feame_len  = ((uint8_t)this->rx_payload.at(2) | ((uint8_t)this->rx_payload.at(3)<<8)) + 6;
+
             if(this->rx_feame_len < 2048)
             {
                 this->state = kStatus_Data;
@@ -155,8 +156,9 @@ void kboot_protocol::decode(QByteArray &ba)
                 {
                     if((uint8_t)this->rx_payload[1] == (uint8_t)0xA5)
                     {
-                        this->rx_payload.remove(0, 6);
-                        emit sig_frame_recv(this->rx_payload);
+                        QByteArray out = this->rx_payload.remove(0, 6);
+                     //   qDebug()<<"kptl emit:"<<out.toHex(',');
+                        emit sig_frame_recv(out);
                     }
 
                     this->resp_flag = true;

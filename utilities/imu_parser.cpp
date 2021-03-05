@@ -12,10 +12,10 @@ typedef enum
     kItemRotationEul =          0xD0,   /* eular               */
     kItemRotationQuat =         0xD1,   /* quat                */
     kItemPressure =             0xF0,   /* pressure            */
-    kItemEnd =                  0x00,
     KItemIMUSOL =               0x91,   /* IMUSOL  */
     KItemDongle =               0x62,   /* RFSOL  */
-    KItemDongleRaw =            0x63,   /* RF Raw acc&gyro  */
+    KItemDongleRaw =            0x63,   /* RF Raw acc&gyro, suggest to discard  */
+    kItemEnd =                  0x00,
 }ItemID_t;
 
 
@@ -38,8 +38,7 @@ void imu_parser::parse(QByteArray &ba)
     int offset = 0;
     int len = ba.size();
     bitmap = 0;
-    // qDebug()<<"size:"<<ba.size();
-    // qDebug()<<"ktpl rx:"<<ba.toHex(',');
+
 
     uint8_t *p = reinterpret_cast<uint8_t*>(ba.data());
 
@@ -104,8 +103,8 @@ void imu_parser::parse(QByteArray &ba)
 
             case KItemIMUSOL:
                 bitmap |= (BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
-                memcpy(&this->dev[0], &p[offset], 76);
-                offset += 76;
+                memcpy(&this->dev[0], &p[offset], sizeof(id0x91_t));
+                offset += sizeof(id0x91_t);
                 break;
 
             case 0x60:
@@ -121,7 +120,7 @@ void imu_parser::parse(QByteArray &ba)
                 /* fill each node */
                 for (int i=0; i<this->dev_info.node_cnt; i++)
                 {
-                    memcpy(&this->dev[i], &p[offset+sizeof(id0x91_t)*i], sizeof(id0x91_t));
+                    memcpy(&this->dev[i], &p[offset], sizeof(id0x91_t));
                     offset += sizeof(id0x91_t);
                 }
 

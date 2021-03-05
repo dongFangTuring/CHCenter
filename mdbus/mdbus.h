@@ -8,8 +8,8 @@ class mdbus : public QObject
     Q_OBJECT
 public:
     explicit mdbus(QObject *parent = nullptr);
-    bool read_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16_t len, uint32_t timeout = 100); /* read multiple REG */
-    bool write_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16_t len, uint32_t timeout = 100);/* write multiple REG */
+    bool read_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16_t len, uint32_t timeout = 100); /* read multiple REG, max REG requst cnt must < 16 */
+    bool write_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16_t len, uint32_t timeout = 100);/* write multiple REG, max REG requst cnt must < 16 */
     bool read_reg(uint8_t dev_addr, uint16_t reg_addr, uint32_t &val, uint32_t timeout = 100);  /* write signle REG */
     bool write_reg(uint8_t dev_addr, uint16_t reg_addr, uint32_t val, uint32_t timeout = 100);  /* write signle REG */
     void delay(uint32_t ms);

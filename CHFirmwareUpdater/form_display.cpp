@@ -5,8 +5,10 @@
 #include <QDebug>
 #include <QTimer>
 
- uint32_t sample_cntr = 0;
- uint32_t sample_frq = 0;
+uint32_t sample_cntr = 0;
+uint32_t sample_frq = 0;
+
+static uint8_t ui_ready = 0;
 
 Form_display::Form_display(QWidget *parent) :
     QWidget(parent),
@@ -15,9 +17,12 @@ Form_display::Form_display(QWidget *parent) :
     ui->setupUi(this);
 
     this->parser = new imu_parser();
+
+    /* creater timer for frq analysis */
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(slt_tmr()));
     timer->start(1000);
+    ui_ready = 1;
 
 }
 
@@ -36,7 +41,7 @@ void Form_display::slt_tmr(void)
 
 void Form_display::slt_kptl_payload_recv(QByteArray &ba)
 {
-
+    int i;
     this->parser->parse(ba);
     QString text;
 
@@ -47,39 +52,50 @@ void Form_display::slt_kptl_payload_recv(QByteArray &ba)
     if(parser->bitmap & BIT_RF_DONGLE)
     {
         text.append(QString("GWID:%1, CNT:%2\n").arg(parser->dev_info.gwid).arg(parser->dev_info.node_cnt));
-
     }
-
-    if(parser->bitmap & BIT_VALID_ID)
+    else /* not RF doongle flag, only single IMU */
     {
-        text.append(QString("ID:%1\n").arg(parser->dev[0].id));
+        parser->dev_info.node_cnt = 1;
     }
 
-    if(parser->bitmap & BIT_VALID_ACC)
+    for(i=0; i<parser->dev_info.node_cnt; i++)
     {
-        text.append(QString("ACC:%1,%2,%3\n").arg(parser->dev[0].acc[0]).arg(parser->dev[0].acc[1]).arg(parser->dev[0].acc[2]));
+        if(parser->bitmap & BIT_VALID_ID)
+        {
+            text.append(QString("ID:%1\n").arg(parser->dev[i].id));
+        }
+
+        if(parser->bitmap & BIT_VALID_ACC)
+        {
+            text.append(QString("ACC:%1,%2,%3\n").arg(parser->dev[i].acc[0]).arg(parser->dev[i].acc[1]).arg(parser->dev[i].acc[2]));
+        }
+
+        if(parser->bitmap & BIT_VALID_GYR)
+        {
+            text.append(QString("GYR:%1,%2,%3\n").arg(parser->dev[i].gyr[0]).arg(parser->dev[i].gyr[1]).arg(parser->dev[i].gyr[2]));
+        }
+
+        if(parser->bitmap & BIT_VALID_MAG)
+        {
+            text.append(QString("MAG:%1,%2,%3\n").arg(parser->dev[i].mag[0]).arg(parser->dev[i].mag[1]).arg(parser->dev[i].mag[2]));
+        }
+
+        if(parser->bitmap & BIT_VALID_EUL)
+        {
+            text.append(QString("EUL:%1,%2,%3\n").arg(parser->dev[i].eul[0]).arg(parser->dev[i].eul[1]).arg(parser->dev[i].eul[2]));
+        }
+
+        if(parser->bitmap & BIT_VALID_QUAT)
+        {
+            text.append(QString("QUAT:%1,%2,%3,%4\n").arg(parser->dev[i].quat[0]).arg(parser->dev[i].quat[1]).arg(parser->dev[i].quat[2]).arg(parser->dev[i].quat[3]));
+        }
     }
 
-    if(parser->bitmap & BIT_VALID_GYR)
+
+    if(ui_ready)
     {
-        text.append(QString("GYR:%1,%2,%3\n").arg(parser->dev[0].gyr[0]).arg(parser->dev[0].gyr[1]).arg(parser->dev[0].gyr[2]));
+        ui->label->setText(text);
     }
 
-    if(parser->bitmap & BIT_VALID_MAG)
-    {
-        text.append(QString("MAG:%1,%2,%3\n").arg(parser->dev[0].mag[0]).arg(parser->dev[0].mag[1]).arg(parser->dev[0].mag[2]));
-    }
-
-    if(parser->bitmap & BIT_VALID_EUL)
-    {
-        text.append(QString("EUL:%1,%2,%3\n").arg(parser->dev[0].eul[0]).arg(parser->dev[0].eul[1]).arg(parser->dev[0].eul[2]));
-    }
-
-    if(parser->bitmap & BIT_VALID_QUAT)
-    {
-        text.append(QString("QUAT:%1,%2,%3,%4\n").arg(parser->dev[0].quat[0]).arg(parser->dev[0].quat[1]).arg(parser->dev[0].quat[2]).arg(parser->dev[0].quat[3]));
-    }
-
-      ui->label->setText(text);
 
 }
