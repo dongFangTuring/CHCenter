@@ -125,6 +125,10 @@ void mdbus_Dialog::on_btn_read_param_clicked()
     uint32_t buf[12];
     QString text;
 
+
+
+
+
     /* ACC */
     this->bus->read_data(1, 64+3, buf, 12);
 
@@ -134,7 +138,24 @@ void mdbus_Dialog::on_btn_read_param_clicked()
             QString("%1 %2 %3\n").arg(QString::number(*(float*)&buf[6], 'f', 4)).arg(QString::number(*(float*)&buf[7], 'f', 4)).arg(QString::number(*(float*)&buf[8], 'f', 4)) +
             QString("%1 %2 %3\n").arg(QString::number(*(float*)&buf[9], 'f', 4)).arg(QString::number(*(float*)&buf[10], 'f', 4)).arg(QString::number(*(float*)&buf[11], 'f', 4));
 
+
+
     ui->label_param->setText(text);
 
 
+}
+
+void mdbus_Dialog::on_btn_read_info_clicked()
+{
+     QString text;
+    /* read product info */
+    uint32_t buf[16];
+
+    this->bus->read_reg(1, 0, buf[0]);
+    text = "PROD: HI" + QString::number(buf[0] & 0xFFFF) + "\n";
+
+    this->bus->read_data(1, 2, buf, 2);
+    text.append("UUID:" + QString::number(buf[0], 16) + QString::number(buf[1], 16));
+
+    ui->label_param->setText(text);
 }

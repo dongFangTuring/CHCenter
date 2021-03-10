@@ -248,6 +248,19 @@
         <string>TextLabel</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="btn_read_info">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>40</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>读取信息</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
