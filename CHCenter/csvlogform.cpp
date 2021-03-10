@@ -8,10 +8,12 @@ CSVLogForm::CSVLogForm(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle(tr("CSV Logger"));
 
+    //set a timer to record a section of time
     timer_log_period=new QTimer(this);
     connect(timer_log_period, SIGNAL(timeout()), this, SLOT(stopLogging()),Qt::QueuedConnection);
     timer_log_period->setSingleShot(true);
 
+    //set a count down timer to start
     timer_countdown=new QTimer(this);
     connect(timer_countdown, SIGNAL(timeout()), this, SLOT(logging_countdown()),Qt::QueuedConnection);
     timer_countdown->setSingleShot(false);
@@ -178,7 +180,7 @@ void CSVLogForm::on_BTNClear_clicked()
     ui->textBrowser->clear();
 }
 
-void CSVLogForm::getIMUData(receive_imusol_packet_t imu_data)
+void CSVLogForm::getIMUData(id0x91_t imu_data)
 {
 
     if(log_started==1){
@@ -236,7 +238,7 @@ void CSVLogForm::getIMUData(receive_imusol_packet_t imu_data)
     }
 
 }
-void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
+void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
 {
     //qDebug()<<frame_counter;
     if(log_started==1){
@@ -248,7 +250,7 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
         QString str_time=time.toString("hh:mm:ss.zzz");
         ui->LabelRemainTime->setText(str_time);
 
-        if(dongle_data.n>0){
+        if(packets.size()>0){
 
             if(frame_counter==0){
 
@@ -275,15 +277,15 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
 
                     stream << "Time,Frame,";
 
-                    for(unsigned short i=0;i<dongle_data.n;i++){
-                        auto imu_data=dongle_data.receive_imusol[i];
+                    for(unsigned short i=0;i<packets.size();i++){
+                        auto imu_data=packets.at(i);
                         gwnode_idlist.push_back(imu_data.id);
 
                         QString title_row=tr("AccX(id%1),AccY(id%1),AccZ(id%1),GyrX(id%1),GyrY(id%1),GyrZ(id%1),"
                                              "MagX(id%1),MagY(id%1),MagZ(id%1),Roll(id%1),Pitch(id%1),Yaw(id%1),"
                                              "Qw(id%1),Qx(id%1),Qy(id%1),Qz(id%1),").arg(imu_data.id);
 
-                        if(i==dongle_data.n-1){
+                        if(i==packets.size()-1){
                             int ret=title_row.lastIndexOf(',');
                             if(ret!=-1)
                                 title_row.remove(ret,1);
@@ -307,13 +309,13 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
 
 
                     //if we lost some nodes.
-                    if(dongle_data.n<gwnode_idlist.size()){
+                    if(packets.size()<gwnode_idlist.size()){
                         for(unsigned short i=0;i<gwnode_idlist.size();i++){
 
                             QString csv_row=",,,,,,,,,,,,,,,,";
-                            for(int j=0;j<dongle_data.n;j++){
+                            for(int j=0;j<packets.size();j++){
 
-                                auto imu_data=dongle_data.receive_imusol[j];
+                                auto imu_data=packets.at(j);
 
                                 if(imu_data.id==gwnode_idlist[i]){
                                     csv_row=imudata2csvrow(imu_data);
@@ -334,12 +336,12 @@ void CSVLogForm::getDongleData(receive_gwsol_packet_t dongle_data)
                     //if all nodes are online
                     else{
 
-                        for(unsigned short i=0;i<dongle_data.n;i++){
-                            auto imu_data=dongle_data.receive_imusol[i];
+                        for(unsigned short i=0;i<packets.size();i++){
+                            auto imu_data=packets.at(i);
 
                             QString csv_row=imudata2csvrow(imu_data);
 
-                            if(i==dongle_data.n-1){
+                            if(i==packets.size()-1){
                                 int ret=csv_row.lastIndexOf(',');
                                 if(ret!=-1)
                                     csv_row.remove(ret,1);
@@ -363,11 +365,11 @@ void CSVLogForm::getBitmap(uchar bitmap)
     m_bitmap=bitmap;
 }
 
-QString CSVLogForm::imudata2csvrow(receive_imusol_packet_t imu_data)
+QString CSVLogForm::imudata2csvrow(id0x91_t imu_data)
 {
 
     QString csv_row="";
-    if(m_bitmap==BIT_VALID_ALL){
+    if(m_bitmap&BIT_VALID_TIME_STAMP){
         csv_row=tr("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14,%15,%16,")
                 .arg(QString::number(imu_data.acc[0],'f',3))
                 .arg(QString::number(imu_data.acc[1],'f',3))

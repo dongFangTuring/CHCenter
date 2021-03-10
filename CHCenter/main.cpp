@@ -23,8 +23,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     //register type for passing value between signal/slot
-    qRegisterMetaType<receive_imusol_packet_t>("receive_imusol_packet_t");
-    qRegisterMetaType<receive_gwsol_packet_t>("receive_gwsol_packet_t");
+    qRegisterMetaType<id0x91_t>("id0x91_t");
+    qRegisterMetaType<QVector<id0x91_t>>("QVector<id0x91_t>");
+    //qRegisterMetaType<receive_gwsol_packet_t>("receive_gwsol_packet_t");
 
 
 

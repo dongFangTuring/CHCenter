@@ -14,7 +14,7 @@
 #include <QTimer>
 #include <QMessageBox>
 
-#include "packet/imu_data_decode.h"
+#include "utilities/imu_parser.h"
 
 namespace Ui {
 class ThreeDForm;
@@ -36,7 +36,7 @@ public:
 private slots:
     void on_BNTLoad_clicked();
 
-    void getIMUData(receive_imusol_packet_t);
+    void getIMUData(id0x91_t);
 
     void on_BTNPosReset_clicked();
 

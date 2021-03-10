@@ -11,8 +11,9 @@
 #include <QMutex>
 
 
-#include "packet/packet.h"
-#include "packet/imu_data_decode.h"
+#include "kptl/kboot_protocol.h"
+#include "utilities/imu_parser.h"
+#include "mdbus/mdbus.h"
 
 class CHSerialport : public QObject
 {
@@ -23,19 +24,14 @@ public:
     explicit CHSerialport(QObject *parent = nullptr);
     ~CHSerialport();
 
-
     QSerialPort *CH_serial = nullptr;
     int openSerialport(QString, int);
-
-
-    receive_imusol_packet_t *IMU_data=&receive_imusol;
-    receive_gwsol_packet_t *IMUs_data=&receive_gwsol;
     uint Frame_rate=0;
     uchar Content_bits;
 
-
     QByteArray CH_rawmsg="";
     bool Is_msgMode=0;
+    imu_parser IMU_data;
 
 public slots:
     void writeData(QString);
@@ -45,8 +41,8 @@ public slots:
 
 signals:
     //emit data to baseform
-    void sigSendDongle(receive_gwsol_packet_t);
-    void sigSendIMU(receive_imusol_packet_t);
+    void sigSendDongle(QVector<id0x91_t>);
+    void sigSendIMU(id0x91_t);
     void sigSendIMUmsg(QString);
     void sigSendBitmap(uchar);
 
@@ -55,23 +51,36 @@ signals:
     void sigPortOpened();
     void sigPortClosed();
     void sigCloseThreadAndPort();
-    void sigUpdateDongleNodeList(bool, receive_gwsol_packet_t);
+    void sigUpdateDongleNodeList(bool, QVector<id0x91_t>);
 
     //write to serial, a cross thread command
-    void sigWriteData(QString);   
+    void sigWriteData(QString);
+
+    //to kboot
+    void sig_send_kbootbus(QByteArray&);
 
 
 private:
+
     QTimer *timer_framerate;
     QMutex mutex_writing;
     QString m_port_name;
     QThread *m_thread;
     int m_baudrate;
-    int m_number_of_node;
+
+    int m_node_cnt;
     bool m_is_gwsol=0;
+
     QString m_IMUmsg="";
 
     uint m_frame_received=0;
+    uint m_frame_counter=0;
+
+    kboot_protocol *kboot;
+    mdbus *bus_reader;
+
+    QVector<id0x91_t> IMU_packets;
+
 
 private slots:
     //count Hz
@@ -86,14 +95,18 @@ private slots:
     void initThreadReading();
     void closeThreadAndPort();
 
+
+
+
     //handle all data from serial
     void handleData();
-    void protocol_0x5A(QByteArray);
+    void protocol_0x5A(QByteArray&);
     void protocol_ASC2(QByteArray);
 
 
     //write to serial, a cross thread command
     void getsigWriteData(QString);
+    void slt_serial_send(QByteArray &ba);
 
 
 };

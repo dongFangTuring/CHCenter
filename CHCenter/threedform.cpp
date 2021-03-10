@@ -236,7 +236,7 @@ void ThreeDForm::on_BNTLoad_clicked()
 }
 
 
-void ThreeDForm::getIMUData(receive_imusol_packet_t imu_data)
+void ThreeDForm::getIMUData(id0x91_t imu_data)
 {
     mutex_writing.lock();
 

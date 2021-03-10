@@ -22,9 +22,9 @@ SOURCES += \
     CHCenter/csvlogform.cpp \
     CHCenter/main.cpp \
     CHCenter/threedform.cpp \
-    packet/imu_data_decode.cpp \
-    packet/packet.cpp \
-    mdbus/mdbus.cpp
+    kptl/kboot_protocol.cpp \
+    mdbus/mdbus.cpp \
+    utilities/imu_parser.cpp
 
 HEADERS += \
     CHCenter/aboutform.h \
@@ -36,9 +36,9 @@ HEADERS += \
     CHCenter/chsettingform.h \
     CHCenter/csvlogform.h \
     CHCenter/threedform.h \
-    packet/imu_data_decode.h \
-    packet/packet.h \
-    mdbus/mdbus.h
+    kptl/kboot_protocol.h \
+    mdbus/mdbus.h \
+    utilities/imu_parser.h
 
 FORMS += \
     CHCenter/aboutform.ui \

@@ -3,6 +3,30 @@
 
 #include <QObject>
 
+
+typedef struct
+{
+    uint8_t     tag;                /* 0x91 */
+    uint8_t     id;
+    uint8_t     rev[6];             /* reserved */
+    uint32_t    ts;                 /* timestamp */
+    float       acc[3];
+    float       gyr[3];
+    float       mag[3];
+    float       eul[3];             /* eular angles:R/P/Y */
+    float       quat[4];            /* quaternion */
+}id0x91_t;
+
+typedef struct
+{
+    uint8_t         tag;            /* 0x62 */
+    uint8_t         gwid;           /* network ID */
+    uint8_t         node_cnt;       /* number of RF device */
+    uint8_t         rev[5];
+}id0x62_hdr_t;
+
+
+
 class imu_parser : public QObject
 {
     Q_OBJECT
@@ -18,26 +42,7 @@ class imu_parser : public QObject
 
 #define MAX_NODE_SIZE 16
 
-    typedef struct
-    {
-        uint8_t     tag;                /* 0x91 */
-        uint8_t     id;
-        uint8_t     rev[6];             /* reserved */
-        uint32_t    ts;                 /* timestamp */
-        float       acc[3];
-        float       gyr[3];
-        float       mag[3];
-        float       eul[3];             /* eular angles:R/P/Y */
-        float       quat[4];            /* quaternion */
-    }id0x91_t;
 
-    typedef struct
-    {
-        uint8_t         tag;            /* 0x62 */
-        uint8_t         gwid;           /* network ID */
-        uint8_t         node_cnt;       /* number of RF device */
-        uint8_t         rev[5];
-    }id0x62_hdr_t;
 
 
 public:

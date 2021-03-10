@@ -49,11 +49,12 @@ BaseForm::BaseForm(QWidget *parent)
     connect(ch_serialport, SIGNAL(errorOpenPort()), this, SLOT(geterrorOpenPort()));
     connect(ch_serialport, SIGNAL(sigPortOpened()), this, SLOT(getsigPortOpened()));
     connect(ch_serialport, SIGNAL(sigPortClosed()), this, SLOT(getsigPortClosed()));
-    connect(ch_serialport, SIGNAL(sigUpdateDongleNodeList(bool, receive_gwsol_packet_t)), this, SLOT(updateDongleNodeList(bool, receive_gwsol_packet_t)));
-    connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
-            this, SLOT(getIMUData(receive_imusol_packet_t)), Qt::QueuedConnection);
-    connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
-            this, SLOT(getDongleData(receive_gwsol_packet_t)), Qt::QueuedConnection);
+    connect(ch_serialport, SIGNAL(sigUpdateDongleNodeList(bool, QVector<id0x91_t>)),
+            this, SLOT(updateDongleNodeList(bool, QVector<id0x91_t>)));
+    connect(ch_serialport, SIGNAL(sigSendIMU(id0x91_t)),
+            this, SLOT(getIMUData(id0x91_t)), Qt::QueuedConnection);
+    connect(ch_serialport, SIGNAL(sigSendDongle(QVector<id0x91_t>)),
+            this, SLOT(getDongleData(QVector<id0x91_t>)), Qt::QueuedConnection);
     connect(ch_serialport, SIGNAL(sigSendIMUmsg(QString)), this, SLOT(getIMUmsg(QString)));
 
     //page 1 widget initialize : Attitude indicator
@@ -70,28 +71,28 @@ BaseForm::BaseForm(QWidget *parent)
     m_chartEul=new ChartWindow(nullptr,"eul");
     m_chartQuat=new ChartWindow(nullptr,"quat");
 
-    connect(this, SIGNAL(sigUpdateBaseFormChart(receive_imusol_packet_t)),
-            this, SLOT(updateBaseFormChart(receive_imusol_packet_t)), Qt::DirectConnection);
+    connect(this, SIGNAL(sigUpdateBaseFormChart(id0x91_t)),
+            this, SLOT(updateBaseFormChart(id0x91_t)), Qt::DirectConnection);
 
 
     //page 2 widget initialize : 3D widget
     ch_threeDform=new ThreeDForm();
-    connect(this, SIGNAL(sigSendIMUtoThreeD(receive_imusol_packet_t)),
-            ch_threeDform, SLOT(getIMUData(receive_imusol_packet_t)));
+    connect(this, SIGNAL(sigSendIMUtoThreeD(id0x91_t)),
+            ch_threeDform, SLOT(getIMUData(id0x91_t)));
 
 
 
     //page 3
     ch_csvlogform=new CSVLogForm();
 
-    connect(ch_serialport, SIGNAL(sigSendIMU(receive_imusol_packet_t)),
-            ch_csvlogform, SLOT(getIMUData(receive_imusol_packet_t)));
-    connect(ch_serialport, SIGNAL(sigSendDongle(receive_gwsol_packet_t)),
-            ch_csvlogform, SLOT(getDongleData(receive_gwsol_packet_t)));
+    connect(ch_serialport, SIGNAL(sigSendIMU(id0x91_t)),
+            ch_csvlogform, SLOT(getIMUData(id0x91_t)));
+    connect(ch_serialport, SIGNAL(sigSendDongle(QVector<id0x91_t>)),
+            ch_csvlogform, SLOT(getDongleData(QVector<id0x91_t>)));
     connect(ch_serialport, SIGNAL(sigSendBitmap(uchar)),
             ch_csvlogform, SLOT(getBitmap(uchar)));
-    //    connect(ch_serialport, SIGNAL(sigPortClosed()),
-    //            ch_csvlogform, SLOT(stopLogging()));
+    connect(ch_serialport, SIGNAL(sigPortClosed()),
+            ch_csvlogform, SLOT(stopLogging()));
 
     //page 4
     ch_settingform=new CHSettingForm();
@@ -188,16 +189,20 @@ void BaseForm::on_BTNConnect_clicked()
 
     update_BTNConnect_state();
 
-    receive_gwsol_packet_t empty;
-    updateDongleNodeList(false,empty);
+    id0x91_t empty;
+    QVector<id0x91_t> a;
+    a.append(empty);
+    updateDongleNodeList(false, a);
 }
 
 void BaseForm::on_BTNDisconnect_clicked()
 {
     if(ch_serialport->CH_serial->isOpen()){
         ch_serialport->closePort();
-        receive_gwsol_packet_t empty;
-        updateDongleNodeList(false,empty);
+        id0x91_t empty;
+        QVector<id0x91_t> a;
+        a.append(empty);
+        updateDongleNodeList(false, a);
     }
 }
 
@@ -232,22 +237,24 @@ void BaseForm::update_BTNConnect_state()
  * @brief BaseForm::updateDongleNodeList
  * if number of nodes changes send sigUpdateDongleNodeList():call updateDongleNodeList()
  */
-void BaseForm::updateDongleNodeList(bool m_is_dongle, receive_gwsol_packet_t dongle_data)
+void BaseForm::updateDongleNodeList(bool m_is_dongle, QVector<id0x91_t> packets)
 {
+
     if(m_is_dongle==1){
         ui->DongleNodeList->clear();
         ui->DongleNodeList->setVisible(true);
 
+        int node_cnt_tmp=ch_serialport->IMU_data.dev_info.node_cnt;
 
-        if(dongle_data.n==0){
+        if(node_cnt_tmp==0){
             ui->DongleNodeList->addItem(tr("No node is online."));
 
         }
         else{
             bool idexist=false;
-            for(int i = 0; i < dongle_data.n; i++)
+            for(int i = 0; i < node_cnt_tmp; i++)
             {
-                int t_id=dongle_data.receive_imusol[i].id;
+                int t_id=packets.at(i).id;
 
                 ui->DongleNodeList->addItem(tr("Wireless Node ID : %1").arg(t_id));
 
@@ -365,48 +372,43 @@ void BaseForm::getsigPortClosed()
  * process 2 kinds of data: hi226/hi229/ch110/hi221 vs hi221gw
  * @param cur_dongle_nodeIndex: while streaming hi221gw, it will remember the chose node(by ID) until it's offine
  */
-void BaseForm::getIMUData(receive_imusol_packet_t imu_data)
+void BaseForm::getIMUData(id0x91_t packet)
 {
 
     mutex_writing.lock();
 
-    m_imu_data=imu_data;
+    m_imu_data=packet;
     m_contentbits = ch_serialport->Content_bits;
 
     mutex_writing.unlock();
 
 
-    //updateBaseForm();
-    emit sigUpdateBaseFormChart(imu_data);
-    emit sigSendIMUtoThreeD(imu_data);
+    emit sigUpdateBaseFormChart(m_imu_data);
+    emit sigSendIMUtoThreeD(m_imu_data);
 
 }
-void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
+void BaseForm::getDongleData(QVector<id0x91_t> packets)
 {    
 
-    //Connected number of nodes > 0
-    if(dongle_data.n>0){
-
-        receive_imusol_packet_t imu_data;
-
-        imu_data=dongle_data.receive_imusol[cur_dongle_nodeIndex];
+    if(ch_serialport->IMU_data.dev_info.node_cnt>0){
 
 
         mutex_writing.lock();
 
-        m_imu_data=imu_data;
+        m_imu_data=packets.at(cur_dongle_nodeIndex);
+
         m_contentbits = ch_serialport->Content_bits;
-        m_protocol_tag = dongle_data.tag;
+        //m_protocol_tag = packets.tag;
 
         mutex_writing.unlock();
 
-        emit sigUpdateBaseFormChart(imu_data);
-        emit sigSendIMUtoThreeD(imu_data);
+        emit sigUpdateBaseFormChart(m_imu_data);
+        emit sigSendIMUtoThreeD(m_imu_data);
     }
     //No node is connected.
     else{
         m_contentbits=0;
-        m_protocol_tag=dongle_data.tag;
+        //m_protocol_tag=packets.tag;
     }
 }
 
@@ -416,21 +418,21 @@ void BaseForm::getDongleData(receive_gwsol_packet_t dongle_data)
  */
 void BaseForm::updateBaseForm()
 {
-//    static u_int sample_counter=0;
-//    uint update_interval=ch_serialport->Frame_rate/30;
-//    update_interval=update_interval*2;
-//    if(update_interval<1)
-//        update_interval=1;
+    //    static u_int sample_counter=0;
+    //    uint update_interval=ch_serialport->Frame_rate/30;
+    //    update_interval=update_interval*2;
+    //    if(update_interval<1)
+    //        update_interval=1;
 
-//    if(sample_counter%update_interval==0){
+    //    if(sample_counter%update_interval==0){
 
-//        updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
-//        m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
-//        m_Compass->setYaw(m_imu_data.eul[2]);
-//        m_protocol_tag=0;
-//    }
+    //        updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
+    //        m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
+    //        m_Compass->setYaw(m_imu_data.eul[2]);
+    //        m_protocol_tag=0;
+    //    }
 
-//    sample_counter++;
+    //    sample_counter++;
 
     updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
     ui->GLWidgetADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
@@ -470,7 +472,7 @@ void BaseForm::getsigSendATcmd(QString ATcmd)
  * @param Content_bits:define what kinds of data can be showed
  */
 
-void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bits, uchar protocol_tag)
+void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits, uchar protocol_tag)
 {
 
     QString setptl="";
@@ -551,15 +553,14 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
             ui->LabelGPQuat->setVisible(false);
     }
 
-    if(content_bits == BIT_VALID_ALL){
+    if(content_bits & BIT_VALID_TIME_STAMP){
         setptl="91";
     }
-    if(protocol_tag == KItemDongleRaw)
-        setptl="63";
+    //    if(protocol_tag == KItemDongleRaw)
+    //        setptl="63";
 
-    else if (protocol_tag == KItemDongle)
+    if (content_bits & BIT_RF_DONGLE)
         setptl="62";
-
 
 
     //delete that last comma
@@ -571,7 +572,7 @@ void BaseForm::updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bi
 
 }
 
-void BaseForm::updateBaseFormChart(receive_imusol_packet_t imu_data)
+void BaseForm::updateBaseFormChart(id0x91_t imu_data)
 {
 
     if(m_contentbits & BIT_VALID_ACC){

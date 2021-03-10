@@ -12,7 +12,7 @@
 #include <QThread>
 #include <QCloseEvent>
 
-#include "packet/imu_data_decode.h"
+#include "utilities/imu_parser.h"
 
 namespace Ui {
 class CSVLogForm;
@@ -36,8 +36,8 @@ private slots:
     void on_BTNClear_clicked();
 
     //Get data from baseform
-    void getIMUData(receive_imusol_packet_t);
-    void getDongleData(receive_gwsol_packet_t);
+    void getIMUData(id0x91_t);
+    void getDongleData(QVector<id0x91_t>);
     void getBitmap(uchar);
 
     void on_SBLogPeriod_valueChanged(int arg1);
@@ -58,8 +58,8 @@ private:
     Ui::CSVLogForm *ui;
     QString current_dir;
 
-    receive_imusol_packet_t m_imudata;
-    receive_gwsol_packet_t m_gwimudata;
+    id0x91_t m_imudata;
+    QVector<id0x91_t> m_gwimudata;
 
     QTimer *timer_log_period;
     QTimer *timer_countdown;
@@ -76,7 +76,7 @@ private:
 
     std::vector<int> gwnode_idlist;
 
-    QString imudata2csvrow(receive_imusol_packet_t);
+    QString imudata2csvrow(id0x91_t);
 
     uchar m_bitmap;
 

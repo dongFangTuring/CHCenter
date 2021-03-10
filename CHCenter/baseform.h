@@ -6,7 +6,7 @@
 #include <QFile>
 #include <QCloseEvent>
 #include <QGraphicsScene>
-#include "packet/imu_data_decode.h"
+
 
 #include "chcomform.h"
 #include "chserialport.h"
@@ -35,8 +35,8 @@ protected:
 
 
 signals:
-    void sigUpdateBaseFormChart(receive_imusol_packet_t);
-    void sigSendIMUtoThreeD(receive_imusol_packet_t);
+    void sigUpdateBaseFormChart(id0x91_t);
+    void sigSendIMUtoThreeD(id0x91_t);
 
 
 private slots:
@@ -52,7 +52,7 @@ private slots:
     void update_BTNConnect_state();
 
     //this will be show if device is HI221GW
-    void updateDongleNodeList(bool, receive_gwsol_packet_t);
+    void updateDongleNodeList(bool, QVector<id0x91_t>);
     void on_DongleNodeList_itemClicked(QListWidgetItem *item);
 
     ///signal from CHComForm ui///
@@ -63,14 +63,14 @@ private slots:
     void geterrorOpenPort();
     void getsigPortOpened();
     void getsigPortClosed();
-    void getIMUData(receive_imusol_packet_t);
-    void getDongleData(receive_gwsol_packet_t);
+    void getIMUData(id0x91_t);
+    void getDongleData(QVector<id0x91_t>);
     void getIMUmsg(QString);
 
     ///stackwidget page1 content:data, chart and attitude indicator///
     void updateBaseForm();
-    void updateIMUTable(receive_imusol_packet_t imu_data, uchar content_bits, uchar protocol_tag);
-    void updateBaseFormChart(receive_imusol_packet_t);
+    void updateIMUTable(id0x91_t imu_data, uchar content_bits, uchar protocol_tag);
+    void updateBaseFormChart(id0x91_t);
 
     ///stackwidget page2 content:///
 
@@ -105,7 +105,7 @@ private:
     QTimer *baseform_timer;
 
     //IMU node and dongle
-    receive_imusol_packet_t m_imu_data;
+    id0x91_t m_imu_data;
     uchar m_protocol_tag;
     uchar m_contentbits=0;
 
