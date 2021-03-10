@@ -39,6 +39,7 @@ void Form_display::slt_tmr(void)
 }
 
 
+
 void Form_display::slt_kptl_payload_recv(QByteArray &ba)
 {
     int i;
@@ -48,6 +49,9 @@ void Form_display::slt_kptl_payload_recv(QByteArray &ba)
     sample_cntr++;
     text.append(QString("bitmap:%1\n").arg(parser->bitmap));
     text.append(QString("frq:%1\n").arg(sample_frq));
+
+    QByteArray array((const char*)parser->item_id, parser->item_id_cnt);
+    text.append("PROTOCOL: " + array.toHex(',') + "\n");
 
     if(parser->bitmap & BIT_RF_DONGLE)
     {

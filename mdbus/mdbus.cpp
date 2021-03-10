@@ -28,11 +28,11 @@ mdbus::mdbus(QObject *parent) : QObject(parent)
 void mdbus::decode(QByteArray &brx)
 {
 
-    if(brx.size())
-    {
-        qDebug()<<"mdbus rx:"<<brx.toHex(',');
-        //qDebug()<<"mdbus rx size:"<<brx.size();
-    }
+//    if(brx.size())
+//    {
+//        qDebug()<<"mdbus rx:"<<brx.toHex(',');
+//        //qDebug()<<"mdbus rx size:"<<brx.size();
+//    }
 
     for(int i =0; i<brx.size(); i++)
     {
@@ -106,7 +106,7 @@ void mdbus::decode(QByteArray &brx)
             break;
         case kStatus_CRCHigh:
             this->recv_crc |= c<<8;
-            if(this->crc16(rx_payload) == this->recv_crc)
+            if(this->crc16(rx_payload) == this->recv_crc) /* CRC match */
             {
                 rx_payload.remove(0, 3); /* 3 = addr(1) + fun_code(1) + byte_cnt(1) */
                 this->recv_ok = true;

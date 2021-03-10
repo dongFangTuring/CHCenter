@@ -47,8 +47,8 @@ public:
 
     void parse(QByteArray &ba);
 
-    id0x91_t        dev[MAX_NODE_SIZE];                  /* dev[0] is filled when single IMU connected */
-    id0x62_hdr_t    dev_info;                 /* rf device node */
+    id0x91_t        dev[MAX_NODE_SIZE];       /* dev[0] is filled when single IMU connected */
+    id0x62_hdr_t    dev_info;                 /* device information */
 
     uint8_t item_id[32];
     uint8_t item_id_cnt;

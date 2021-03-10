@@ -148,6 +148,7 @@ void mdbus_Dialog::on_btn_read_param_clicked()
 void mdbus_Dialog::on_btn_read_info_clicked()
 {
      QString text;
+
     /* read product info */
     uint32_t buf[16];
 

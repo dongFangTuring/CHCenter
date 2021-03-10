@@ -21,7 +21,7 @@ typedef enum
 
 imu_parser::imu_parser(QObject *parent) : QObject(parent)
 {
-
+    this->item_id_cnt = 0;
 }
 
 static int stream2int16(int *dest,uint8_t *src)
@@ -39,7 +39,7 @@ void imu_parser::parse(QByteArray &ba)
     int len = ba.size();
     bitmap = 0;
 
-
+    item_id_cnt = 0;
     uint8_t *p = reinterpret_cast<uint8_t*>(ba.data());
 
     for(int i =0; i<len; i++)
@@ -49,12 +49,14 @@ void imu_parser::parse(QByteArray &ba)
             switch(p[offset])
             {
             case kItemID:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= BIT_VALID_ID;
                 this->dev[0].id = p[1];
                 offset += 2;
                 break;
 
             case kItemAccRaw:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= BIT_VALID_ACC;
                 stream2int16(temp, &p[offset + 1]);
                 this->dev[0].acc[0] = (float)temp[0] / 1000;
@@ -65,6 +67,7 @@ void imu_parser::parse(QByteArray &ba)
 
             case kItemGyrRaw:
             case 0xB1:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= BIT_VALID_GYR;
                 stream2int16(temp, &p[offset + 1]);
                 this->dev[0].gyr[0] = (float)temp[0] / 10;
@@ -74,6 +77,7 @@ void imu_parser::parse(QByteArray &ba)
                 break;
 
             case kItemMagRaw:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= BIT_VALID_MAG;
                 stream2int16(temp, &p[offset + 1]);
                 this->dev[0].mag[0] = (float)temp[0] / 10;
@@ -83,6 +87,7 @@ void imu_parser::parse(QByteArray &ba)
                 break;
 
             case kItemRotationEul:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= BIT_VALID_EUL;
                 stream2int16(temp, &p[offset + 1]);
                 this->dev[0].eul[1] = (float)temp[0] / 100;
@@ -92,16 +97,19 @@ void imu_parser::parse(QByteArray &ba)
                 break;
 
             case kItemRotationQuat:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= BIT_VALID_QUAT;
                 memcpy((void*)this->dev[0].quat, p + offset + 1, sizeof(this->dev[0].quat));
                 offset += 17;
                 break;
 
             case kItemPressure:
+                item_id[item_id_cnt++] = p[offset];
                 offset += 5;
                 break;
 
             case KItemIMUSOL:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= (BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
                 memcpy(&this->dev[0], &p[offset], sizeof(id0x91_t));
                 offset += sizeof(id0x91_t);
@@ -111,6 +119,7 @@ void imu_parser::parse(QByteArray &ba)
                 offset += (4*8)+1;
                 break;
             case KItemDongle:
+                item_id[item_id_cnt++] = p[offset];
                 bitmap |= (BIT_RF_DONGLE | BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
 
                 /* fill rf hdr */
@@ -123,7 +132,6 @@ void imu_parser::parse(QByteArray &ba)
                     memcpy(&this->dev[i], &p[offset], sizeof(id0x91_t));
                     offset += sizeof(id0x91_t);
                 }
-
                 break;
 
             case KItemDongleRaw:
