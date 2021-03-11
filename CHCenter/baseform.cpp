@@ -556,6 +556,7 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits, uchar proto
     if(content_bits & BIT_VALID_TIME_STAMP){
         setptl="91";
     }
+    //no more 0x63
     //    if(protocol_tag == KItemDongleRaw)
     //        setptl="63";
 

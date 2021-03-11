@@ -19,7 +19,7 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     kboot->moveToThread(m_thread);
 
     /* connect kboot paser to serial */
-    connect(this, SIGNAL(sig_send_kbootbus(QByteArray&)), this->kboot, SLOT(slt_serial_read(QByteArray&)));
+    connect(this, SIGNAL(sig_send_kbootbus(QByteArray&)), kboot, SLOT(slt_serial_read(QByteArray&)));
     connect(kboot, SIGNAL(sig_serial_send(QByteArray&)), this, SLOT(slt_serial_send(QByteArray&)));
 
 
@@ -163,6 +163,24 @@ void CHSerialport::on_thread_started()
     else{
         emit sigPortOpened();
         //qDebug() << "serial port thread is:" << QThread::currentThreadId();
+
+        //read product info
+        uint32_t buf[64];
+
+        bus_reader->read_reg(1, 0, buf[0]);
+        qDebug()<< "PROD: HI" + QString::number(buf[0] & 0xFFFF) + "\n";
+
+        bus_reader->read_data(1, 2, buf, 2);
+        qDebug()<<QString("UUID:" + QString::number(buf[0], 16) + QString::number(buf[1], 16));
+
+        //mdbus reader
+
+        int aaa = bus_reader->read_data(1, 0, buf, 32);
+        if(aaa){
+            for(int i=0; i<32; i++){
+                qDebug()<<buf[i];
+            }
+        }
     }
 
 
@@ -199,14 +217,7 @@ void CHSerialport::handleData()
 
         //kboot protocol_0x5A;
         emit sig_send_kbootbus(raw_data);
-        //mdbus reader
-        //        uint32_t buf[64];
-        //        int aaa = bus_reader->read_data(1, 0, buf, 32);
-        //        if(aaa){
-        //            for(int i=0; i<32; i++){
-        //                qDebug()<<buf[i];
-        //            }
-        //        }
+
 
     }
 
@@ -321,7 +332,8 @@ void CHSerialport::protocol_ASC2(QByteArray asc2_data)
     //has found 0x5A
     if(rst!=-1){
         m_IMUmsg=QString(asc2_data.toHex()).toUpper();
-        emit sigSendIMUmsg(m_IMUmsg);
+        QString a = m_IMUmsg.replace(QRegularExpression("(.{2})"), "\\1 ");
+        emit sigSendIMUmsg(a);
         m_IMUmsg="";
     }
 
@@ -356,6 +368,13 @@ void CHSerialport::writeData(QString ATcmd)
 void CHSerialport:: slt_serial_send(QByteArray &ba)
 {
     CH_serial->write(ba);
+    qDebug("tba");
+
+    QString a=ba.toHex().toUpper();
+    QString split = a.replace(QRegularExpression("(.{2})"), "\\1 ");
+
+
+    qDebug()<<split;
 
     //    this->mserial->clear(QSerialPort::Input);
 

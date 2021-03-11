@@ -19,13 +19,14 @@ int main(int argc, char *argv[])
 {
 
     QApplication::setAttribute(Qt::AA_UseOpenGLES);
-    //QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+    //QApplication::setAttribute(Qt::AA_UseDesktopOpenGL); it comsume more cpu
     QApplication a(argc, argv);
 
     //register type for passing value between signal/slot
     qRegisterMetaType<id0x91_t>("id0x91_t");
     qRegisterMetaType<QVector<id0x91_t>>("QVector<id0x91_t>");
-    //qRegisterMetaType<receive_gwsol_packet_t>("receive_gwsol_packet_t");
+    qRegisterMetaType<QByteArray>("QByteArray&");
+
 
 
 
