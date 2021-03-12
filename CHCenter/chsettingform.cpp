@@ -2,7 +2,7 @@
 #include "ui_chsettingform.h"
 
 CHSettingForm::CHSettingForm(QWidget *parent) :
-    QWidget(parent),
+    QDialog(parent),
     ui(new Ui::CHSettingForm)
 {
     ui->setupUi(this);

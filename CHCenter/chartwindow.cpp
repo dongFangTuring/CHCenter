@@ -317,6 +317,7 @@ void ChartWindow::updateMovingWindow()
                 m_chartView->zoom_mode=2;   //zoom at the newest
                 m_serieslist.at(0)->setVisible(false); //hide refresh line
             }
+
         }
         //for free mode
         else{

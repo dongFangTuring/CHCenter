@@ -10,7 +10,7 @@ namespace Ui {
 class CHSettingForm;
 }
 
-class CHSettingForm : public QWidget
+class CHSettingForm : public QDialog
 {
     Q_OBJECT
 

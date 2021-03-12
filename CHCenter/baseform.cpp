@@ -169,6 +169,7 @@ void BaseForm::on_SideBarBTN3_clicked()
 void BaseForm::on_SideBarBTN4_clicked()
 {
     ch_settingform->settingConfig_init();
+    ch_settingform->setModal(true);
     ch_settingform->show();
 
 }
