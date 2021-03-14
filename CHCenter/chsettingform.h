@@ -54,14 +54,12 @@ public:
     CHConfig CH_Config;
 
 public slots:
-    void setTerminalBoxText(QString str);
     void StreamATcmd();
     void settingConfig_init();
 
 private slots:
 
     void sltMdbusParamLoaded();
-    void writeRST();
     void on_LoadParamBTN_clicked();
 
     void on_BTN_clearTB_clicked();
@@ -113,10 +111,8 @@ private:
 
     void identifyProduct();
     void writeUART_CFG();
-    void writeMode();
-    void writeBaud();
-    void writeEOUT();
-
+    void writeCmd(uint8_t cmd);
+    void delay(uint32_t ms);
 
 };
 

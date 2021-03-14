@@ -25,7 +25,7 @@ void CHSettingForm::closeEvent(QCloseEvent *event)
 {
 
     if (event->spontaneous()) {
-        writeEOUT();
+        writeCmd(0x08);
     } else {
         QWidget::closeEvent(event);
     }
@@ -92,13 +92,6 @@ void CHSettingForm::identifyProduct()
 
 }
 
-void CHSettingForm::setTerminalBoxText(QString str)
-{
-
-    ui->TB_Termial->append(str);
-
-}
-
 
 
 ///obselete///
@@ -155,7 +148,7 @@ void CHSettingForm::sltMdbusParamLoaded()
     }
 
 
-    prod_info.append(tr("Product: %1, ").arg(CH_Config.Model));
+    prod_info.append(tr("Product: %1 ").arg(CH_Config.Model));
     prod_info.append(tr("UUID: %1%2 ").arg(m_modbus_param[2],0,16).arg(m_modbus_param[3],0,16));
 
     //read ID, RF parameters
@@ -341,14 +334,12 @@ void CHSettingForm::on_CB_Mode_activated(int index)
         CH_Config.Mode=0x01;
     else if(index==1)
         CH_Config.Mode=0x03;
-    writeMode();
 }
 
 void CHSettingForm::on_CB_Baud_activated(const QString &arg1)
 {
     qDebug()<<"Baud_currentIndexChanged";
     CH_Config.Baud=arg1.toUInt();
-    writeBaud();
 }
 void CHSettingForm::on_BTN_ATCMD_clicked()
 {
@@ -406,40 +397,52 @@ void CHSettingForm::writeUART_CFG()
     uint32_t temp_UART_CFG=(CH_Config.ODR<<16)+CH_Config.Bitmap;
     m_modbus_param[10]=temp_UART_CFG;
 
-    emit sigSetParam('w', &m_modbus_param[10], 10);
 
 }
-void CHSettingForm::writeMode()
+
+
+void CHSettingForm::delay(uint32_t ms)
 {
-    emit sigSetParam('w', &CH_Config.Mode, 16);
+    QEventLoop eventloop;
+    QTimer::singleShot(ms, &eventloop, SLOT(quit()));
+    eventloop.exec();
 }
-void CHSettingForm::writeBaud()
-{
-    emit sigSetParam('w', &CH_Config.Baud, 9);
-}
+
 
 
 void CHSettingForm::on_RSTBTN_clicked()
 {
-    uint32_t tmp_cmd_flash=0x06; //save all parameters to flash
+    emit sigSetParam('w', &CH_Config.Baud, 9);
+    delay(10);
+    emit sigSetParam('w', &CH_Config.Mode, 16);
+    delay(10);
+    emit sigSetParam('w', &m_modbus_param[10], 10);
+    delay(10);
+    emit sigSetParam('w', &m_modbus_param[40], 40);
+    delay(10);
+    emit sigSetParam('w', &CH_Config.ID, 4);
+    delay(10);
 
-    m_modbus_param[17]=tmp_cmd_flash;
-    emit sigSetParam('w', &m_modbus_param[17], 17); //17:CMD
+    writeCmd(0x06); /* SAVE TO FLASH */
 
-    QTimer::singleShot(200, this, SLOT(writeRST()));
+
+    uint8_t cmd = 0x05;  /* RST */
+    QTimer::singleShot(1000, this, [&,cmd](){
+             writeCmd(cmd);
+         }
+    );
+
+
+
 
 }
-void CHSettingForm::writeRST()
+
+void CHSettingForm::writeCmd(uint8_t cmd)
 {
-    m_modbus_param[17]= 0x05; //RST
+    m_modbus_param[17]= cmd;
     emit sigSetParam('w', &m_modbus_param[17], 17);
 }
 
-void CHSettingForm::writeEOUT()
-{
-    m_modbus_param[17] = 0x08; /* EOUT */
-    emit sigSetParam('w', &m_modbus_param[17], 17);
-}
 
 void CHSettingForm::on_BTN_PrintCalib_clicked()
 {
@@ -452,7 +455,7 @@ void CHSettingForm::on_BTN_PrintCalib_clicked()
         }
 
     }
-    setTerminalBoxText(text);
+    ui->TB_Termial->append(text);
 }
 
 void CHSettingForm::on_CB_MaxNodeSize_activated(const QString &arg1)
@@ -469,7 +472,7 @@ void CHSettingForm::on_CB_MaxNodeSize_activated(const QString &arg1)
 
     m_modbus_param[40]=tmp_rf;
 
-    emit sigSetParam('w', &m_modbus_param[40], 40);
+
 
 }
 
@@ -486,7 +489,7 @@ void CHSettingForm::on_CB_GWFRQ_activated(const QString &arg1)
 
     m_modbus_param[40]=tmp_rf;
 
-    emit sigSetParam('w', &m_modbus_param[40], 40);
+
 }
 
 void CHSettingForm::on_SB_GWID_valueChanged(int arg1)
@@ -502,13 +505,11 @@ void CHSettingForm::on_SB_GWID_valueChanged(int arg1)
 
     m_modbus_param[40]=tmp_rf;
 
-    emit sigSetParam('w', &m_modbus_param[40], 40);
 }
 
 void CHSettingForm::on_SB_ID_valueChanged(int arg1)
 {
     CH_Config.ID=arg1;
-    emit sigSetParam('w', &CH_Config.ID, 4);
 }
 
 

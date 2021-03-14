@@ -454,7 +454,6 @@ void BaseForm::updateBaseForm()
  */
 void BaseForm::getIMUmsg(QString str)
 {
-    ch_settingform->setTerminalBoxText(str);
     if(str.indexOf("BAUD")>=0){
         statusbar_msg.current_status=tr("Please restart the device to take effect, and connect with new Baudrate.");
         ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
