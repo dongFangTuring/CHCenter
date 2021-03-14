@@ -12,6 +12,7 @@ public:
     kboot_protocol();
     ~kboot_protocol();
 
+    void kboot_clear();
     /* general API */
     void delay(uint32_t ms);
 

@@ -150,6 +150,9 @@ void CHSerialport::on_thread_started()
     connect(CH_serial, SIGNAL(readyRead()), this, SLOT(handleData()), Qt::QueuedConnection);
     connect(timer_framerate, SIGNAL(timeout()), this, SLOT(countFrameRate()),Qt::QueuedConnection);
 
+    m_kboot->kboot_clear();
+
+
     timer_framerate->start();
     int ret=openSerialport(m_port_name, m_baudrate);
     if(ret==-1){

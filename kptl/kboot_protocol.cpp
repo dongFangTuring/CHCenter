@@ -63,7 +63,6 @@ enum
 
 kboot_protocol::kboot_protocol()
 {
-
     this->state = kStatus_Idle;
     this->rx_feame_len = 0;
     this->resp_flag = false;
@@ -72,6 +71,13 @@ kboot_protocol::kboot_protocol()
 kboot_protocol::~kboot_protocol()
 {
 
+}
+
+void kboot_protocol::kboot_clear()
+{
+    this->state = kStatus_Idle;
+    this->rx_feame_len = 0;
+    this->resp_flag = false;
 }
 
 void kboot_protocol::decode(QByteArray &ba)
@@ -252,7 +258,7 @@ QByteArray kboot_protocol::cmd_get_property(uint8_t property_code)
 
     }
 
-    return this->rx_payload;;
+    return this->rx_payload;
 }
 
 bool kboot_protocol::cmd_flash_erase_region(uint32_t addr, uint32_t len)
