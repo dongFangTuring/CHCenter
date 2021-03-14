@@ -144,7 +144,7 @@ void kboot_protocol::decode(QByteArray &ba)
         case kStatus_Data:
             if(this->rx_payload.size() == this->rx_feame_len)
             {
-//                qDebug()<<"kptl rx:"<<rx_payload.toHex(',');
+                //qDebug()<<"kptl rx:"<<rx_payload.toHex(',');
 
                 /* CRC */
                 uint16_t crc_calculated = do_crc_check(rx_payload);
@@ -157,8 +157,9 @@ void kboot_protocol::decode(QByteArray &ba)
                     if((uint8_t)this->rx_payload[1] == (uint8_t)0xA5)
                     {
                         QByteArray out = this->rx_payload.remove(0, 6);
-                     //   qDebug()<<"kptl emit:"<<out.toHex(',');
+                        //qDebug()<<"kptl emit:"<<out.toHex(',');
                         emit sig_frame_recv(out);
+
                     }
 
                     this->resp_flag = true;

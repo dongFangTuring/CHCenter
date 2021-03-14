@@ -27,14 +27,13 @@ public:
     QSerialPort *CH_serial = nullptr;
     int openSerialport(QString, int);
     uint Frame_rate=0;
+
     uchar Content_bits;
 
-    QByteArray CH_rawmsg="";
-    bool Is_msgMode=0;
     imu_parser IMU_data;
 
 public slots:
-    void writeData(QString);
+
     void closePort();
     void linkCHdevices(QString, int);
     void quitmThread();
@@ -53,11 +52,37 @@ signals:
     void sigCloseThreadAndPort();
     void sigUpdateDongleNodeList(bool, QVector<id0x91_t>);
 
-    //write to serial, a cross thread command
-    void sigWriteData(QString);
+    //send raw binary to kboot and modbus
+    void sig_send_kboot(QByteArray&);
+    void sig_send_bus(QByteArray&);
 
-    //to kboot
-    void sig_send_kbootbus(QByteArray&);
+    //send back the read modbus config chsetting
+    void sigMdbusParamLoaded();
+
+private slots:
+    //count Hz
+    void countFrameRate();
+
+    //if device is connected but 0Hz, check if it is still available
+    void checkPortStatus();
+
+    //control of the second thread
+    void on_thread_started();
+    void on_thread_stopped();
+    void initThreadReading();
+    void closeThreadAndPort();
+
+
+    //handle all data from serial
+    void handleData();
+    void protocol_0x5A(QByteArray&);
+    void protocol_ASC2(QByteArray);
+
+    //write to serial, a cross thread command
+    void slt_writeData(QString);
+    void slt_serial_send(QByteArray &ba);
+
+    void sltRWMdbus(char rw, uint32_t *param, int16_t address=-1);
 
 
 private:
@@ -76,37 +101,13 @@ private:
     uint m_frame_received=0;
     uint m_frame_counter=0;
 
-    kboot_protocol *kboot;
-    mdbus *bus_reader;
+    kboot_protocol *m_kboot;
+    mdbus *m_mdbus;
 
     QVector<id0x91_t> IMU_packets;
 
 
-private slots:
-    //count Hz
-    void countFrameRate();
 
-    //if device is connected but 0Hz, check if it is still available
-    void checkPortStatus();
-
-    //control of the second thread
-    void on_thread_started();
-    void on_thread_stopped();
-    void initThreadReading();
-    void closeThreadAndPort();
-
-
-
-
-    //handle all data from serial
-    void handleData();
-    void protocol_0x5A(QByteArray&);
-    void protocol_ASC2(QByteArray);
-
-
-    //write to serial, a cross thread command
-    void getsigWriteData(QString);
-    void slt_serial_send(QByteArray &ba);
 
 
 };

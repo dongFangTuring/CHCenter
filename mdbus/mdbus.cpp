@@ -217,7 +217,7 @@ bool mdbus:: write_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint
     ba.append((crc>>0) & 0xFF);
     ba.append((crc>>8) & 0xFF);
 
-    qDebug()<<"mdbus tx: "<<ba.toHex(',');
+    //qDebug()<<"mdbus tx: "<<ba.toHex(',');
 
     emit sig_serial_send(ba);
     this->brx.clear();

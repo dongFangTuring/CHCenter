@@ -80,7 +80,7 @@ private slots:
 
 
     ///stackwidget page4 content:///
-    void getsigSendATcmd(QString ATcmd);
+
 
     ///MenuBar signals of actions///
     void on_actionExit_triggered();

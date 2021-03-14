@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
     //register type for passing value between signal/slot
     qRegisterMetaType<id0x91_t>("id0x91_t");
     qRegisterMetaType<QVector<id0x91_t>>("QVector<id0x91_t>");
-    qRegisterMetaType<QByteArray>("QByteArray&");
-
+    qRegisterMetaType<QByteArray>("QByteArray");
+    qRegisterMetaType<int16_t>("int16_t");
 
 
 

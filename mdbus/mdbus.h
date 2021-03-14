@@ -14,6 +14,7 @@ public:
     bool write_reg(uint8_t dev_addr, uint16_t reg_addr, uint32_t val, uint32_t timeout = 100);  /* write signle REG */
     void delay(uint32_t ms);
 
+
 public slots:
     void slt_serial_read(QByteArray &ba);  /* slt for recv data */
 

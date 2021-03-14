@@ -8,31 +8,28 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     CH_serial = new QSerialPort();
     timer_framerate = new QTimer();
 
-    kboot = new kboot_protocol();
-    bus_reader = new mdbus();
+    m_kboot = new kboot_protocol();
+    m_mdbus = new mdbus();
 
 
     //move those to second thread
     this->moveToThread(m_thread);
     CH_serial->moveToThread(m_thread);
     timer_framerate->moveToThread(m_thread);
-    kboot->moveToThread(m_thread);
+    m_kboot->moveToThread(m_thread);
+    m_mdbus->moveToThread(m_thread);
 
     /* connect kboot paser to serial */
-    connect(this, SIGNAL(sig_send_kbootbus(QByteArray&)), kboot, SLOT(slt_serial_read(QByteArray&)));
-    connect(kboot, SIGNAL(sig_serial_send(QByteArray&)), this, SLOT(slt_serial_send(QByteArray&)));
+    connect(this, SIGNAL(sig_send_kboot(QByteArray&)), m_kboot, SLOT(slt_serial_read(QByteArray&)));
+    connect(m_kboot, SIGNAL(sig_serial_send(QByteArray&)), this, SLOT(slt_serial_send(QByteArray&)));
+    /* connect kptl recv to form_display */
+    connect(m_kboot, SIGNAL(sig_frame_recv(QByteArray&)), this, SLOT(protocol_0x5A(QByteArray&)));
 
-
-    /* connect kboot download progress */
-    //connect(this->kboot, &kboot_protocol::sig_download_progress, this, &MainWindow::slt_update_progress_bar);
 
     /* connect modbus decoder to serial */
-    connect(this, SIGNAL(sig_send_kbootbus(QByteArray&)), bus_reader, SLOT(slt_serial_read(QByteArray&)));
-    connect(bus_reader, SIGNAL(sig_serial_send(QByteArray&)), this, SLOT(slt_serial_send(QByteArray&)));
+    connect(this, SIGNAL(sig_send_bus(QByteArray&)), m_mdbus, SLOT(slt_serial_read(QByteArray&)));
+    connect(m_mdbus, SIGNAL(sig_serial_send(QByteArray&)), this, SLOT(slt_serial_send(QByteArray&)));
 
-
-    /* connect kptl recv to form_display */
-    connect(kboot, SIGNAL(sig_frame_recv(QByteArray&)), this, SLOT(protocol_0x5A(QByteArray&)));
 
 
     //cross threads signals
@@ -40,7 +37,7 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     connect(m_thread, SIGNAL(finished()), this, SLOT(on_thread_stopped()),Qt::QueuedConnection);
 
     //be able to write data from baseform to serial port in second thread
-    connect(this, SIGNAL(sigWriteData(QString)), this, SLOT(getsigWriteData(QString)));
+    //connect(this, SIGNAL(sigWriteData(QString)), this, SLOT(getsigWriteData(QString)));
 
     //be able to close port and thread from baseform
     connect(this, SIGNAL(sigCloseThreadAndPort()), this, SLOT(closeThreadAndPort()));
@@ -63,7 +60,7 @@ void CHSerialport::initThreadReading()
         m_thread->quit();
         m_thread->wait();
     }
-    m_thread->start();
+    m_thread->start(); //go to on thread started
 
 }
 
@@ -110,7 +107,6 @@ void CHSerialport::quitmThread(){
 
 void CHSerialport::linkCHdevices(QString port_name, int baudrate)
 {
-
     m_port_name=port_name;
     m_baudrate=baudrate;
     initThreadReading();
@@ -164,23 +160,7 @@ void CHSerialport::on_thread_started()
         emit sigPortOpened();
         //qDebug() << "serial port thread is:" << QThread::currentThreadId();
 
-        //read product info
-        uint32_t buf[64];
 
-        bus_reader->read_reg(1, 0, buf[0]);
-        qDebug()<< "PROD: HI" + QString::number(buf[0] & 0xFFFF) + "\n";
-
-        bus_reader->read_data(1, 2, buf, 2);
-        qDebug()<<QString("UUID:" + QString::number(buf[0], 16) + QString::number(buf[1], 16));
-
-        //mdbus reader
-
-        int aaa = bus_reader->read_data(1, 0, buf, 32);
-        if(aaa){
-            for(int i=0; i<32; i++){
-                qDebug()<<buf[i];
-            }
-        }
     }
 
 
@@ -192,17 +172,10 @@ void CHSerialport::on_thread_stopped()
 
     IMU_data.dev_info.node_cnt=0;
     m_node_cnt=0;
-
     m_is_gwsol=0;
 }
 
-void CHSerialport::getsigWriteData(QString str)
-{
-    QByteArray ba = str.toLocal8Bit();
-    const char *c_str2 = ba.data();
-    CH_serial->write(c_str2,100);
 
-}
 
 
 void CHSerialport::handleData()
@@ -214,11 +187,8 @@ void CHSerialport::handleData()
 
 
         protocol_ASC2(raw_data);
-
-        //kboot protocol_0x5A;
-        emit sig_send_kbootbus(raw_data);
-
-
+        emit sig_send_kboot(raw_data);
+        emit sig_send_bus(raw_data);
     }
 
 
@@ -239,6 +209,7 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
 
     if(IMU_data.bitmap & BIT_RF_DONGLE)
     {
+        //qDebug()<<"dongle";
         for(int i=0;i<IMU_data.dev_info.node_cnt;i++){
             IMU_packets.append(IMU_data.dev[i]);
         }
@@ -274,7 +245,7 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
 
     if(Content_bits!=IMU_data.bitmap){
         Content_bits=IMU_data.bitmap;
-        sigSendBitmap(Content_bits);
+        emit sigSendBitmap(Content_bits);
     }
 
     mutex_writing.unlock();
@@ -331,14 +302,17 @@ void CHSerialport::protocol_ASC2(QByteArray asc2_data)
 
     //has found 0x5A
     if(rst!=-1){
+
         m_IMUmsg=QString(asc2_data.toHex()).toUpper();
         QString a = m_IMUmsg.replace(QRegularExpression("(.{2})"), "\\1 ");
-        emit sigSendIMUmsg(a);
+        emit sigSendIMUmsg(tr("Rx : %1").arg(a));
         m_IMUmsg="";
     }
 
     //no found of 0x5A, meaning that the device sent ACS2
     else{
+
+
         m_IMUmsg+=asc2_data;
         if(m_IMUmsg.indexOf("OK")!=-1)
         {
@@ -361,23 +335,52 @@ void CHSerialport::protocol_ASC2(QByteArray asc2_data)
     }
 }
 
-void CHSerialport::writeData(QString ATcmd)
+void CHSerialport::slt_writeData(QString ATcmd)
 {
-    emit sigWriteData(ATcmd);
+    QByteArray ba = ATcmd.toLocal8Bit();
+    const char *c_str2 = ba.data();
+    CH_serial->write(c_str2,100);
+
 }
 void CHSerialport:: slt_serial_send(QByteArray &ba)
 {
     CH_serial->write(ba);
-    qDebug("tba");
-
     QString a=ba.toHex().toUpper();
     QString split = a.replace(QRegularExpression("(.{2})"), "\\1 ");
 
-
-    qDebug()<<split;
-
-    //    this->mserial->clear(QSerialPort::Input);
+    emit sigSendIMUmsg(tr("Tx : %1").arg(split));
+    //this->mserial->clear(QSerialPort::Input);
 
     CH_serial->waitForBytesWritten();
     //this->mserial->waitForReadyRead(20);
+}
+
+void CHSerialport::sltRWMdbus(char rw, uint32_t *param, int16_t address)
+{
+    /* read product info */
+    if(rw=='r'){
+        for(unsigned short int i=0; i<112;i=i+16){
+            bool isOK=m_mdbus->read_data(0, i, &param[i], 16);
+            if(!isOK){
+                qDebug()<<"READ ERROR";
+            }
+        }
+
+        emit sigMdbusParamLoaded();
+    }
+    else if (rw=='w'){
+        if(address<0) //write all
+            for(unsigned short int i=0; i<112;i=i+16){
+                m_mdbus->write_data(0, i, &param[i], 16);
+            }
+        else if(address>=0){
+            bool isOK=m_mdbus->write_reg(0, address,*param);
+            //qDebug()<<*param;
+            if(!isOK){
+                qDebug()<<"WRITE ERROR";
+            }
+        }
+
+    }
+
 }

@@ -119,6 +119,7 @@ void imu_parser::parse(QByteArray &ba)
                 offset += (4*8)+1;
                 break;
             case KItemDongle:
+
                 item_id[item_id_cnt++] = p[offset];
                 bitmap |= (BIT_RF_DONGLE | BIT_VALID_QUAT | BIT_VALID_EUL | BIT_VALID_MAG | BIT_VALID_GYR | BIT_VALID_ACC | BIT_VALID_ID | BIT_VALID_TIME_STAMP);
 

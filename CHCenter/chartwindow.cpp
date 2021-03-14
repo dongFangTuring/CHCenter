@@ -151,6 +151,10 @@ void ChartWindow::init()
 {
     //default following mode
     m_chartView->isFreeMode=false;
+    m_chartView->setFocus();
+
+    //auto scale
+    ui->CB_AutoYScale->setChecked(true);
 
     //reset sample_counter
     sample_counter=0;
@@ -192,7 +196,7 @@ void ChartWindow::init()
 
 void ChartWindow::updateLineData(float *array){
 
-    m_chartView->setFocus();
+
     if(this->isVisible()){
 
         if(sample_counter>=max_sample_number){
@@ -251,7 +255,7 @@ void ChartWindow::updateMovingWindow()
             qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
             qreal distance_x=abs(cur_x_max-cur_x_min);
 
-            QList<QPointF> wSizePoints_X, wSizePoints_Y, wSizePoints_Z, wSizePoints_W,wSizePoints_norm;// a window size number of points.
+            QList<QPointF> wSizePoints_X, wSizePoints_Y, wSizePoints_Z, wSizePoints_W, wSizePoints_norm;// a window size number of points.
 
             if(sample_counter>=distance_x){
                 if(m_type=="quat"){
@@ -292,6 +296,7 @@ void ChartWindow::updateMovingWindow()
 
             }
 
+
             //replaced with new series
             if(m_type=="quat"){
                 m_serieslist.at(1)->replace(wSizePoints_W);
@@ -310,6 +315,24 @@ void ChartWindow::updateMovingWindow()
 
             }
 
+            //find the Y max min value, and scale
+            if(ui->CB_AutoYScale->isChecked()){
+                //qDebug()<<"OMG";
+                QList<double> listVal;
+                listVal.append(wSizePoints_X.last().y());
+                listVal.append(wSizePoints_Y.last().y());
+                listVal.append(wSizePoints_Z.last().y());
+                //listVal.append(wSizePoints_W.last().y());
+
+                double min = *std::min_element(listVal.begin(), listVal.end());
+                double max = *std::max_element(listVal.begin(), listVal.end());
+                //qDebug()<<min<<"aaa"<<max;
+                if((min<axisY->min())||(max>axisY->max()))
+                    m_chartView->zoom(1,1,2);
+
+            }
+
+            //set range of X axis
             axisX->setRange(0,distance_x);
 
             if(m_chartView->zoom_mode!=2){
@@ -720,13 +743,13 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
 
         if(in_out==0){ //zoom in
             if(!(distance_y<0.01))
-                axisY->setRange(view_center.y()-distance_y/2/1.5,view_center.y()+distance_y/2/1.5);
+                axisY->setRange(view_center.y()-distance_y/2/2,view_center.y()+distance_y/2/2);
             else{
                 axisY->setRange(view_center.y()-0.005,view_center.y()+0.005);
             }
         }
         else if(in_out==1){ //zoom out
-            axisY->setRange(view_center.y()-distance_y/2*1.5,view_center.y()+distance_y/2*1.5);
+            axisY->setRange(view_center.y()-distance_y/2*2,view_center.y()+distance_y/2*2);
 
             if(axisY->min()<valueRange[0]){
                 axisY->setRange(valueRange[0],axisY->max());

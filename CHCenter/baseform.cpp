@@ -97,7 +97,12 @@ BaseForm::BaseForm(QWidget *parent)
     //page 4
     ch_settingform=new CHSettingForm();
 
-    connect(ch_settingform,SIGNAL(sigSendATcmd(QString)), this, SLOT(getsigSendATcmd(QString)));
+    connect(ch_settingform ,SIGNAL(sigSetParam(char, uint32_t*, int16_t)),
+            ch_serialport,SLOT(sltRWMdbus(char, uint32_t*, int16_t)));
+    connect(ch_serialport,SIGNAL(sigMdbusParamLoaded()),
+            ch_settingform,SLOT(sltMdbusParamLoaded()));
+
+    connect(ch_settingform,SIGNAL(sigSendATcmd(QString)), ch_serialport, SLOT(slt_writeData(QString)));
 
     //about form
     m_aboutform = new AboutForm(this);
@@ -169,7 +174,6 @@ void BaseForm::on_SideBarBTN3_clicked()
 void BaseForm::on_SideBarBTN4_clicked()
 {
     ch_settingform->settingConfig_init();
-    ch_settingform->setModal(true);
     ch_settingform->show();
 
 }
@@ -381,6 +385,7 @@ void BaseForm::getIMUData(id0x91_t packet)
     m_imu_data=packet;
     m_contentbits = ch_serialport->Content_bits;
 
+
     mutex_writing.unlock();
 
 
@@ -399,7 +404,7 @@ void BaseForm::getDongleData(QVector<id0x91_t> packets)
         m_imu_data=packets.at(cur_dongle_nodeIndex);
 
         m_contentbits = ch_serialport->Content_bits;
-        //m_protocol_tag = packets.tag;
+
 
         mutex_writing.unlock();
 
@@ -460,11 +465,7 @@ void BaseForm::getIMUmsg(QString str)
     }
 }
 
-void BaseForm::getsigSendATcmd(QString ATcmd)
-{
-    ATcmd+="\r\n";
-    ch_serialport->writeData(ATcmd);
-}
+
 
 
 /**

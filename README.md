@@ -23,16 +23,16 @@ QTranslation:
 2. In QT command line, go to project directory: 
 
    ```
-   lupdate -pro CHCenter.pro -ts CHCenter_en_US.ts -noobsolete
-   lupdate -pro CHCenter.pro -ts CHCenter_tc.ts -noobsolete
-   lupdate -pro CHCenter.pro -ts CHCenter_cn.ts -noobsolete
+   lupdate -pro CHCenter.pro -ts CHCenter/CHCenter_en_US.ts -noobsolete
+   lupdate -pro CHCenter.pro -ts CHCenter/CHCenter_tc.ts -noobsolete
+   lupdate -pro CHCenter.pro -ts CHCenter/CHCenter_cn.ts -noobsolete
    ```
 
 3. use QT linguist to edit .ts file. while finished editing :
    ```
-   lrelease CHCenter_en_US.ts
-   lrelease CHCenter_tc.ts
-   lrelease CHCenter_cn.ts
+   lrelease CHCenter/CHCenter_en_US.ts
+   lrelease CHCenter/CHCenter_tc.ts
+   lrelease CHCenter/CHCenter_cn.ts
    ```
    
 4. add .qm to qrc resources
