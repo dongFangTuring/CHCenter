@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>822</width>
-    <height>715</height>
+    <width>856</width>
+    <height>755</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -122,7 +122,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Apply All and Restart</string>
+            <string>Save &amp;&amp; Apply</string>
            </property>
           </widget>
          </item>
@@ -136,8 +136,8 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
           <layout class="QVBoxLayout" name="verticalLayout_8">
            <property name="spacing">
             <number>5</number>
@@ -437,20 +437,20 @@
               <enum>Qt::LeftToRight</enum>
              </property>
              <property name="text">
-              <string>Advanced</string>
+              <string>Use AT cmd</string>
              </property>
             </widget>
            </item>
           </layout>
          </item>
-         <item>
+         <item row="0" column="1">
           <widget class="Line" name="line_3">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="2">
           <layout class="QVBoxLayout" name="verticalLayout_11">
            <item>
             <widget class="QGroupBox" name="GB_Advanced">

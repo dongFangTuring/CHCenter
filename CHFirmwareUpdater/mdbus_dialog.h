@@ -40,6 +40,8 @@ private slots:
 
     void on_btn_read_info_clicked();
 
+    void on_btn_enable_output_clicked();
+
 private:
     Ui::main_Dialog *ui;
     mdbus *bus;

@@ -160,3 +160,8 @@ void mdbus_Dialog::on_btn_read_info_clicked()
 
     ui->label_param->setText(text);
 }
+
+void mdbus_Dialog::on_btn_enable_output_clicked()
+{
+    this->bus->write_reg(1, 17, 0x08);
+}

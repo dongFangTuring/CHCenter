@@ -25,7 +25,7 @@ void CHSettingForm::closeEvent(QCloseEvent *event)
 {
 
     if (event->spontaneous()) {
-        settingConfig_leave();
+        writeEOUT();
     } else {
         QWidget::closeEvent(event);
     }
@@ -90,33 +90,6 @@ void CHSettingForm::identifyProduct()
 
 
 
-}
-
-
-void CHSettingForm::settingConfig_leave()
-{
-
-
-    QMessageBox msgBox;
-    msgBox.setText(tr("Do you want to save settings and restart module?"));
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    msgBox.setDefaultButton(QMessageBox::No);
-    msgBox.setButtonText(QMessageBox::Yes, tr("Yes"));
-    msgBox.setButtonText(QMessageBox::No, tr("Don't save"));
-
-    int ret = msgBox.exec();
-    switch (ret) {
-    case QMessageBox::Yes:
-        on_RSTBTN_clicked();
-        break;
-    case QMessageBox::No:
-        break;
-    default:
-        break;
-    }
-
-
-    emit sigSendATcmd("AT+EOUT=1\r\n");
 }
 
 void CHSettingForm::setTerminalBoxText(QString str)
@@ -458,8 +431,13 @@ void CHSettingForm::on_RSTBTN_clicked()
 }
 void CHSettingForm::writeRST()
 {
-    uint32_t tmp_cmd_rst=0x05;  //RST
-    m_modbus_param[17]=tmp_cmd_rst;
+    m_modbus_param[17]= 0x05; //RST
+    emit sigSetParam('w', &m_modbus_param[17], 17);
+}
+
+void CHSettingForm::writeEOUT()
+{
+    m_modbus_param[17] = 0x08; /* EOUT */
     emit sigSetParam('w', &m_modbus_param[17], 17);
 }
 

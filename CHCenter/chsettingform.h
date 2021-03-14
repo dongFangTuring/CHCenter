@@ -57,7 +57,6 @@ public slots:
     void setTerminalBoxText(QString str);
     void StreamATcmd();
     void settingConfig_init();
-    void settingConfig_leave();
 
 private slots:
 
@@ -116,6 +115,7 @@ private:
     void writeUART_CFG();
     void writeMode();
     void writeBaud();
+    void writeEOUT();
 
 
 };

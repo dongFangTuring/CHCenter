@@ -261,6 +261,19 @@
         <string>读取信息</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="btn_enable_output">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>290</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>开启数据输出</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
