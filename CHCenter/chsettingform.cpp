@@ -68,8 +68,11 @@ void CHSettingForm::settingConfig_init()
 
 void CHSettingForm::identifyProduct()
 {
-    bool is221=CH_Config.Model=="HI221";
-    bool is221dongle=CH_Config.Model=="HI221Dongle";
+    bool is221 = CH_Config.Model == "HI221";
+    bool is221dongle = CH_Config.Model == "HI221Dongle";
+
+    ui->Label_ID->setVisible(is221dongle);
+    ui->CB_ID->setVisible(is221dongle);
 
     ui->Label_GWID->setVisible(is221||is221dongle);
     ui->SB_GWID->setVisible(is221||is221dongle);
@@ -86,9 +89,6 @@ void CHSettingForm::identifyProduct()
 
     ui->Label_MaxNodeSize->setVisible(is221dongle);
     ui->CB_MaxNodeSize->setVisible(is221dongle);
-
-
-
 
 }
 
@@ -148,8 +148,8 @@ void CHSettingForm::sltMdbusParamLoaded()
     }
 
 
-    prod_info.append(tr("Product: %1 ").arg(CH_Config.Model));
-    prod_info.append(tr("UUID: %1%2 ").arg(m_modbus_param[2],0,16).arg(m_modbus_param[3],0,16));
+    prod_info.append(tr("%1").arg(CH_Config.Model));
+    prod_info.append(tr(" UUID: %1%2").arg(m_modbus_param[2],0,16).arg(m_modbus_param[3],0,16));
 
     //read ID, RF parameters
     CH_Config.ID=m_modbus_param[4];
@@ -176,7 +176,7 @@ void CHSettingForm::sltMdbusParamLoaded()
     ui->Label_ProdInfo->setText(prod_info);
 
     //UI load ID, RF parameters
-    ui->SB_ID->setValue(CH_Config.ID);
+    ui->CB_ID->setCurrentIndex(CH_Config.ID);
     ui->SB_GWID->setValue(CH_Config.GWID);
 
     for(int i=0;i < ui->CB_GWFRQ->count();i++){
