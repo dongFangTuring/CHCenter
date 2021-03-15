@@ -361,26 +361,44 @@ void CHSerialport:: slt_serial_send(QByteArray &ba)
 void CHSerialport::sltRWMdbus(char rw, uint32_t *param, int16_t address)
 {
     /* read product info */
-    if(rw=='r'){
-        for(unsigned short int i=0; i<112;i=i+16){
-            bool isOK=m_mdbus->read_data(0, i, &param[i], 16);
-            if(!isOK){
-                qDebug()<<"READ ERROR";
+    if(rw=='r')
+    {
+        /* FIXME
+         * read a dummy first
+         * */
+        m_mdbus->read_data(0, 0, &param[0], 1);
+
+        for(int i=0; i<112; i+=16) /* suggest not to read all param, use what, read what */
+        {
+            bool ret = m_mdbus->read_data(0, i, &param[i], 16);
+            if(ret)
+            {
+                emit sigMdbusParamLoaded();
+            }
+            else
+            {
+                qDebug()<<"MDBUS: READ ERROR:"<<i;
             }
         }
 
-        emit sigMdbusParamLoaded();
+
     }
-    else if (rw=='w'){
+    else if (rw=='w')
+    {
         if(address<0) //write all
-            for(unsigned short int i=0; i<112;i=i+16){
+        {
+            for(unsigned short int i=0; i<112;i=i+16)
+            {
                 m_mdbus->write_data(0, i, &param[i], 16);
             }
-        else if(address>=0){
-            bool isOK=m_mdbus->write_reg(0, address,*param);
+        }
+
+        else if(address>=0)
+        {
+            bool isOK = m_mdbus->write_reg(0, address,*param);
             //qDebug()<<*param;
             if(!isOK){
-                qDebug()<<"WRITE ERROR";
+                qDebug()<<"MDBUS: WRITE ERROR";
             }
         }
 
