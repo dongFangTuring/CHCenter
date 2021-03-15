@@ -534,82 +534,6 @@ void ChartWindow::handleMarkerClicked()
 
 
 
-//void ChartWindow::on_SliderSample_valueChanged(int value)
-//{
-
-
-//    qreal cur_x_min = axisX->min();//目前X軸顯示區間的最小x值
-//    qreal cur_x_max = axisX->max();//目前X軸顯示區間的最大x值
-
-
-//    qreal distance_x=abs(cur_x_max-cur_x_min);
-
-//    axisX->setRange(value-distance_x/2,value+distance_x/2);
-
-//    if(axisX->min()<0){
-//        qreal error = 0-cur_x_min;
-//        axisX->setRange(cur_x_min+error,cur_x_max+error);
-//    }
-//    if(axisX->max()>max_sample_number){
-//        qreal error = cur_x_max-max_sample_number;
-//        axisX->setRange(cur_x_min-error,cur_x_max-error);
-//    }
-
-//}
-
-//void ChartWindow::on_BTNSampleZoomIn_clicked()
-//{
-//    m_chartView->zoom(0,0,0);
-
-//}
-
-//void ChartWindow::on_BTNSampleZoomOut_clicked()
-//{
-//    m_chartView->zoom(1,0,0);
-//}
-
-//void ChartWindow::on_SliderValue_valueChanged(int value)
-//{
-//    float f_value=float(-value)/100.0f;
-
-
-//    qreal cur_y_min = axisY->min();
-//    qreal cur_y_max = axisY->max();
-
-//    qreal distance_y=abs(cur_y_max-cur_y_min);
-//    axisY->setRange(f_value-distance_y/2,f_value+distance_y/2);
-
-//    if(axisY->min()<valueRange[0]){
-//        qreal error = valueRange[0]-cur_y_min;
-//        axisY->setRange(cur_y_min+error,cur_y_max+error);
-//    }
-//    if(axisY->max()>valueRange[1]){
-//        qreal error = cur_y_max-valueRange[1];
-//        axisY->setRange(cur_y_min-error,cur_y_max-error);
-//    }
-//}
-
-//void ChartWindow::on_BTNValueZoomIn_clicked()
-//{
-//    m_chartView->zoom(0,1,0);
-//    //qDebug()<<"zoomin";
-//}
-
-//void ChartWindow::on_BTNValueZoomOut_clicked()
-//{
-//    m_chartView->zoom(1,1,0);
-//    //qDebug()<<"zoomout";
-//}
-//void ChartWindow::on_BNTValueReset_clicked()
-//{
-//    qreal cur_y_min = axisY->min();
-//    qreal cur_y_max = axisY->max();
-//    qreal distance_y=abs(cur_y_max-cur_y_min);
-
-//    axisY->setRange(0-distance_y/2,0+distance_y/2);
-
-//}
-
 
 
 ///CusChartView class
@@ -664,28 +588,6 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
                     axisX->setRange(0,x_scales[scale_level]);
                 }
 
-                //old method 0.8x
-                //            if(distance_x>100){
-                //                if(mode==0){//zoom at center
-                //                    qreal new_distance_x=distance_x*0.8;
-                //                    axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
-                //                }
-                //                else if (mode==1){ //zoom at cursur position
-
-
-                //                    qreal ratio=qreal(cursor_pos.x())/qreal(this->width());
-                //                    int target_data=round(cur_x_min+distance_x*ratio);
-                //                    qreal new_distance_x=distance_x*0.8;
-                //                    int view_centerX=round(target_data-new_distance_x*(ratio-0.5));
-
-                //                    view_center.setX(view_centerX);
-
-                //                    axisX->setRange(view_center.x()-new_distance_x/2,view_center.x()+new_distance_x/2);
-                //                }
-                //                else if(mode==2){//zoom at the newest
-                //                    qreal new_distance_x=distance_x*0.8;
-                //                    axisX->setRange(cur_x_max-new_distance_x,cur_x_max);
-                //                }
             }
         }
 

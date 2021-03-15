@@ -39,13 +39,12 @@ void CHSettingForm::settingConfig_init()
 {
     ui->GB_OldPTL->setVisible(false);
 
-    new_ch_config=CH_Config;
     CH_Config.Baud = 0;
     CH_Config.Setptl = "";
-    CH_Config.ODR = -1;
+    CH_Config.ODR = 0;
     CH_Config.GWID = 0;
-    CH_Config.ID = 1;
-    CH_Config.Mode = -1;
+    CH_Config.ID = 0;
+    CH_Config.Mode = 0;
 
     //read mdbus
     emit sigSetParam('r', m_modbus_param);
@@ -84,11 +83,9 @@ void CHSettingForm::identifyProduct()
     ui->Label_Mode->setVisible(!is221dongle);
     ui->CB_Mode->setVisible(!is221dongle);
 
-    ui->Label_GWFRQ->setVisible(is221dongle);
-    ui->CB_GWFRQ->setVisible(is221dongle);
+    ui->Label_DongleParam->setVisible(is221dongle);
+    ui->CB_DongleParam->setVisible(is221dongle);
 
-    ui->Label_MaxNodeSize->setVisible(is221dongle);
-    ui->CB_MaxNodeSize->setVisible(is221dongle);
 
 }
 
@@ -179,18 +176,23 @@ void CHSettingForm::sltMdbusParamLoaded()
     ui->CB_ID->setCurrentIndex(CH_Config.ID);
     ui->SB_GWID->setValue(CH_Config.GWID);
 
-    for(int i=0; i < ui->CB_GWFRQ->count(); i++) {
+    switch (CH_Config.MaxNodeSize) {
+    case 4:
+        ui->CB_DongleParam->setCurrentIndex(0);
+        break;
+    case 8:
+        ui->CB_DongleParam->setCurrentIndex(1);
+        break;
+    case 16:
+        ui->CB_DongleParam->setCurrentIndex(2);
+        break;
+    default:
+        qDebug()<<tr("Exception: dongle param-%1,%2").arg(CH_Config.MaxNodeSize).arg(CH_Config.GWFRQ);
+        ui->CB_DongleParam->setCurrentIndex(1);
+        break;
 
-        if(CH_Config.GWFRQ==ui->CB_GWFRQ->itemText(i).toUInt()) {
-            ui->CB_GWFRQ->setCurrentIndex(i);
-        }
     }
-    for(int i=0; i < ui->CB_MaxNodeSize->count(); i++) {
 
-        if(CH_Config.MaxNodeSize==ui->CB_MaxNodeSize->itemText(i).toUInt()) {
-            ui->CB_MaxNodeSize->setCurrentIndex(i);
-        }
-    }
 
     //UI load Baud
     for(int i=0; i < ui->CB_Baud->count(); i++) {
@@ -407,15 +409,15 @@ void CHSettingForm::delay(uint32_t ms)
 
 void CHSettingForm::on_RSTBTN_clicked()
 {
-    emit sigSetParam('w', &CH_Config.Baud, 9);
+    emit sigSetParam('w', &CH_Config.Baud, 9);       //baud
     delay(10);
-    emit sigSetParam('w', &CH_Config.Mode, 16);
+    emit sigSetParam('w', &CH_Config.Mode, 16);      //mode
     delay(10);
-    emit sigSetParam('w', &m_modbus_param[10], 10);
+    emit sigSetParam('w', &m_modbus_param[10], 10);  //ODR&bitmap
     delay(10);
-    emit sigSetParam('w', &m_modbus_param[40], 40);
+    emit sigSetParam('w', &m_modbus_param[40], 40);  //RF parameters
     delay(10);
-    emit sigSetParam('w', &CH_Config.ID, 4);
+    emit sigSetParam('w', &CH_Config.ID, 4);         //ID
     delay(10);
 
     writeCmd(0x06); /* SAVE TO FLASH */
@@ -425,7 +427,7 @@ void CHSettingForm::on_RSTBTN_clicked()
     QTimer::singleShot(1000, this, [&,cmd]() {
         writeCmd(cmd);
     }
-                      );
+    );
 
 
 
@@ -453,10 +455,30 @@ void CHSettingForm::on_BTN_PrintCalib_clicked()
     ui->TB_Termial->append(text);
 }
 
-void CHSettingForm::on_CB_MaxNodeSize_activated(const QString &arg1)
-{
 
-    CH_Config.MaxNodeSize=arg1.toUInt();
+
+
+void CHSettingForm::on_CB_DongleParam_activated(int index)
+{
+    switch (index) {
+
+    case 0:
+        CH_Config.GWFRQ=400;
+        CH_Config.MaxNodeSize=4;
+        break;
+    case 1:
+        CH_Config.GWFRQ=200;
+        CH_Config.MaxNodeSize=8;
+        break;
+    case 2:
+        CH_Config.GWFRQ=100;
+        CH_Config.MaxNodeSize=16;
+        break;
+    default:
+        break;
+
+
+    }
 
     uint32_t tmp_rf=0;
     tmp_rf+=CH_Config.GWFRQ;
@@ -466,26 +488,9 @@ void CHSettingForm::on_CB_MaxNodeSize_activated(const QString &arg1)
     tmp_rf+=CH_Config.GWID;
 
     m_modbus_param[40]=tmp_rf;
-
-
-
 }
 
-void CHSettingForm::on_CB_GWFRQ_activated(const QString &arg1)
-{
-    CH_Config.GWFRQ=arg1.toUInt();
 
-    uint32_t tmp_rf=0;
-    tmp_rf+=CH_Config.GWFRQ;
-    tmp_rf=tmp_rf<<8;
-    tmp_rf+=CH_Config.MaxNodeSize;
-    tmp_rf=tmp_rf<<8;
-    tmp_rf+=CH_Config.GWID;
-
-    m_modbus_param[40]=tmp_rf;
-
-
-}
 
 void CHSettingForm::on_SB_GWID_valueChanged(int arg1)
 {
@@ -506,5 +511,7 @@ void CHSettingForm::on_SB_ID_valueChanged(int arg1)
 {
     CH_Config.ID=arg1;
 }
+
+
 
 
