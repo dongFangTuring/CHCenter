@@ -25,7 +25,7 @@ void CHSettingForm::closeEvent(QCloseEvent *event)
 {
 
     if (event->spontaneous()) {
-        writeCmd(0x08);
+        writeCmd(0x08); /* ENABLE OUTPUT */
     } else {
         QWidget::closeEvent(event);
     }
@@ -40,12 +40,12 @@ void CHSettingForm::settingConfig_init()
     ui->GB_OldPTL->setVisible(false);
 
     new_ch_config=CH_Config;
-    CH_Config.Baud=0;
-    CH_Config.Setptl="";
-    CH_Config.ODR=-1;
-    CH_Config.GWID=0;
-    CH_Config.ID=1;
-    CH_Config.Mode=-1;
+    CH_Config.Baud = 0;
+    CH_Config.Setptl = "";
+    CH_Config.ODR = -1;
+    CH_Config.GWID = 0;
+    CH_Config.ID = 1;
+    CH_Config.Mode = -1;
 
     //read mdbus
     emit sigSetParam('r', m_modbus_param);
@@ -123,7 +123,7 @@ void CHSettingForm::sltMdbusParamLoaded()
     //read model, UUID
     QString prod_info;
 
-    switch(m_modbus_param[0] & 0xFFFF){
+    switch(m_modbus_param[0] & 0xFFFF) {
     case 100:
         CH_Config.Model=("CH100");
         break;
@@ -179,29 +179,29 @@ void CHSettingForm::sltMdbusParamLoaded()
     ui->CB_ID->setCurrentIndex(CH_Config.ID);
     ui->SB_GWID->setValue(CH_Config.GWID);
 
-    for(int i=0;i < ui->CB_GWFRQ->count();i++){
+    for(int i=0; i < ui->CB_GWFRQ->count(); i++) {
 
-        if(CH_Config.GWFRQ==ui->CB_GWFRQ->itemText(i).toUInt()){
+        if(CH_Config.GWFRQ==ui->CB_GWFRQ->itemText(i).toUInt()) {
             ui->CB_GWFRQ->setCurrentIndex(i);
         }
     }
-    for(int i=0;i < ui->CB_MaxNodeSize->count();i++){
+    for(int i=0; i < ui->CB_MaxNodeSize->count(); i++) {
 
-        if(CH_Config.MaxNodeSize==ui->CB_MaxNodeSize->itemText(i).toUInt()){
+        if(CH_Config.MaxNodeSize==ui->CB_MaxNodeSize->itemText(i).toUInt()) {
             ui->CB_MaxNodeSize->setCurrentIndex(i);
         }
     }
 
     //UI load Baud
-    for(int i=0;i < ui->CB_Baud->count();i++){
-        if(CH_Config.Baud==ui->CB_Baud->itemText(i).toUInt()){
+    for(int i=0; i < ui->CB_Baud->count(); i++) {
+        if(CH_Config.Baud==ui->CB_Baud->itemText(i).toUInt()) {
             ui->CB_Baud->setCurrentIndex(i);
         }
     }
 
     //UI load ODR
-    for(int i=0;i < ui->CB_ODR->count();i++){
-        if(CH_Config.ODR==ui->CB_ODR->itemText(i).toUInt()){
+    for(int i=0; i < ui->CB_ODR->count(); i++) {
+        if(CH_Config.ODR==ui->CB_ODR->itemText(i).toUInt()) {
             ui->CB_ODR->setCurrentIndex(i);
         }
     }
@@ -215,41 +215,39 @@ void CHSettingForm::sltMdbusParamLoaded()
 
     //UI load protocol
     uint16_t temp_Bitmap=0x0001;
-    if(CH_Config.Bitmap&temp_Bitmap){
+    if(CH_Config.Bitmap&temp_Bitmap) {
         CH_Config.Setptl="91";
         ui->CB_PTL->setCurrentIndex(0);
-    }
-    else if(CH_Config.Bitmap&(temp_Bitmap<<8)){
+    } else if(CH_Config.Bitmap&(temp_Bitmap<<8)) {
         CH_Config.Setptl="62";
-    }
-    else{
+    } else {
         ui->CB_PTL->setCurrentIndex(1);
 
-        if((CH_Config.Bitmap&(temp_Bitmap<<1))){
+        if((CH_Config.Bitmap&(temp_Bitmap<<1))) {
             CH_Config.Setptl+="90,";
             ui->CB_90->setChecked(true);
         }
-        if((CH_Config.Bitmap&(temp_Bitmap<<2))){
+        if((CH_Config.Bitmap&(temp_Bitmap<<2))) {
             CH_Config.Setptl+="A0,";
             ui->CB_A0->setChecked(true);
         }
-        if((CH_Config.Bitmap&(temp_Bitmap<<3))){
+        if((CH_Config.Bitmap&(temp_Bitmap<<3))) {
             CH_Config.Setptl+="B0,";
             ui->CB_B0->setChecked(true);
         }
-        if((CH_Config.Bitmap&(temp_Bitmap<<4))){
+        if((CH_Config.Bitmap&(temp_Bitmap<<4))) {
             CH_Config.Setptl+="C0,";
             ui->CB_C0->setChecked(true);
         }
-        if((CH_Config.Bitmap&(temp_Bitmap<<5))){
+        if((CH_Config.Bitmap&(temp_Bitmap<<5))) {
             CH_Config.Setptl+="D0,";
             ui->CB_D0->setChecked(true);
         }
-        if((CH_Config.Bitmap&(temp_Bitmap<<6))){
+        if((CH_Config.Bitmap&(temp_Bitmap<<6))) {
             CH_Config.Setptl+="D1,";
             ui->CB_D1->setChecked(true);
         }
-        if((CH_Config.Bitmap&(temp_Bitmap<<7))){
+        if((CH_Config.Bitmap&(temp_Bitmap<<7))) {
             CH_Config.Setptl+="F0,";
             ui->CB_F0->setChecked(true);
         }
@@ -272,7 +270,7 @@ void CHSettingForm::on_BTN_clearTB_clicked()
 
 void CHSettingForm::on_CB_PTL_activated(int index)
 {
-    if(index){
+    if(index) {
         ui->GB_OldPTL->setVisible(true);
         ui->CB_90->setChecked(true);
         ui->CB_A0->setChecked(true);
@@ -282,8 +280,7 @@ void CHSettingForm::on_CB_PTL_activated(int index)
         ui->CB_D1->setChecked(true);
         ui->CB_F0->setChecked(true);
         writeUART_CFG();
-    }
-    else{
+    } else {
         ui->GB_OldPTL->setVisible(false);
         writeUART_CFG();
     }
@@ -352,19 +349,17 @@ void CHSettingForm::on_CB_Advanced_stateChanged(int arg1)
 }
 void CHSettingForm::writeUART_CFG()
 {
-    if(CH_Config.Model=="HI221"){
+    if(CH_Config.Model=="HI221") {
         CH_Config.Bitmap=0x0001;
     }
 
-    else if(CH_Config.Model=="HI221Dongle"){
+    else if(CH_Config.Model=="HI221Dongle") {
 
         CH_Config.Bitmap=0x0001<<8;
-    }
-    else{
-        if(ui->CB_PTL->currentIndex()==0){
+    } else {
+        if(ui->CB_PTL->currentIndex()==0) {
             CH_Config.Bitmap=0x0001;
-        }
-        else{
+        } else {
             uint16_t temp_bitmap=0;
 
             if(ui->CB_F0->isChecked())
@@ -427,10 +422,10 @@ void CHSettingForm::on_RSTBTN_clicked()
 
 
     uint8_t cmd = 0x05;  /* RST */
-    QTimer::singleShot(1000, this, [&,cmd](){
-             writeCmd(cmd);
-         }
-    );
+    QTimer::singleShot(1000, this, [&,cmd]() {
+        writeCmd(cmd);
+    }
+                      );
 
 
 
@@ -448,9 +443,9 @@ void CHSettingForm::on_BTN_PrintCalib_clicked()
 {
     QString text;
     text="ACC Calibration Parameters:\n";
-    for(int i = 67;i<79;i++){
+    for(int i = 67; i<79; i++) {
         text+=tr("%1 ").arg(QString::number(*(float*)&m_modbus_param[i],'f',4),20);
-        if((i-67)%3==2){
+        if((i-67)%3==2) {
             text+='\n';
         }
 

@@ -56,7 +56,7 @@ CHSerialport::~CHSerialport()
 
 void CHSerialport::initThreadReading()
 {
-    if(m_thread->isRunning()){
+    if(m_thread->isRunning()) {
         m_thread->quit();
         m_thread->wait();
     }
@@ -80,24 +80,25 @@ int CHSerialport::openSerialport(QString port_name, int baudrate)
     return 0;
 }
 
-void CHSerialport::closePort(){
+void CHSerialport::closePort()
+{
     emit sigCloseThreadAndPort();
 }
 
 void CHSerialport::closeThreadAndPort()
 {
-    while(1){
+    while(1) {
         if(CH_serial->isOpen()) {
             CH_serial->disconnect();
             CH_serial->close();
-        }
-        else {
+        } else {
             emit sigPortClosed();
             break;
         }
     }
 }
-void CHSerialport::quitmThread(){
+void CHSerialport::quitmThread()
+{
     m_thread->quit();
     m_thread->wait();
     qDebug()<<"Port and thread are closed";
@@ -119,7 +120,7 @@ void CHSerialport::countFrameRate()
     Frame_rate=m_frame_counter;
     m_frame_counter=0;
     mutex_writing.unlock();
-    if(Frame_rate==0){
+    if(Frame_rate==0) {
         checkPortStatus();
     }
 
@@ -155,11 +156,10 @@ void CHSerialport::on_thread_started()
 
     timer_framerate->start();
     int ret=openSerialport(m_port_name, m_baudrate);
-    if(ret==-1){
+    if(ret==-1) {
         closePort();
         emit errorOpenPort();
-    }
-    else{
+    } else {
         emit sigPortOpened();
         //qDebug() << "serial port thread is:" << QThread::currentThreadId();
 
@@ -184,8 +184,7 @@ void CHSerialport::on_thread_stopped()
 void CHSerialport::handleData()
 {
 
-    if(CH_serial->bytesAvailable() > 0 && CH_serial->isReadable())
-    {
+    if(CH_serial->bytesAvailable() > 0 && CH_serial->isReadable()) {
         QByteArray raw_data = CH_serial->readAll();
 
 
@@ -210,34 +209,31 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
     IMU_packets.resize(0);
 
 
-    if(IMU_data.bitmap & BIT_RF_DONGLE)
-    {
+    if(IMU_data.bitmap & BIT_RF_DONGLE) {
         //qDebug()<<"dongle";
-        for(int i=0;i<IMU_data.dev_info.node_cnt;i++){
+        for(int i=0; i<IMU_data.dev_info.node_cnt; i++) {
             IMU_packets.append(IMU_data.dev[i]);
         }
 
         //if switch from single IMU module
-        if(m_is_gwsol==0){
+        if(m_is_gwsol==0) {
             m_is_gwsol=1;
             emit sigUpdateDongleNodeList(true, IMU_packets);
         }
 
         //if the new numbers of nodes isn't equal to the list
-        if(!(m_node_cnt==IMU_data.dev_info.node_cnt)){
+        if(!(m_node_cnt==IMU_data.dev_info.node_cnt)) {
             m_node_cnt=IMU_data.dev_info.node_cnt;
             emit sigUpdateDongleNodeList(true, IMU_packets);
 
         }
         emit sigSendDongle(IMU_packets);
 
-    }
-    else /* not RF doongle flag, only single IMU */
-    {
+    } else { /* not RF doongle flag, only single IMU */
         IMU_data.dev_info.node_cnt = 1;
         IMU_packets.append(IMU_data.dev[0]);
 
-        if(m_is_gwsol==1){
+        if(m_is_gwsol==1) {
             m_is_gwsol=0;
             emit sigUpdateDongleNodeList(false, IMU_packets);
         }
@@ -246,7 +242,7 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
 
     }
 
-    if(Content_bits!=IMU_data.bitmap){
+    if(Content_bits!=IMU_data.bitmap) {
         Content_bits=IMU_data.bitmap;
         emit sigSendBitmap(Content_bits);
     }
@@ -304,7 +300,7 @@ void CHSerialport::protocol_ASC2(QByteArray asc2_data)
     int rst=asc2_data.indexOf(0x5A);
 
     //has found 0x5A
-    if(rst!=-1){
+    if(rst!=-1) {
 
         m_IMUmsg=QString(asc2_data.toHex()).toUpper();
         QString a = m_IMUmsg.replace(QRegularExpression("(.{2})"), "\\1 ");
@@ -313,21 +309,18 @@ void CHSerialport::protocol_ASC2(QByteArray asc2_data)
     }
 
     //no found of 0x5A, meaning that the device sent ACS2
-    else{
+    else {
 
 
         m_IMUmsg+=asc2_data;
-        if(m_IMUmsg.indexOf("OK")!=-1)
-        {
+        if(m_IMUmsg.indexOf("OK")!=-1) {
             emit sigSendIMUmsg(m_IMUmsg);
             m_IMUmsg="";
-        }
-        else if(m_IMUmsg.indexOf("ERR")!=-1){
+        } else if(m_IMUmsg.indexOf("ERR")!=-1) {
             emit sigSendIMUmsg(m_IMUmsg);
             m_IMUmsg="";
-        }
-        else{
-            if(m_IMUmsg.size()>300){
+        } else {
+            if(m_IMUmsg.size()>300) {
                 emit sigSendIMUmsg("Data decoded error.");
                 m_IMUmsg="";
             }
@@ -361,43 +354,33 @@ void CHSerialport:: slt_serial_send(QByteArray &ba)
 void CHSerialport::sltRWMdbus(char rw, uint32_t *param, int16_t address)
 {
     /* read product info */
-    if(rw=='r')
-    {
+    if(rw=='r') {
         /* FIXME
          * read a dummy first
          * */
         m_mdbus->read_data(0, 0, &param[0], 1);
 
-        for(int i=0; i<112; i+=16) /* suggest not to read all param, use what, read what */
-        {
+        for(int i=0; i<112; i+=16) { /* suggest not to read all param, use what, read what */
             bool ret = m_mdbus->read_data(0, i, &param[i], 16);
-            if(ret)
-            {
+            if(ret) {
                 emit sigMdbusParamLoaded();
-            }
-            else
-            {
+            } else {
                 qDebug()<<"MDBUS: READ ERROR:"<<i;
             }
         }
 
 
-    }
-    else if (rw=='w')
-    {
-        if(address<0) //write all
-        {
-            for(unsigned short int i=0; i<112;i=i+16)
-            {
+    } else if (rw=='w') {
+        if(address<0) { //write all
+            for(unsigned short int i=0; i<112; i=i+16) {
                 m_mdbus->write_data(0, i, &param[i], 16);
             }
         }
 
-        else if(address>=0)
-        {
+        else if(address>=0) {
             bool isOK = m_mdbus->write_reg(0, address,*param);
             //qDebug()<<*param;
-            if(!isOK){
+            if(!isOK) {
                 qDebug()<<"MDBUS: WRITE ERROR";
             }
         }

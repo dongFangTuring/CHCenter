@@ -53,7 +53,7 @@ CSVLogForm::~CSVLogForm()
 void CSVLogForm::closeEvent(QCloseEvent *event)
 {
 
-    if(log_started){
+    if(log_started) {
         QMessageBox msgBox;
         msgBox.setText(tr("You're still recording data"));
         msgBox.setInformativeText(tr("Do you really want to stop and exit?"));
@@ -83,8 +83,8 @@ void CSVLogForm::closeEvent(QCloseEvent *event)
 void CSVLogForm::on_BTNPath_clicked()
 {
     QString dir_path = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                    current_dir,
-                                                    tr("csv file (*.csv)"));
+                       current_dir,
+                       tr("csv file (*.csv)"));
 
     if(!dir_path.isEmpty())
         current_dir=dir_path;
@@ -127,7 +127,7 @@ void CSVLogForm::on_BTNStart_clicked()
     QString dir=temp.remove(index1,index2-index1+4);
 
     bool dir_exists = QFileInfo::exists(dir) && QFileInfo(dir).isDir();
-    if(!dir_exists==1){
+    if(!dir_exists==1) {
 
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Error"));
@@ -136,10 +136,9 @@ void CSVLogForm::on_BTNStart_clicked()
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
         msgBox.exec();
-    }
-    else{
+    } else {
 
-        if(log_started==1){
+        if(log_started==1) {
             ui->BTNStart->setEnabled(0);
             QMessageBox msgBox;
             msgBox.setWindowTitle(tr("Wait..."));
@@ -147,20 +146,18 @@ void CSVLogForm::on_BTNStart_clicked()
             msgBox.setStandardButtons(QMessageBox::Ok);
             msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
             msgBox.exec();
-        }
-        else{
+        } else {
             //message
             ui->textBrowser->append(tr("->Save path : %1").arg(fullpath));
 
             ch_logfile.setFileName(fullpath);
             ui->BTNStart->setEnabled(0);
 
-            if(ui->CBCountDown->isChecked()){
+            if(ui->CBCountDown->isChecked()) {
                 timer_countdown->setInterval(1000);
                 timer_countdown->start();
                 countdown_sec=ui->SBCountDown->value();
-            }
-            else{
+            } else {
                 ui->BTNStop->setEnabled(1);
                 startLogging();
             }
@@ -183,7 +180,7 @@ void CSVLogForm::on_BTNClear_clicked()
 void CSVLogForm::getIMUData(id0x91_t imu_data)
 {
 
-    if(log_started==1){
+    if(log_started==1) {
 
         int remainMsec=timer_log_period->remainingTime();
 
@@ -192,8 +189,8 @@ void CSVLogForm::getIMUData(id0x91_t imu_data)
         QString str_time=time.toString("hh:mm:ss.zzz");
         ui->LabelRemainTime->setText(str_time);
 
-        if(frame_counter==0){
-            if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)){
+        if(frame_counter==0) {
+            if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)) {
                 stopLogging();
                 QMessageBox msgBox;
                 msgBox.setWindowTitle(tr("Log error!"));
@@ -203,21 +200,18 @@ void CSVLogForm::getIMUData(id0x91_t imu_data)
                 msgBox.setButtonText(QMessageBox::Ok, tr("Ok"));
                 msgBox.exec();
 
-            }
-            else{
+            } else {
                 QTextStream stream(&ch_logfile);
                 stream << tr("Time,Frame,AccX,AccY,AccZ,GyrX,GyrY,GyrZ,"
                              "MagX,MagY,MagZ,Roll,Pitch,Yaw,Qw,Qx,Qy,Qz")<<"\n";
                 frame_counter++;
             }
 
-        }
-        else{
-            if(!ch_logfile.isOpen()){
+        } else {
+            if(!ch_logfile.isOpen()) {
                 qDebug()<<"not opened";
                 ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append);
-            }
-            else{
+            } else {
                 QTextStream stream(&ch_logfile);
 
                 QString tm_now = QTime::currentTime().toString("hh-mm-ss.zzz");
@@ -241,7 +235,7 @@ void CSVLogForm::getIMUData(id0x91_t imu_data)
 void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
 {
     //qDebug()<<frame_counter;
-    if(log_started==1){
+    if(log_started==1) {
 
         int remainMsec=timer_log_period->remainingTime();
 
@@ -250,9 +244,9 @@ void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
         QString str_time=time.toString("hh:mm:ss.zzz");
         ui->LabelRemainTime->setText(str_time);
 
-        if(packets.size()>0){
+        if(packets.size()>0) {
 
-            if(frame_counter==0){
+            if(frame_counter==0) {
 
                 gwnode_idlist.clear();
 
@@ -262,7 +256,7 @@ void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
                 QString str_time=time.toString("hh:mm:ss.zzz");
                 ui->LabelRemainTime->setText(str_time);
 
-                if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)){
+                if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)) {
                     stopLogging();
                     QMessageBox msgBox;
                     msgBox.setWindowTitle(tr("Log error!"));
@@ -271,13 +265,12 @@ void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
                     msgBox.setStandardButtons(QMessageBox::Ok);
                     msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
                     msgBox.exec();
-                }
-                else{
+                } else {
                     QTextStream stream(&ch_logfile);
 
                     stream << "Time,Frame,";
 
-                    for(unsigned short i=0;i<packets.size();i++){
+                    for(unsigned short i=0; i<packets.size(); i++) {
                         auto imu_data=packets.at(i);
                         gwnode_idlist.push_back(imu_data.id);
 
@@ -285,7 +278,7 @@ void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
                                              "MagX(id%1),MagY(id%1),MagZ(id%1),Roll(id%1),Pitch(id%1),Yaw(id%1),"
                                              "Qw(id%1),Qx(id%1),Qy(id%1),Qz(id%1),").arg(imu_data.id);
 
-                        if(i==packets.size()-1){
+                        if(i==packets.size()-1) {
                             int ret=title_row.lastIndexOf(',');
                             if(ret!=-1)
                                 title_row.remove(ret,1);
@@ -295,13 +288,11 @@ void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
                     stream << "\n";
                     frame_counter++;
                 }
-            }
-            else{
-                if(!ch_logfile.isOpen()){
+            } else {
+                if(!ch_logfile.isOpen()) {
                     qDebug()<<"not opened";
                     ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append);
-                }
-                else{
+                } else {
                     QTextStream stream(&ch_logfile);
 
                     QString tm_now = QTime::currentTime().toString("hh-mm-ss.zzz");
@@ -309,20 +300,20 @@ void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
 
 
                     //if we lost some nodes.
-                    if(packets.size()<gwnode_idlist.size()){
-                        for(unsigned short i=0;i<gwnode_idlist.size();i++){
+                    if(packets.size()<gwnode_idlist.size()) {
+                        for(unsigned short i=0; i<gwnode_idlist.size(); i++) {
 
                             QString csv_row=",,,,,,,,,,,,,,,,";
-                            for(int j=0;j<packets.size();j++){
+                            for(int j=0; j<packets.size(); j++) {
 
                                 auto imu_data=packets.at(j);
 
-                                if(imu_data.id==gwnode_idlist[i]){
+                                if(imu_data.id==gwnode_idlist[i]) {
                                     csv_row=imudata2csvrow(imu_data);
                                 }
                             }
 
-                            if(i==gwnode_idlist.size()-1){
+                            if(i==gwnode_idlist.size()-1) {
                                 int ret=csv_row.lastIndexOf(',');
                                 if(ret!=-1)
                                     csv_row.remove(ret,1);
@@ -334,14 +325,14 @@ void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
                         frame_counter++;
                     }
                     //if all nodes are online
-                    else{
+                    else {
 
-                        for(unsigned short i=0;i<packets.size();i++){
+                        for(unsigned short i=0; i<packets.size(); i++) {
                             auto imu_data=packets.at(i);
 
                             QString csv_row=imudata2csvrow(imu_data);
 
-                            if(i==packets.size()-1){
+                            if(i==packets.size()-1) {
                                 int ret=csv_row.lastIndexOf(',');
                                 if(ret!=-1)
                                     csv_row.remove(ret,1);
@@ -369,7 +360,7 @@ QString CSVLogForm::imudata2csvrow(id0x91_t imu_data)
 {
 
     QString csv_row="";
-    if(m_bitmap&BIT_VALID_TIME_STAMP){
+    if(m_bitmap&BIT_VALID_TIME_STAMP) {
         csv_row=tr("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14,%15,%16,")
                 .arg(QString::number(imu_data.acc[0],'f',3))
                 .arg(QString::number(imu_data.acc[1],'f',3))
@@ -387,46 +378,40 @@ QString CSVLogForm::imudata2csvrow(id0x91_t imu_data)
                 .arg(QString::number(imu_data.quat[1],'f',3))
                 .arg(QString::number(imu_data.quat[2],'f',3))
                 .arg(QString::number(imu_data.quat[3],'f',3));
-    }
-    else{
-        if(m_bitmap & BIT_VALID_ACC){
-            for(unsigned short i=0;i<3;i++){
+    } else {
+        if(m_bitmap & BIT_VALID_ACC) {
+            for(unsigned short i=0; i<3; i++) {
                 csv_row+=QString::number(imu_data.acc[i],'f',3)+",";
             }
-        }
-        else{
+        } else {
             csv_row+=",,,";
         }
-        if(m_bitmap & BIT_VALID_GYR){
-            for(unsigned short i=0;i<3;i++){
+        if(m_bitmap & BIT_VALID_GYR) {
+            for(unsigned short i=0; i<3; i++) {
                 csv_row+=QString::number(imu_data.gyr[i],'f',3)+",";
             }
-        }
-        else{
+        } else {
             csv_row+=",,,";
         }
-        if(m_bitmap & BIT_VALID_MAG){
-            for(unsigned short i=0;i<3;i++){
+        if(m_bitmap & BIT_VALID_MAG) {
+            for(unsigned short i=0; i<3; i++) {
                 csv_row+=QString::number(int(imu_data.mag[i]))+",";
             }
-        }
-        else{
+        } else {
             csv_row+=",,,";
         }
-        if(m_bitmap & BIT_VALID_EUL){
-            for(unsigned short i=0;i<3;i++){
+        if(m_bitmap & BIT_VALID_EUL) {
+            for(unsigned short i=0; i<3; i++) {
                 csv_row+=QString::number(imu_data.eul[i],'f',3)+",";
             }
-        }
-        else{
+        } else {
             csv_row+=",,,";
         }
-        if(m_bitmap & BIT_VALID_QUAT){
-            for(unsigned short i=0;i<4;i++){
+        if(m_bitmap & BIT_VALID_QUAT) {
+            for(unsigned short i=0; i<4; i++) {
                 csv_row+=QString::number(imu_data.quat[i],'f',3)+",";
             }
-        }
-        else{
+        } else {
             csv_row+=",,,,";
         }
     }
@@ -468,15 +453,13 @@ void CSVLogForm::stopLogging()
 
     log_started=0;
     on_SBLogPeriod_valueChanged(0);
-    if(ch_logfile.isOpen())
-    {
+    if(ch_logfile.isOpen()) {
         ui->textBrowser->append(tr("->File has been successfully saved at : %1\n").arg(ch_logfile.fileName()));
         ch_logfile.close();
-    }
-    else{
+    } else {
         ui->textBrowser->append(tr("->No file is saved! Please check connection, Baud, and frame rate setting."));
     }
-    if(timer_log_period->isActive()){
+    if(timer_log_period->isActive()) {
         timer_log_period->stop();
     }
 
@@ -485,10 +468,9 @@ void CSVLogForm::stopLogging()
 
 void CSVLogForm::checkIsStarted()
 {
-    if(frame_counter==0){
+    if(frame_counter==0) {
         stopLogging();
-    }
-    else{
+    } else {
         //keep
     }
 }
@@ -496,13 +478,12 @@ void CSVLogForm::checkIsStarted()
 void CSVLogForm::logging_countdown()
 {
 
-    if(countdown_sec<=0){
+    if(countdown_sec<=0) {
 
         startLogging();
         ui->BTNStop->setEnabled(1);
         timer_countdown->stop();
-    }
-    else{
+    } else {
         ui->textBrowser->append(tr("->Will be started at %1s ...").arg(countdown_sec));
         countdown_sec--;
     }

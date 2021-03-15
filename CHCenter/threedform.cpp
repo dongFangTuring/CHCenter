@@ -71,7 +71,7 @@ int ThreeDForm::initView()
 
     //add .obj file
     int rst=loadobj(obj_filepath);
-    if(rst==-1){
+    if(rst==-1) {
         //        QMessageBox msgBox;
         //        msgBox.setText(tr("No file exists or wrong path!"));
         //        msgBox.setWindowTitle(tr("Error"));
@@ -216,7 +216,7 @@ void ThreeDForm::startThreeDPlot()
 
 void ThreeDForm::stopThreeDPlot()
 {
-    if(timer->isActive()){
+    if(timer->isActive()) {
         timer->stop();
     }
 }
@@ -224,13 +224,13 @@ void ThreeDForm::stopThreeDPlot()
 void ThreeDForm::on_BNTLoad_clicked()
 {
     QString file = QFileDialog::getOpenFileName(this,
-                                                tr("Open .obj model"),
-                                                QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).at(0),
-                                                "*.obj");
+                   tr("Open .obj model"),
+                   QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).at(0),
+                   "*.obj");
 
 
     qDebug()<<file;
-    if(QFile(file).exists()){
+    if(QFile(file).exists()) {
         obj_filepath=file;
     }
 }
