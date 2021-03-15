@@ -58,6 +58,9 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *event) override;
 
+signals:
+    void sigUserWheelZoom();
+
 private:
     QPoint m_lastMousePos;
     bool key_ctrl_pressed=false;
@@ -85,8 +88,6 @@ public:
 
 
 public slots:
-    //	void handleTimeout();
-
     //幾個操作資料的槽函式
     void addSeries(QList<QPointF> &data, QString legend_title);     //新增一條曲線
     void removeSeries();                            //移出一條曲線
@@ -96,15 +97,10 @@ public slots:
 
 private slots:
     void updateMovingWindow();
+    void sltUserWheelZoom();
 
-    //obsolete control BTN
-//    void on_SliderSample_valueChanged(int value);
-//    void on_BTNSampleZoomIn_clicked();
-//    void on_BTNSampleZoomOut_clicked();
-//    void on_SliderValue_valueChanged(int value);
-//    void on_BTNValueZoomIn_clicked();
-//    void on_BTNValueZoomOut_clicked();
-//    void on_BNTValueReset_clicked();
+
+
 
 private:
     Ui::ChartWindow *ui;
@@ -115,8 +111,6 @@ private:
     //record the type of chart, such as quat, acc..
     QString m_type;
 
-
-    QTimer movingwindow_timer;
 
     QChart * m_chart;     //圖表元件，可理解為畫筆，用它畫曲線
     QList<QLineSeries *> m_serieslist;   //曲線列表

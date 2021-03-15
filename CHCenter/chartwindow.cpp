@@ -13,9 +13,9 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     this->setStyleSheet("background-color:#424242; color:white;");
 
     m_chart = new QChart;
-    movingwindow_timer.setInterval(1000/60);
-    connect(&movingwindow_timer, SIGNAL(timeout(void)), this, SLOT(updateMovingWindow(void)), Qt::DirectConnection);
-    //movingwindow_timer.start();
+    m_chartView = new CusChartView(m_chart);
+
+    connect(m_chartView, SIGNAL(sigUserWheelZoom(void)), this, SLOT(sltUserWheelZoom(void)), Qt::DirectConnection);
 
     //create default axes first, so we can add series later.
     axisX = new QValueAxis;
@@ -114,7 +114,7 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
 
     //sync max and min value to cuschart class
-    m_chartView = new CusChartView(m_chart);
+
     m_chartView->valueRange[0]=valueRange[0];
     m_chartView->valueRange[1]=valueRange[1];
     m_chartView->max_sample_number=max_sample_number;
@@ -374,6 +374,11 @@ void ChartWindow::updateMovingWindow()
 
     }
 
+}
+
+void ChartWindow::sltUserWheelZoom()
+{
+    ui->CB_AutoYScale->setChecked(false);
 }
 
 
@@ -839,6 +844,7 @@ void CusChartView::wheelEvent(QWheelEvent *event)
     }
 
     else { //zoom Y
+        sigUserWheelZoom();
         if(numDegrees.y()>0)
             zoom(0,1,zoom_mode);
         else if(numDegrees.y()<0)
