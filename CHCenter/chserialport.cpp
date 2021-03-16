@@ -187,8 +187,6 @@ void CHSerialport::handleData()
     if(CH_serial->bytesAvailable() > 0 && CH_serial->isReadable()) {
         QByteArray raw_data = CH_serial->readAll();
 
-
-        protocol_ASC2(raw_data);
         emit sig_send_kboot(raw_data);
         emit sig_send_bus(raw_data);
     }
@@ -248,42 +246,6 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
     }
 
     mutex_writing.unlock();
-}
-
-void CHSerialport::protocol_ASC2(QByteArray asc2_data)
-{
-    int rst=asc2_data.indexOf(0x5A);
-
-    //has found 0x5A
-    if(rst!=-1) {
-
-        m_IMUmsg=QString(asc2_data.toHex()).toUpper();
-        QString a = m_IMUmsg.replace(QRegularExpression("(.{2})"), "\\1 ");
-        emit sigSendIMUmsg(tr("Rx : %1").arg(a));
-        m_IMUmsg="";
-    }
-
-    //no found of 0x5A, meaning that the device sent ACS2
-    else {
-
-
-        m_IMUmsg+=asc2_data;
-        if(m_IMUmsg.indexOf("OK")!=-1) {
-            emit sigSendIMUmsg(m_IMUmsg);
-            m_IMUmsg="";
-        } else if(m_IMUmsg.indexOf("ERR")!=-1) {
-            emit sigSendIMUmsg(m_IMUmsg);
-            m_IMUmsg="";
-        } else {
-            if(m_IMUmsg.size()>300) {
-                emit sigSendIMUmsg("Data decoded error.");
-                m_IMUmsg="";
-            }
-
-        }
-
-
-    }
 }
 
 void CHSerialport::slt_writeData(QString ATcmd)

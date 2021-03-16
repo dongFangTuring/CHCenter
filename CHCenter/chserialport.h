@@ -76,7 +76,6 @@ private slots:
     //handle all data from serial
     void handleData();
     void protocol_0x5A(QByteArray&);
-    void protocol_ASC2(QByteArray);
 
     //write to serial, a cross thread command
     void slt_writeData(QString);
@@ -95,8 +94,6 @@ private:
 
     int m_node_cnt;
     bool m_is_gwsol=0;
-
-    QString m_IMUmsg="";
 
     uint m_frame_counter=0;
 
