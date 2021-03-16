@@ -35,8 +35,8 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
         addSeries(point_Z, "Z");
         addSeries(point_norm, "Norm");
 
-        valueRange[0]=-8;
-        valueRange[1]=8;
+        valueRange[0] = -16;
+        valueRange[1] = 16;
         m_chart->setTitle(tr("Acceleration (G)"));
 
     } else if (type=="gyr") {
@@ -49,8 +49,8 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
         addSeries(point_Z, "Z");
         addSeries(point_norm, "Norm");
 
-        valueRange[0]=-2000;
-        valueRange[1]=2000;
+        valueRange[0] = -2000;
+        valueRange[1] = 2000;
         m_chart->setTitle(tr("Angular Velocity (°/s)"));
 
     } else if (type=="mag") {
@@ -63,8 +63,8 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
         addSeries(point_Z, "Z");
         addSeries(point_norm, "Norm");
 
-        valueRange[0]=-80;
-        valueRange[1]=80;
+        valueRange[0] = -200;
+        valueRange[1] = 200;
         m_chart->setTitle(tr("Magnetic Field (μT)"));
     } else if (type=="eul") {
 
@@ -76,8 +76,8 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
         addSeries(point_Z, "Yaw");
 
 
-        valueRange[0]=-180;
-        valueRange[1]=180;
+        valueRange[0] = -180;
+        valueRange[1] = 360;
         m_chart->setTitle(tr("Euler Angles (°)"));
 
     } else if (type=="quat") {
@@ -91,17 +91,13 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
         addSeries(point_Z, "Z");
 
 
-        valueRange[0]=-1;
-        valueRange[1]=1;
+        valueRange[0] = -1;
+        valueRange[1] = 1;
         m_chart->setTitle(tr("Quaternion (Norm)"));
 
     }
 
 
-
-    //the max and min of Y axis
-    valueRange[0]=valueRange[0]*2;
-    valueRange[1]=valueRange[1]*2;
 
     axisX->setLabelFormat("%d");
     axisX->setTitleText("Samples");
