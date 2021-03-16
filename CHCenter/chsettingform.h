@@ -7,7 +7,8 @@
 #include <QCloseEvent>
 #include <QDebug>
 
-namespace Ui {
+namespace Ui
+{
 class CHSettingForm;
 }
 
@@ -19,13 +20,13 @@ public:
     explicit CHSettingForm(QWidget *parent = nullptr);
     ~CHSettingForm();
 
-    struct CHConfig{
+    struct CHConfig {
 
         QString Setptl="";
         QString Model="";
 
         uint32_t ID=0;
-        uint8_t GWID=0,MaxNodeSize=0,GWFRQ=0;
+        int GWID=0, MaxNodeSize=0, GWFRQ=0;
 
 
         uint16_t Bitmap=0;

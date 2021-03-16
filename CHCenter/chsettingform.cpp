@@ -50,8 +50,7 @@ void CHSettingForm::settingConfig_init()
     emit sigSetParam('r', m_modbus_param);
 
 
-    ui->CB_Advanced->setChecked(false);
-    ui->GB_Advanced->setVisible(false);
+    ui->GB_ATCMD->setVisible(true);
 
 
     //delay 100ms to clear text
@@ -76,7 +75,6 @@ void CHSettingForm::identifyProduct()
     ui->Label_GWID->setVisible(is221||is221dongle);
     ui->SB_GWID->setVisible(is221||is221dongle);
 
-    ui->GB_OldPTL->setVisible(!(is221||is221dongle));
     ui->CB_PTL->setVisible(!(is221||is221dongle));
     ui->Label_PTL->setVisible(!(is221||is221dongle));
 
@@ -122,51 +120,51 @@ void CHSettingForm::sltMdbusParamLoaded()
 
     switch(m_modbus_param[0] & 0xFFFF) {
     case 100:
-        CH_Config.Model=("CH100");
+        CH_Config.Model = ("CH100");
         break;
     case 110:
-        CH_Config.Model=("CH110");
+        CH_Config.Model = ("CH110");
         break;
     case 221:
-        CH_Config.Model=("HI221");
+        CH_Config.Model = ("HI221");
         break;
     case 222:
-        CH_Config.Model=("HI221Dongle");
+        CH_Config.Model = ("HI221Dongle");
         break;
     case 226:
-        CH_Config.Model=("HI226");
+        CH_Config.Model = ("HI226");
         break;
     case 229:
-        CH_Config.Model=("HI229");
+        CH_Config.Model = ("HI229");
         break;
     default:
-        CH_Config.Model=("Unrecognized");
+        CH_Config.Model = ("Unrecognized");
         break;
     }
 
 
     prod_info.append(tr("%1").arg(CH_Config.Model));
-    prod_info.append(tr(" UUID: %1%2").arg(m_modbus_param[2],0,16).arg(m_modbus_param[3],0,16));
+    prod_info.append(tr(" UUID: %1%2").arg(m_modbus_param[2], 0, 16).arg(m_modbus_param[3], 0, 16));
 
     //read ID, RF parameters
-    CH_Config.ID=m_modbus_param[4];
-    CH_Config.GWID=m_modbus_param[40]& 0x000000FF;
+    CH_Config.ID = m_modbus_param[4];
+    CH_Config.GWID = m_modbus_param[40] & 0xFF;
 
-    CH_Config.MaxNodeSize=(m_modbus_param[40]>>8)& 0x000000FF;
-    CH_Config.GWFRQ=(m_modbus_param[40]>>16)& 0x000000FF;
+    CH_Config.MaxNodeSize = (m_modbus_param[40]>>8) & 0xFF;
+    CH_Config.GWFRQ = (m_modbus_param[40]>>16) & 0xFF;
 
     //read Baud
-    CH_Config.Baud=m_modbus_param[9];
+    CH_Config.Baud = m_modbus_param[9];
 
     //read bitmap
-    CH_Config.Setptl="";
-    CH_Config.Bitmap=uint16_t(m_modbus_param[10] & 0x0000FFFF);
+    CH_Config.Setptl = "";
+    CH_Config.Bitmap = uint16_t(m_modbus_param[10] & 0xFFFF);
 
     //read ODR
-    CH_Config.ODR=uint16_t(m_modbus_param[10] >> 16);
+    CH_Config.ODR = uint16_t(m_modbus_param[10] >> 16);
 
     //read mode
-    CH_Config.Mode=m_modbus_param[16];
+    CH_Config.Mode = m_modbus_param[16];
 
 
     //UI load ProdInfo
@@ -196,32 +194,32 @@ void CHSettingForm::sltMdbusParamLoaded()
 
     //UI load Baud
     for(int i=0; i < ui->CB_Baud->count(); i++) {
-        if(CH_Config.Baud==ui->CB_Baud->itemText(i).toUInt()) {
+        if(CH_Config.Baud == ui->CB_Baud->itemText(i).toUInt()) {
             ui->CB_Baud->setCurrentIndex(i);
         }
     }
 
     //UI load ODR
     for(int i=0; i < ui->CB_ODR->count(); i++) {
-        if(CH_Config.ODR==ui->CB_ODR->itemText(i).toUInt()) {
+        if(CH_Config.ODR == ui->CB_ODR->itemText(i).toUInt()) {
             ui->CB_ODR->setCurrentIndex(i);
         }
     }
     //UI load mode
 
-    if(CH_Config.Mode==0x01)
+    if(CH_Config.Mode == 0x01)
         ui->CB_Mode->setCurrentIndex(0); //6 axis
-    else if(CH_Config.Mode==0x03)
+    else if(CH_Config.Mode == 0x03)
         ui->CB_Mode->setCurrentIndex(1); //9 axis
 
 
     //UI load protocol
-    uint16_t temp_Bitmap=0x0001;
+    uint16_t temp_Bitmap = 0x0001;
     if(CH_Config.Bitmap&temp_Bitmap) {
-        CH_Config.Setptl="91";
+        CH_Config.Setptl = "91";
         ui->CB_PTL->setCurrentIndex(0);
     } else if(CH_Config.Bitmap&(temp_Bitmap<<8)) {
-        CH_Config.Setptl="62";
+        CH_Config.Setptl = "62";
     } else {
         ui->CB_PTL->setCurrentIndex(1);
 
@@ -347,7 +345,7 @@ void CHSettingForm::on_BTN_ATCMD_clicked()
 
 void CHSettingForm::on_CB_Advanced_stateChanged(int arg1)
 {
-    ui->GB_Advanced->setVisible(arg1);
+    ui->GB_ATCMD->setVisible(arg1);
 }
 void CHSettingForm::writeUART_CFG()
 {
@@ -427,7 +425,7 @@ void CHSettingForm::on_RSTBTN_clicked()
     QTimer::singleShot(1000, this, [&,cmd]() {
         writeCmd(cmd);
     }
-    );
+                      );
 
 
 
@@ -463,15 +461,15 @@ void CHSettingForm::on_CB_DongleParam_activated(int index)
     switch (index) {
 
     case 0:
-        CH_Config.GWFRQ=400;
+        CH_Config.GWFRQ = 400;
         CH_Config.MaxNodeSize=4;
         break;
     case 1:
-        CH_Config.GWFRQ=200;
+        CH_Config.GWFRQ = 200;
         CH_Config.MaxNodeSize=8;
         break;
     case 2:
-        CH_Config.GWFRQ=100;
+        CH_Config.GWFRQ = 100;
         CH_Config.MaxNodeSize=16;
         break;
     default:

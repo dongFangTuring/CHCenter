@@ -108,8 +108,8 @@ void CHSerialport::quitmThread()
 
 void CHSerialport::linkCHdevices(QString port_name, int baudrate)
 {
-    m_port_name=port_name;
-    m_baudrate=baudrate;
+    m_port_name = port_name;
+    m_baudrate = baudrate;
     initThreadReading();
 }
 
@@ -155,8 +155,8 @@ void CHSerialport::on_thread_started()
 
 
     timer_framerate->start();
-    int ret=openSerialport(m_port_name, m_baudrate);
-    if(ret==-1) {
+    int ret = openSerialport(m_port_name, m_baudrate);
+    if(ret == -1) {
         closePort();
         emit errorOpenPort();
     } else {
