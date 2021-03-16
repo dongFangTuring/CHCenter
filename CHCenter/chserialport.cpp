@@ -173,7 +173,7 @@ void CHSerialport::on_thread_stopped()
     timer_framerate->stop();
     timer_framerate->disconnect();
 
-    IMU_data.dev_info.node_cnt=0;
+    parser.dev_info.node_cnt=0;
     m_node_cnt=0;
     m_is_gwsol=0;
 }
@@ -200,7 +200,7 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
 {
     mutex_writing.lock();
 
-    IMU_data.parse(binary_data);
+    parser.parse(binary_data);
 
     //counting frames per seconds
     m_frame_counter++;
@@ -209,10 +209,10 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
     IMU_packets.resize(0);
 
 
-    if(IMU_data.bitmap & BIT_RF_DONGLE) {
+    if(parser.bitmap & BIT_RF_DONGLE) {
         //qDebug()<<"dongle";
-        for(int i=0; i<IMU_data.dev_info.node_cnt; i++) {
-            IMU_packets.append(IMU_data.dev[i]);
+        for(int i=0; i<parser.dev_info.node_cnt; i++) {
+            IMU_packets.append(parser.dev[i]);
         }
 
         //if switch from single IMU module
@@ -222,77 +222,32 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
         }
 
         //if the new numbers of nodes isn't equal to the list
-        if(!(m_node_cnt==IMU_data.dev_info.node_cnt)) {
-            m_node_cnt=IMU_data.dev_info.node_cnt;
+        if(!(m_node_cnt==parser.dev_info.node_cnt)) {
+            m_node_cnt=parser.dev_info.node_cnt;
             emit sigUpdateDongleNodeList(true, IMU_packets);
 
         }
         emit sigSendDongle(IMU_packets);
 
     } else { /* not RF doongle flag, only single IMU */
-        IMU_data.dev_info.node_cnt = 1;
-        IMU_packets.append(IMU_data.dev[0]);
+        parser.dev_info.node_cnt = 1;
+        IMU_packets.append(parser.dev[0]);
 
         if(m_is_gwsol==1) {
             m_is_gwsol=0;
             emit sigUpdateDongleNodeList(false, IMU_packets);
         }
 
-        emit sigSendIMU(IMU_data.dev[0]);
+        emit sigSendIMU(parser.dev[0]);
 
     }
 
-    if(Content_bits!=IMU_data.bitmap) {
-        Content_bits=IMU_data.bitmap;
+    if(Content_bits!=parser.bitmap) {
+        Content_bits=parser.bitmap;
         emit sigSendBitmap(Content_bits);
     }
 
     mutex_writing.unlock();
-
-    //    for (int i=0;i<binary_data.length();i++) {
-    //        uint8_t c=binary_data[i];
-    //        packet_decode(c);
-    //    }
-
-    //    //if there is new frame, send signal with the new frame to baseform and other classes.
-    //    if(m_frame_received!=frame_count){
-
-
-    //        if(receive_gwsol.tag == KItemDongle || receive_gwsol.tag == KItemDongleRaw)
-    //        {
-    //            //if switch from single IMU module
-    //            if(m_is_gwsol==0){
-    //                m_is_gwsol=1;
-    //                emit sigUpdateDongleNodeList(true,receive_gwsol);
-    //            }
-
-    //            //if the new numbers of nodes isn't equal to the list
-    //            if(!(m_node_cnt==receive_gwsol.n)){
-    //                m_node_cnt=receive_gwsol.n;
-    //                emit sigUpdateDongleNodeList(true,receive_gwsol);
-    //            }
-
-    //            emit sigSendDongle(receive_gwsol);
-
-    //        }
-    //        else{
-    //            if(m_is_gwsol==1){
-    //                m_is_gwsol=0;
-    //                emit sigUpdateDongleNodeList(false,receive_gwsol);
-    //            }
-
-    //            emit sigSendIMU(receive_imusol);
-
-    //        }
-
-
-    //        if(Content_bits!=bitmap){
-    //            Content_bits=bitmap;
-    //            sigSendBitmap(Content_bits);
-    //        }
-    //        m_frame_received=frame_count;
-
-    //    }
 }
 
 void CHSerialport::protocol_ASC2(QByteArray asc2_data)

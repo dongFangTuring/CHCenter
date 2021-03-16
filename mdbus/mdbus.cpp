@@ -6,8 +6,7 @@
 #define MB_FUNC_ERROR                         ( 128 )
 #define MAX_PDU_SIZE                          ( 253 )
 
-enum
-{
+enum {
     kStatus_Addr,
     kStatus_Funcode,
     kStatus_ByteCnt,
@@ -28,21 +27,18 @@ mdbus::mdbus(QObject *parent) : QObject(parent)
 void mdbus::decode(QByteArray &brx)
 {
 
-//    if(brx.size())
-//    {
-//        qDebug()<<"mdbus rx:"<<brx.toHex(',');
-//        //qDebug()<<"mdbus rx size:"<<brx.size();
-//    }
+    //    if(brx.size())
+    //    {
+    //        qDebug()<<"mdbus rx:"<<brx.toHex(',');
+    //        //qDebug()<<"mdbus rx size:"<<brx.size();
+    //    }
 
-    for(int i =0; i<brx.size(); i++)
-    {
+    for(int i =0; i<brx.size(); i++) {
         uint8_t c = brx.at(i);
 
-        switch (this->state)
-        {
+        switch (this->state) {
         case kStatus_Addr:
-            if(c == this->slv_addr)
-            {
+            if(c == this->slv_addr) {
                 this->rx_payload.clear();
                 this->rx_payload.append(c);
                 this->state = kStatus_Funcode;
@@ -52,8 +48,7 @@ void mdbus::decode(QByteArray &brx)
         case kStatus_Funcode:
             this->fun_code = c;
             rx_payload.append(c);
-            switch(this->fun_code)
-            {
+            switch(this->fun_code) {
             case MB_FUNC_READ_INPUT_REGISTER:
                 this->state = kStatus_ByteCnt;
                 break;
@@ -69,33 +64,27 @@ void mdbus::decode(QByteArray &brx)
         case kStatus_ByteCnt:
             this->rx_byte_cnt = c;
             rx_payload.append(c);
-            if(this->rx_byte_cnt <= MAX_PDU_SIZE)
-            {
+            if(this->rx_byte_cnt <= MAX_PDU_SIZE) {
                 if(this->rx_byte_cnt)
                     this->state = kStatus_Data;
                 else
                     this->state = kStatus_CRCLow;
                 break;
-            }
-            else
-            {
+            } else {
                 this->state = kStatus_Addr;
             }
         case kStatus_Data:
             rx_payload.append(c);
 
-            if(this->fun_code == MB_FUNC_READ_INPUT_REGISTER && rx_payload.size() == this->rx_byte_cnt + 3) /* 3 = addr(1) + fun_code(1) + byte_cnt(1) */
-            {
+            if(this->fun_code == MB_FUNC_READ_INPUT_REGISTER && rx_payload.size() == this->rx_byte_cnt + 3) { /* 3 = addr(1) + fun_code(1) + byte_cnt(1) */
                 this->state = kStatus_CRCLow;
             }
 
-            if(this->fun_code == MB_FUNC_WRITE_MULTIPLE_REGISTERS && rx_payload.size() == 6)
-            {
+            if(this->fun_code == MB_FUNC_WRITE_MULTIPLE_REGISTERS && rx_payload.size() == 6) {
                 this->state = kStatus_CRCLow;
             }
 
-            if(rx_payload.size() > MAX_PDU_SIZE) /* something err! */
-            {
+            if(rx_payload.size() > MAX_PDU_SIZE) { /* something err! */
                 qDebug()<<"mdbus decode err\n";
                 this->state = kStatus_Addr;
             }
@@ -106,13 +95,10 @@ void mdbus::decode(QByteArray &brx)
             break;
         case kStatus_CRCHigh:
             this->recv_crc |= c<<8;
-            if(this->crc16(rx_payload) == this->recv_crc) /* CRC match */
-            {
+            if(this->crc16(rx_payload) == this->recv_crc) { /* CRC match */
                 rx_payload.remove(0, 3); /* 3 = addr(1) + fun_code(1) + byte_cnt(1) */
                 this->recv_ok = true;
-            }
-            else
-            {
+            } else {
                 qDebug()<<"mdbus crc err\n";
             }
 
@@ -160,8 +146,7 @@ bool mdbus::read_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16
     this->recv_ok = false;
 
     /* wait for resp data or timeout */
-    while(!this->recv_ok && timeout)
-    {
+    while(!this->recv_ok && timeout) {
         this->decode(brx);
         this->brx.clear();
         this->delay(1);
@@ -170,10 +155,8 @@ bool mdbus::read_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint16
 
     this->serial_read_flag = false;
 
-    if(this->recv_ok)
-    {
-        for(int i=0; i<this->rx_payload.size() / 4; i++)
-        {
+    if(this->recv_ok) {
+        for(int i=0; i<this->rx_payload.size() / 4; i++) {
             QByteArray qval = this->rx_payload.mid(i*4, 4);
             uint32_t *val = reinterpret_cast<uint32_t*>(qval.data());
             buf[i] = qFromBigEndian(val[0]);
@@ -206,8 +189,7 @@ bool mdbus:: write_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint
     ba.append(((len*2)>>0) & 0xFF);
     ba.append(len*4);
 
-    for(int i=0; i<len; i++)
-    {
+    for(int i=0; i<len; i++) {
         val = qToBigEndian(buf[i]);
         ba.append(QByteArray((const char*)&val, 4));
     }
@@ -226,8 +208,7 @@ bool mdbus:: write_data(uint8_t dev_addr, uint16_t reg_addr, uint32_t *buf, uint
     this->recv_ok = false;
 
     /* wait for resp data or timeout */
-    while(!this->recv_ok && timeout)
-    {
+    while(!this->recv_ok && timeout) {
         this->decode(brx);
         this->brx.clear();
         this->delay(1);
@@ -261,8 +242,7 @@ void mdbus::delay(uint32_t ms)
 
 void mdbus::slt_serial_read(QByteArray &ba)
 {
-    if(this->serial_read_flag)
-    {
+    if(this->serial_read_flag) {
         this->brx.append(ba);
     }
 }
@@ -274,17 +254,15 @@ uint16_t mdbus::crc16(QByteArray senddata)
     uint16_t wcrc=0XFFFF;
     uint8_t temp;
     int i=0,j=0;
-    for(i=0;i<len;i++)
-    {
+    for(i=0; i<len; i++) {
         temp=senddata.at(i);
         wcrc^=temp;
-        for(j=0;j<8;j++){
+        for(j=0; j<8; j++) {
 
-            if(wcrc&0X0001){
+            if(wcrc&0X0001) {
                 wcrc>>=1;
                 wcrc^=0XA001;
-            }
-            else
+            } else
                 wcrc>>=1;
         }
     }

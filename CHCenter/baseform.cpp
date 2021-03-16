@@ -247,7 +247,7 @@ void BaseForm::updateDongleNodeList(bool m_is_dongle, QVector<id0x91_t> packets)
         ui->DongleNodeList->clear();
         ui->DongleNodeList->setVisible(true);
 
-        int node_cnt_tmp = ch_serialport->IMU_data.dev_info.node_cnt;
+        int node_cnt_tmp = ch_serialport->parser.dev_info.node_cnt;
 
         if(node_cnt_tmp == 0) {
             ui->DongleNodeList->addItem(tr("No node is online."));
@@ -391,7 +391,7 @@ void BaseForm::getIMUData(id0x91_t packet)
 void BaseForm::getDongleData(QVector<id0x91_t> packets)
 {
 
-    if(ch_serialport->IMU_data.dev_info.node_cnt > 0) {
+    if(ch_serialport->parser.dev_info.node_cnt > 0) {
 
 
         mutex_writing.lock();

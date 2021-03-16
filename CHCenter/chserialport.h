@@ -30,7 +30,7 @@ public:
 
     uchar Content_bits;
 
-    imu_parser IMU_data;
+    imu_parser parser;
 
 public slots:
 
@@ -98,7 +98,6 @@ private:
 
     QString m_IMUmsg="";
 
-    uint m_frame_received=0;
     uint m_frame_counter=0;
 
     kboot_protocol *m_kboot;
