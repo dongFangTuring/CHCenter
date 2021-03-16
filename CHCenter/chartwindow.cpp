@@ -15,7 +15,6 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     m_chart = new QChart;
     m_chartView = new CusChartView(m_chart);
 
-    connect(m_chartView, SIGNAL(sigUserWheelZoom(void)), this, SLOT(sltUserWheelZoom(void)), Qt::DirectConnection);
 
     //create default axes first, so we can add series later.
     axisX = new QValueAxis;
@@ -149,8 +148,6 @@ void ChartWindow::init()
     m_chartView->isFreeMode=false;
     m_chartView->setFocus();
 
-    //auto scale
-    ui->CB_AutoYScale->setChecked(true);
 
     //reset sample_counter
     sample_counter=0;
@@ -308,22 +305,6 @@ void ChartWindow::updateMovingWindow()
 
             }
 
-            //find the Y max min value, and scale
-            if(ui->CB_AutoYScale->isChecked()) {
-                //qDebug()<<"OMG";
-                QList<double> listVal;
-                listVal.append(wSizePoints_X.last().y());
-                listVal.append(wSizePoints_Y.last().y());
-                listVal.append(wSizePoints_Z.last().y());
-                //listVal.append(wSizePoints_W.last().y());
-
-                double min = *std::min_element(listVal.begin(), listVal.end());
-                double max = *std::max_element(listVal.begin(), listVal.end());
-                //qDebug()<<min<<"aaa"<<max;
-                if((min<axisY->min())||(max>axisY->max()))
-                    m_chartView->zoom(1,1,2);
-
-            }
 
             //set range of X axis
             axisX->setRange(0,distance_x);
@@ -376,10 +357,6 @@ void ChartWindow::updateMovingWindow()
 
 }
 
-void ChartWindow::sltUserWheelZoom()
-{
-    ui->CB_AutoYScale->setChecked(false);
-}
 
 
 
@@ -734,23 +711,23 @@ void CusChartView::mouseDoubleClickEvent(QMouseEvent *event)
 void CusChartView::wheelEvent(QWheelEvent *event)
 {
     QPoint numDegrees = event->angleDelta();
-    cursor_pos=event->pos();
+    cursor_pos = event->pos();
     //qDebug()<<cursor_pos;
 
     if(event->buttons() & Qt::RightButton || key_ctrl_pressed==true) {
-        if(numDegrees.y()>0)  //while right btn is pressed, zoom X
-            zoom(0,0,zoom_mode);      //mode 1=free mode
+        if(numDegrees.y() > 0)  //while right btn is pressed, zoom X
+            zoom(0, 0, zoom_mode);      //mode 1=free mode
         else if(numDegrees.y()<0)
-            zoom(1,0,zoom_mode);
+            zoom(1, 0, zoom_mode);
 
     }
 
     else { //zoom Y
         sigUserWheelZoom();
-        if(numDegrees.y()>0)
-            zoom(0,1,zoom_mode);
-        else if(numDegrees.y()<0)
-            zoom(1,1,zoom_mode);
+        if(numDegrees.y() > 0)
+            zoom(0, 1, zoom_mode);
+        else if(numDegrees.y() <0)
+            zoom(1, 1, zoom_mode);
 
     }
     event->accept();
@@ -761,7 +738,7 @@ void CusChartView::wheelEvent(QWheelEvent *event)
 void CusChartView::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() & Qt::Key_Control) {
-        key_ctrl_pressed=true;
+        key_ctrl_pressed = true;
     }
 
 
@@ -772,7 +749,7 @@ void CusChartView::keyPressEvent(QKeyEvent *event)
 void CusChartView::keyReleaseEvent(QKeyEvent *event)
 {
     if(event->key() & Qt::Key_Control) {
-        key_ctrl_pressed=false;
+        key_ctrl_pressed = false;
     }
     event->accept();
     QChartView::keyReleaseEvent(event);

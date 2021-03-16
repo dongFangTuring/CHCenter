@@ -31,7 +31,10 @@ QT_CHARTS_END_NAMESPACE
 QT_CHARTS_USE_NAMESPACE   //使用qtchart需要加入這條語句
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class ChartWindow; }
+namespace Ui
+{
+class ChartWindow;
+}
 QT_END_NAMESPACE
 
 class CusChartView: public QChartView
@@ -67,7 +70,7 @@ private:
     QPoint cursor_pos;
 
     uchar scale_level=5;
-    ushort x_scales[15]={50,100,200,500,1000,2000,5000,7500,10000,12500,15000,17500,20000,30000,50000};
+    ushort x_scales[15]= {50,100,200,500,1000,2000,5000,7500,10000,12500,15000,17500,20000,30000,50000};
 
 };
 
@@ -97,7 +100,6 @@ public slots:
 
 private slots:
     void updateMovingWindow();
-    void sltUserWheelZoom();
 
 
 

@@ -120,13 +120,6 @@
           </property>
          </spacer>
         </item>
-        <item>
-         <widget class="QCheckBox" name="CB_AutoYScale">
-          <property name="text">
-           <string>Auto Scale Y</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
      </item>
