@@ -110,9 +110,9 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
 
     //sync max and min value to cuschart class
 
-    m_chartView->valueRange[0]=valueRange[0];
-    m_chartView->valueRange[1]=valueRange[1];
-    m_chartView->max_sample_number=max_sample_number;
+    m_chartView->valueRange[0] = valueRange[0];
+    m_chartView->valueRange[1] = valueRange[1];
+    m_chartView->max_sample_number = max_sample_number;
 
     //tune performance of opengl
     m_chartView->setRenderHints(QPainter::Antialiasing);
