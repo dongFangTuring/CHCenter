@@ -39,7 +39,7 @@ void ThreeDForm::closeEvent(QCloseEvent *event)
 int ThreeDForm::initView()
 {
 
-    view = new Qt3DExtras::Qt3DWindow();
+    view=new Qt3DExtras::Qt3DWindow();
 
     // put Qt3DWindow into a container in order to make it possible
     // to handle the view inside a widget
@@ -236,7 +236,7 @@ void ThreeDForm::on_BNTLoad_clicked()
 }
 
 
-void ThreeDForm::getIMUData(id0x91_t imu_data)
+void ThreeDForm::getIMUPackets(id0x91_t imu_data)
 {
     mutex_writing.lock();
 

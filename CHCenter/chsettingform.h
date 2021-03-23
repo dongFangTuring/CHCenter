@@ -28,29 +28,10 @@ public:
         uint32_t ID=0;
         int GWID=0, MaxNodeSize=0, GWFRQ=0;
 
-
         uint16_t Bitmap=0;
         uint16_t ODR=0;
         uint32_t Baud=0;
-
         uint32_t Mode=0;
-
-//        QString Compare(CHConfig new_ch_config){
-//            QString changes="";
-//            if(this->ODR!=new_ch_config.ODR)
-//                changes+=tr("Frame Rate = %1\n").arg(QString::number(new_ch_config.ODR));
-//            if(this->Baud!=new_ch_config.Baud)
-//                changes+=tr("Baudrate = %1\n").arg(QString::number(new_ch_config.Baud));
-//            if(this->Setptl!=new_ch_config.Setptl)
-//                changes+=tr("Data Content = %1\n").arg(new_ch_config.Setptl);
-//            if(this->ID!=new_ch_config.ID)
-//                changes+=tr("Node ID = %1\n").arg(QString::number(new_ch_config.ID));
-//            if(this->GWID!=new_ch_config.GWID)
-//                changes+=tr("GWID = %1\n").arg(QString::number(new_ch_config.GWID));
-//            if(this->Mode!=new_ch_config.Mode)
-//                changes+=tr("Mode = %1\n").arg(QString::number(new_ch_config.Mode));
-//            return changes;
-//        }
     };
 
 
@@ -83,11 +64,7 @@ private slots:
 
     void on_BTN_ATCMD_clicked();
 
-    void on_CB_Advanced_stateChanged(int arg1);
-
     void on_RSTBTN_clicked();
-
-    void on_BTN_PrintCalib_clicked();
 
     void on_SB_GWID_valueChanged(int arg1);
 

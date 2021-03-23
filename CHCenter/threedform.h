@@ -16,6 +16,9 @@
 
 #include "utilities/imu_parser.h"
 
+using namespace std;
+
+
 namespace Ui {
 class ThreeDForm;
 }
@@ -36,7 +39,7 @@ public:
 private slots:
     void on_BNTLoad_clicked();
 
-    void getIMUData(id0x91_t);
+    void getIMUPackets(id0x91_t);
 
     void on_BTNPosReset_clicked();
 

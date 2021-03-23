@@ -15,6 +15,7 @@
 #include "utilities/imu_parser.h"
 #include "mdbus/mdbus.h"
 
+
 class CHSerialport : public QObject
 {
     Q_OBJECT
@@ -24,24 +25,28 @@ public:
     explicit CHSerialport(QObject *parent = nullptr);
     ~CHSerialport();
 
-    QSerialPort *CH_serial = nullptr;
-    int openSerialport(QString, int);
+
+    bool PortIsOpened(){
+        return CH_serial->isOpen();
+    }
+
     uint Frame_rate=0;
 
-    uchar Content_bits;
+    //control of connect device
+    void linkCHdevices(QString port_name, int baudrate);
 
-    imu_parser parser;
-
-public slots:
-
+    //control of closing port
     void closePort();
-    void linkCHdevices(QString, int);
+
+    //after port closed, second thread need to be stop by first thread
     void quitmThread();
+
+
 
 signals:
     //emit data to baseform
-    void sigSendDongle(QVector<id0x91_t>);
-    void sigSendIMU(id0x91_t);
+    //void sigSendDongle(QVector<id0x91_t>);
+    void sigSendIMU(QVector<id0x91_t>);
     void sigSendIMUmsg(QString);
     void sigSendBitmap(uchar);
 
@@ -60,6 +65,9 @@ signals:
     void sigMdbusParamLoaded();
 
 private slots:
+
+    //open port
+    int openSerialport(QString, int);
     //count Hz
     void countFrameRate();
 
@@ -77,7 +85,7 @@ private slots:
     void handleData();
     void protocol_0x5A(QByteArray&);
 
-    //write to serial, a cross thread command
+    //write to serial
     void slt_writeData(QString);
     void slt_serial_send(QByteArray &ba);
 
@@ -86,24 +94,32 @@ private slots:
 
 private:
 
+    //serial class, make it no parent to move into 2st thread
+    QSerialPort *CH_serial = nullptr;
+
+
     QTimer *timer_framerate;
     QMutex mutex_writing;
+
+    //store port info for connection
     QString m_port_name;
-    QThread *m_thread;
     int m_baudrate;
 
+    //2st thread
+    QThread *m_thread;
+
+
     int m_node_cnt;
-    bool m_is_gwsol=0;
+    bool m_isDongle=0;
 
     uint m_frame_counter=0;
 
     kboot_protocol *m_kboot;
     mdbus *m_mdbus;
 
+
     QVector<id0x91_t> IMU_packets;
-
-
-
+    imu_parser parser;
 
 
 };

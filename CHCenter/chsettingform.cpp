@@ -8,9 +8,6 @@ CHSettingForm::CHSettingForm(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle(tr("Device Settings"));
 
-    connect(this, SIGNAL(sigSendATcmd(QString)), this, SLOT(displayATcmd(QString)));
-
-
     settingConfig_init();
 
 }
@@ -47,10 +44,8 @@ void CHSettingForm::settingConfig_init()
     CH_Config.Mode = 0;
 
     //read mdbus
-    emit sigSetParam('r', m_modbus_param);
-
-
-    ui->GB_ATCMD->setVisible(true);
+    on_LoadParamBTN_clicked();
+    //emit sigSetParam('r', m_modbus_param);
 
 
     //delay 100ms to clear text
@@ -69,8 +64,8 @@ void CHSettingForm::identifyProduct()
     bool is221 = CH_Config.Model == "HI221";
     bool is221dongle = CH_Config.Model == "HI221Dongle";
 
-    ui->Label_ID->setVisible(is221dongle);
-    ui->CB_ID->setVisible(is221dongle);
+    ui->Label_ID->setVisible(!is221dongle);
+    ui->SB_ID->setVisible(!is221dongle);
 
     ui->Label_GWID->setVisible(is221||is221dongle);
     ui->SB_GWID->setVisible(is221||is221dongle);
@@ -103,8 +98,13 @@ void CHSettingForm::on_LoadParamBTN_clicked()
 {
 
     //sigSetParam(read or write, array[], -1:write all, >0 write to rigister addr)
-    emit sigSetParam('r', m_modbus_param);
+    QVector<int16_t> reg_toread={0,2,3,4,9,16,40};
 
+    foreach(int16_t i,reg_toread){
+        emit sigSetParam('r', &m_modbus_param[i],i);
+        delay(30);
+    }
+    sltMdbusParamLoaded();
 }
 
 void CHSettingForm::sltMdbusParamLoaded()
@@ -171,7 +171,7 @@ void CHSettingForm::sltMdbusParamLoaded()
     ui->Label_ProdInfo->setText(prod_info);
 
     //UI load ID, RF parameters
-    ui->CB_ID->setCurrentIndex(CH_Config.ID);
+    ui->SB_ID->setValue(CH_Config.ID);
     ui->SB_GWID->setValue(CH_Config.GWID);
 
     switch (CH_Config.MaxNodeSize) {
@@ -343,10 +343,7 @@ void CHSettingForm::on_BTN_ATCMD_clicked()
     emit sigSendATcmd(ui->LE_ATCMD->text()+"\r\n");
 }
 
-void CHSettingForm::on_CB_Advanced_stateChanged(int arg1)
-{
-    ui->GB_ATCMD->setVisible(arg1);
-}
+
 void CHSettingForm::writeUART_CFG()
 {
     if(CH_Config.Model=="HI221") {
@@ -420,16 +417,10 @@ void CHSettingForm::on_RSTBTN_clicked()
 
     writeCmd(0x06); /* SAVE TO FLASH */
 
-
     uint8_t cmd = 0x05;  /* RST */
     QTimer::singleShot(1000, this, [&,cmd]() {
         writeCmd(cmd);
-    }
-                      );
-
-
-
-
+    });
 }
 
 void CHSettingForm::writeCmd(uint8_t cmd)
@@ -439,19 +430,19 @@ void CHSettingForm::writeCmd(uint8_t cmd)
 }
 
 
-void CHSettingForm::on_BTN_PrintCalib_clicked()
-{
-    QString text;
-    text="ACC Calibration Parameters:\n";
-    for(int i = 67; i<79; i++) {
-        text+=tr("%1 ").arg(QString::number(*(float*)&m_modbus_param[i],'f',4),20);
-        if((i-67)%3==2) {
-            text+='\n';
-        }
+//void CHSettingForm::on_BTN_PrintCalib_clicked()
+//{
+//    QString text;
+//    text="ACC Calibration Parameters:\n";
+//    for(int i = 67; i<79; i++) {
+//        text+=tr("%1 ").arg(QString::number(*(float*)&m_modbus_param[i],'f',4),20);
+//        if((i-67)%3==2) {
+//            text+='\n';
+//        }
 
-    }
-    ui->TB_Termial->append(text);
-}
+//    }
+//    ui->TB_Termial->append(text);
+//}
 
 
 

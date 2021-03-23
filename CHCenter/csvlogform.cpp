@@ -76,15 +76,15 @@ void CSVLogForm::closeEvent(QCloseEvent *event)
             break;
 
         }
-
-
     }
 }
+
+
 void CSVLogForm::on_BTNPath_clicked()
 {
     QString dir_path = QFileDialog::getSaveFileName(this, tr("Save File"),
-                       current_dir,
-                       tr("csv file (*.csv)"));
+                                                    current_dir,
+                                                    tr("csv file (*.csv)"));
 
     if(!dir_path.isEmpty())
         current_dir=dir_path;
@@ -177,11 +177,10 @@ void CSVLogForm::on_BTNClear_clicked()
     ui->textBrowser->clear();
 }
 
-void CSVLogForm::getIMUData(id0x91_t imu_data)
+void CSVLogForm::getIMUPackets(QVector<id0x91_t> packets)
 {
 
     if(log_started==1) {
-
         int remainMsec=timer_log_period->remainingTime();
 
         QTime time(0,0,0);
@@ -189,173 +188,169 @@ void CSVLogForm::getIMUData(id0x91_t imu_data)
         QString str_time=time.toString("hh:mm:ss.zzz");
         ui->LabelRemainTime->setText(str_time);
 
-        if(frame_counter==0) {
-            if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)) {
-                stopLogging();
-                QMessageBox msgBox;
-                msgBox.setWindowTitle(tr("Log error!"));
-                msgBox.setText(tr("The current file can't be writed. "
-                                  "Please close other windows that may using the file."));
-                msgBox.setStandardButtons(QMessageBox::Ok);
-                msgBox.setButtonText(QMessageBox::Ok, tr("Ok"));
-                msgBox.exec();
-
+        if(packets.size()>0){
+            if(packets.size()==1){
+                write2csv(packets.first());
             } else {
-                QTextStream stream(&ch_logfile);
-                stream << tr("Time,Frame,AccX,AccY,AccZ,GyrX,GyrY,GyrZ,"
-                             "MagX,MagY,MagZ,Roll,Pitch,Yaw,Qw,Qx,Qy,Qz")<<"\n";
-                frame_counter++;
-            }
-
-        } else {
-            if(!ch_logfile.isOpen()) {
-                qDebug()<<"not opened";
-                ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append);
-            } else {
-                QTextStream stream(&ch_logfile);
-
-                QString tm_now = QTime::currentTime().toString("hh-mm-ss.zzz");
-
-                QString csv_row=tr("%1,%2,").arg(tm_now).arg(frame_counter);
-                csv_row+=imudata2csvrow(imu_data);
-
-                int ret=csv_row.lastIndexOf(',');
-                if(ret!=-1)
-                    csv_row.remove(ret,1);
-
-                stream << csv_row <<"\n";
-
-                frame_counter++;
+                writeDongle2csv(packets);
             }
         }
-        ui->LabelFrameCounter->setText(QString::number(frame_counter-1));
     }
-
 }
-void CSVLogForm::getDongleData(QVector<id0x91_t> packets)
-{
-    //qDebug()<<frame_counter;
-    if(log_started==1) {
 
-        int remainMsec=timer_log_period->remainingTime();
-
-        QTime time(0,0,0);
-        time=time.addMSecs(remainMsec);
-        QString str_time=time.toString("hh:mm:ss.zzz");
-        ui->LabelRemainTime->setText(str_time);
-
-        if(packets.size()>0) {
-
-            if(frame_counter==0) {
-
-                gwnode_idlist.clear();
-
-                int remainMsec=timer_log_period->remainingTime();
-                QTime time(0,0,0);
-                time=time.addMSecs(remainMsec);
-                QString str_time=time.toString("hh:mm:ss.zzz");
-                ui->LabelRemainTime->setText(str_time);
-
-                if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)) {
-                    stopLogging();
-                    QMessageBox msgBox;
-                    msgBox.setWindowTitle(tr("Log error!"));
-                    msgBox.setText(tr("The current file can't be writed. "
-                                      "Please close other windows that may using the file."));
-                    msgBox.setStandardButtons(QMessageBox::Ok);
-                    msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
-                    msgBox.exec();
-                } else {
-                    QTextStream stream(&ch_logfile);
-
-                    stream << "Time,Frame,";
-
-                    for(unsigned short i=0; i<packets.size(); i++) {
-                        auto imu_data=packets.at(i);
-                        gwnode_idlist.push_back(imu_data.id);
-
-                        QString title_row=tr("AccX(id%1),AccY(id%1),AccZ(id%1),GyrX(id%1),GyrY(id%1),GyrZ(id%1),"
-                                             "MagX(id%1),MagY(id%1),MagZ(id%1),Roll(id%1),Pitch(id%1),Yaw(id%1),"
-                                             "Qw(id%1),Qx(id%1),Qy(id%1),Qz(id%1),").arg(imu_data.id);
-
-                        if(i==packets.size()-1) {
-                            int ret=title_row.lastIndexOf(',');
-                            if(ret!=-1)
-                                title_row.remove(ret,1);
-                        }
-                        stream << title_row;
-                    }
-                    stream << "\n";
-                    frame_counter++;
-                }
-            } else {
-                if(!ch_logfile.isOpen()) {
-                    qDebug()<<"not opened";
-                    ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append);
-                } else {
-                    QTextStream stream(&ch_logfile);
-
-                    QString tm_now = QTime::currentTime().toString("hh-mm-ss.zzz");
-                    stream << tr("%1,%2,").arg(tm_now).arg(frame_counter);
-
-
-                    //if we lost some nodes.
-                    if(packets.size()<gwnode_idlist.size()) {
-                        for(unsigned short i=0; i<gwnode_idlist.size(); i++) {
-
-                            QString csv_row=",,,,,,,,,,,,,,,,";
-                            for(int j=0; j<packets.size(); j++) {
-
-                                auto imu_data=packets.at(j);
-
-                                if(imu_data.id==gwnode_idlist[i]) {
-                                    csv_row=imudata2csvrow(imu_data);
-                                }
-                            }
-
-                            if(i==gwnode_idlist.size()-1) {
-                                int ret=csv_row.lastIndexOf(',');
-                                if(ret!=-1)
-                                    csv_row.remove(ret,1);
-                            }
-                            stream<<csv_row;
-
-                        }
-                        stream <<"\n";
-                        frame_counter++;
-                    }
-                    //if all nodes are online
-                    else {
-
-                        for(unsigned short i=0; i<packets.size(); i++) {
-                            auto imu_data=packets.at(i);
-
-                            QString csv_row=imudata2csvrow(imu_data);
-
-                            if(i==packets.size()-1) {
-                                int ret=csv_row.lastIndexOf(',');
-                                if(ret!=-1)
-                                    csv_row.remove(ret,1);
-                            }
-
-                            stream<<csv_row;
-                        }
-
-                        stream <<"\n";
-                        frame_counter++;
-                    }
-                }
-            }
-            ui->LabelFrameCounter->setText(QString::number(frame_counter-1));
-        }
-    }
-
-}
 void CSVLogForm::getBitmap(uchar bitmap)
 {
     m_bitmap=bitmap;
 }
+void CSVLogForm::writeDongle2csv(QVector<id0x91_t> packets)
+{
 
+    if(frame_counter==0) {
+
+        gwnode_idlist.clear();
+
+        int remainMsec=timer_log_period->remainingTime();
+        QTime time(0,0,0);
+        time=time.addMSecs(remainMsec);
+        QString str_time=time.toString("hh:mm:ss.zzz");
+        ui->LabelRemainTime->setText(str_time);
+
+        if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)) {
+            stopLogging();
+            QMessageBox msgBox;
+            msgBox.setWindowTitle(tr("Log error!"));
+            msgBox.setText(tr("The current file can't be writed. "
+                                      "Please close other windows that may using the file."));
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setButtonText(QMessageBox::Ok, tr("OK"));
+            msgBox.exec();
+        } else {
+            QTextStream stream(&ch_logfile);
+
+            stream << "Time,Frame,";
+
+            for(unsigned short i=0; i<packets.size(); i++) {
+                auto imu_data=packets.at(i);
+                gwnode_idlist.push_back(imu_data.id);
+
+                QString title_row=tr("AccX(id%1),AccY(id%1),AccZ(id%1),GyrX(id%1),GyrY(id%1),GyrZ(id%1),"
+                                             "MagX(id%1),MagY(id%1),MagZ(id%1),Roll(id%1),Pitch(id%1),Yaw(id%1),"
+                                             "Qw(id%1),Qx(id%1),Qy(id%1),Qz(id%1),").arg(imu_data.id);
+
+                if(i==packets.size()-1) {
+                    int ret=title_row.lastIndexOf(',');
+                    if(ret!=-1)
+                        title_row.remove(ret,1);
+                }
+                stream << title_row;
+            }
+            stream << "\n";
+            frame_counter++;
+        }
+    } else {
+        if(!ch_logfile.isOpen()) {
+            qDebug()<<"not opened";
+            ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append);
+        } else {
+            QTextStream stream(&ch_logfile);
+
+            QString tm_now = QTime::currentTime().toString("hh-mm-ss.zzz");
+            stream << tr("%1,%2,").arg(tm_now).arg(frame_counter);
+
+
+            //if we lost some nodes.
+            if(packets.size()<gwnode_idlist.size()) {
+                for(unsigned short i=0; i<gwnode_idlist.size(); i++) {
+
+                    QString csv_row=",,,,,,,,,,,,,,,,";
+                    for(int j=0; j<packets.size(); j++) {
+
+                        auto imu_data=packets.at(j);
+
+                        if(imu_data.id==gwnode_idlist[i]) {
+                            csv_row=imudata2csvrow(imu_data);
+                        }
+                    }
+
+                    if(i==gwnode_idlist.size()-1) {
+                        int ret=csv_row.lastIndexOf(',');
+                        if(ret!=-1)
+                            csv_row.remove(ret,1);
+                    }
+                    stream<<csv_row;}
+
+                stream <<"\n";
+                frame_counter++;
+            } else {//if all nodes are online
+
+                for(unsigned short i=0; i<packets.size(); i++) {
+                    auto imu_data=packets.at(i);
+
+                    QString csv_row=imudata2csvrow(imu_data);
+
+                    if(i==packets.size()-1) {
+                        int ret=csv_row.lastIndexOf(',');
+                        if(ret!=-1)
+                            csv_row.remove(ret,1);
+                    }
+
+                    stream<<csv_row;}
+
+                stream <<"\n";
+                frame_counter++;}
+        }
+    }
+
+    ui->LabelFrameCounter->setText(QString::number(frame_counter-1));
+}
+
+
+void CSVLogForm::write2csv(id0x91_t imu_data)
+{
+
+    if(frame_counter==0) {
+        if(!ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append)) {
+            stopLogging();
+            QMessageBox msgBox;
+            msgBox.setWindowTitle(tr("Log error!"));
+            msgBox.setText(tr("The current file can't be writed. "
+                                  "Please close other windows that may using the file."));
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setButtonText(QMessageBox::Ok, tr("Ok"));
+            msgBox.exec();
+
+        } else {
+            QTextStream stream(&ch_logfile);
+            stream << tr("Time,Frame,AccX,AccY,AccZ,GyrX,GyrY,GyrZ,"
+                             "MagX,MagY,MagZ,Roll,Pitch,Yaw,Qw,Qx,Qy,Qz")<<"\n";
+            frame_counter++;
+        }
+
+    } else {
+        if(!ch_logfile.isOpen()) {
+            qDebug()<<"not opened";
+            ch_logfile.open(QIODevice::WriteOnly| QIODevice::Append);
+        } else {
+            QTextStream stream(&ch_logfile);
+
+            QString tm_now = QTime::currentTime().toString("hh-mm-ss.zzz");
+
+            QString csv_row=tr("%1,%2,").arg(tm_now).arg(frame_counter);
+
+            csv_row+=imudata2csvrow(imu_data);
+
+            int ret=csv_row.lastIndexOf(',');
+            if(ret!=-1)
+                csv_row.remove(ret,1);
+
+            stream << csv_row <<"\n";
+
+            frame_counter++;
+        }
+    }
+    ui->LabelFrameCounter->setText(QString::number(frame_counter-1));
+
+}
 QString CSVLogForm::imudata2csvrow(id0x91_t imu_data)
 {
 

@@ -36,8 +36,7 @@ private slots:
     void on_BTNClear_clicked();
 
     //Get data from baseform
-    void getIMUData(id0x91_t);
-    void getDongleData(QVector<id0x91_t>);
+    void getIMUPackets(QVector<id0x91_t>);
     void getBitmap(uchar);
 
     void on_SBLogPeriod_valueChanged(int arg1);
@@ -74,7 +73,10 @@ private:
 
     int countdown_sec;
 
-    std::vector<int> gwnode_idlist;
+    QVector<int> gwnode_idlist;
+
+    void writeDongle2csv(QVector<id0x91_t>);
+    void write2csv(id0x91_t);
 
     QString imudata2csvrow(id0x91_t);
 

@@ -63,17 +63,17 @@ private slots:
     void geterrorOpenPort();
     void getsigPortOpened();
     void getsigPortClosed();
-    void getIMUData(id0x91_t);
-    void getDongleData(QVector<id0x91_t>);
+    void getIMUPackets(QVector<id0x91_t> packets);
+    void getBitmap(uchar);
+
     void getIMUmsg(QString);
 
     ///stackwidget page1 content:data, chart and attitude indicator///
     void updateBaseForm();
-    void updateIMUTable(id0x91_t imu_data, uchar content_bits, uchar protocol_tag);
+    void updateIMUTable(id0x91_t imu_data, uchar content_bits);
     void updateBaseFormChart(id0x91_t);
 
     ///stackwidget page2 content:///
-
 
 
     ///stackwidget page3 content:///

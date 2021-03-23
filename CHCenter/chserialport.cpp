@@ -11,7 +11,6 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     m_kboot = new kboot_protocol();
     m_mdbus = new mdbus();
 
-
     //move those to second thread
     this->moveToThread(m_thread);
     CH_serial->moveToThread(m_thread);
@@ -31,7 +30,6 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     connect(m_mdbus, SIGNAL(sig_serial_send(QByteArray&)), this, SLOT(slt_serial_send(QByteArray&)));
 
 
-
     //cross threads signals
     connect(m_thread, SIGNAL(started()), this, SLOT(on_thread_started()),Qt::QueuedConnection);
     connect(m_thread, SIGNAL(finished()), this, SLOT(on_thread_stopped()),Qt::QueuedConnection);
@@ -42,9 +40,7 @@ CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
     //be able to close port and thread from baseform
     connect(this, SIGNAL(sigCloseThreadAndPort()), this, SLOT(closeThreadAndPort()));
 
-
     timer_framerate->setInterval(1000);
-
 
 }
 
@@ -53,16 +49,6 @@ CHSerialport::~CHSerialport()
     sigCloseThreadAndPort();
 }
 
-
-void CHSerialport::initThreadReading()
-{
-    if(m_thread->isRunning()) {
-        m_thread->quit();
-        m_thread->wait();
-    }
-    m_thread->start(); //go to on thread started
-
-}
 
 int CHSerialport::openSerialport(QString port_name, int baudrate)
 {
@@ -85,6 +71,16 @@ void CHSerialport::closePort()
     emit sigCloseThreadAndPort();
 }
 
+void CHSerialport::initThreadReading()
+{
+    if(m_thread->isRunning()) {
+        m_thread->quit();
+        m_thread->wait();
+    }
+    m_thread->start(); //go to on thread started
+
+}
+
 void CHSerialport::closeThreadAndPort()
 {
     while(1) {
@@ -97,14 +93,13 @@ void CHSerialport::closeThreadAndPort()
         }
     }
 }
+
 void CHSerialport::quitmThread()
 {
     m_thread->quit();
     m_thread->wait();
     qDebug()<<"Port and thread are closed";
 }
-
-
 
 void CHSerialport::linkCHdevices(QString port_name, int baudrate)
 {
@@ -143,8 +138,6 @@ void CHSerialport::checkPortStatus()
     }
 }
 
-
-
 void CHSerialport::on_thread_started()
 {
 
@@ -162,12 +155,9 @@ void CHSerialport::on_thread_started()
     } else {
         emit sigPortOpened();
         //qDebug() << "serial port thread is:" << QThread::currentThreadId();
-
-
     }
-
-
 }
+
 void CHSerialport::on_thread_stopped()
 {
     timer_framerate->stop();
@@ -175,7 +165,7 @@ void CHSerialport::on_thread_stopped()
 
     parser.dev_info.node_cnt=0;
     m_node_cnt=0;
-    m_is_gwsol=0;
+    m_isDongle=0;
 }
 
 
@@ -196,6 +186,8 @@ void CHSerialport::handleData()
 
 void CHSerialport::protocol_0x5A(QByteArray &binary_data)
 {
+    static uchar m_bitmap=0;
+
     mutex_writing.lock();
 
     parser.parse(binary_data);
@@ -208,14 +200,14 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
 
 
     if(parser.bitmap & BIT_RF_DONGLE) {
-        //qDebug()<<"dongle";
+
         for(int i=0; i<parser.dev_info.node_cnt; i++) {
             IMU_packets.append(parser.dev[i]);
         }
 
         //if switch from single IMU module
-        if(m_is_gwsol==0) {
-            m_is_gwsol=1;
+        if(m_isDongle==0) {
+            m_isDongle=1;
             emit sigUpdateDongleNodeList(true, IMU_packets);
         }
 
@@ -225,24 +217,23 @@ void CHSerialport::protocol_0x5A(QByteArray &binary_data)
             emit sigUpdateDongleNodeList(true, IMU_packets);
 
         }
-        emit sigSendDongle(IMU_packets);
+        emit sigSendIMU(IMU_packets);
 
     } else { /* not RF doongle flag, only single IMU */
         parser.dev_info.node_cnt = 1;
         IMU_packets.append(parser.dev[0]);
 
-        if(m_is_gwsol==1) {
-            m_is_gwsol=0;
+        if(m_isDongle==1) {
+            m_isDongle=0;
             emit sigUpdateDongleNodeList(false, IMU_packets);
         }
-
-        emit sigSendIMU(parser.dev[0]);
+        emit sigSendIMU(IMU_packets);
 
     }
 
-    if(Content_bits!=parser.bitmap) {
-        Content_bits=parser.bitmap;
-        emit sigSendBitmap(Content_bits);
+    if(m_bitmap!=parser.bitmap) {
+        m_bitmap=parser.bitmap;
+        emit sigSendBitmap(m_bitmap);
     }
 
     mutex_writing.unlock();
@@ -276,13 +267,21 @@ void CHSerialport::sltRWMdbus(char rw, uint32_t *param, int16_t address)
          * read a dummy first
          * */
         m_mdbus->read_data(0, 0, &param[0], 1);
-
-        for(int i=0; i<112; i+=16) { /* suggest not to read all param, use what, read what */
-            bool ret = m_mdbus->read_data(0, i, &param[i], 16);
+        if(address<0){
+            for(int i=0; i<112; i+=16) { /* suggest not to read all param, use what, read what */
+                bool ret = m_mdbus->read_data(0, i, &param[i], 16);
+                if(ret) {
+                    emit sigMdbusParamLoaded();
+                } else {
+                    qDebug()<<"MDBUS: READ ERROR:"<<i;
+                }
+            }
+        }else if(address>=0) {
+            bool ret = m_mdbus->read_reg(0, address,*param);
             if(ret) {
-                emit sigMdbusParamLoaded();
+
             } else {
-                qDebug()<<"MDBUS: READ ERROR:"<<i;
+                qDebug()<<"MDBUS: READ ERROR:"<<address;
             }
         }
 
