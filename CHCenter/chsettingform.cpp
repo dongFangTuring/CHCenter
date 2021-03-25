@@ -64,8 +64,8 @@ void CHSettingForm::identifyProduct()
     bool is221 = CH_Config.Model == "HI221";
     bool is221dongle = CH_Config.Model == "HI221Dongle";
 
-    ui->Label_ID->setVisible(!is221dongle);
-    ui->SB_ID->setVisible(!is221dongle);
+    ui->Label_ID->setVisible(is221);
+    ui->SB_ID->setVisible(is221);
 
     ui->Label_GWID->setVisible(is221||is221dongle);
     ui->SB_GWID->setVisible(is221||is221dongle);

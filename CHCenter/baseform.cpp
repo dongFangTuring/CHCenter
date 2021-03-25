@@ -26,8 +26,8 @@ BaseForm::BaseForm(QWidget *parent)
     //set the stylesheet of baseform
 
     ui->LabelStatusMsg->setStyleSheet("background-color:white; color: black; padding:10px 25px;");
-    ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
-    ui->PageDataScroll->setStyleSheet("background-color:rgb(250, 250, 250);");
+    //ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
+    ui->centralwidget->setStyleSheet("background-color:rgb(250, 250, 250);");
 
 
     //initial the HI221GW node choosing widget
@@ -108,6 +108,7 @@ BaseForm::BaseForm(QWidget *parent)
     m_aboutform = new AboutForm(this);
     m_aboutform->setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint);
     m_aboutform->setFixedSize(500, 500);
+    m_aboutform->setLabelVersion(sf_version);
 
 
     //Welcome message
@@ -152,33 +153,6 @@ BaseForm::~BaseForm()
     delete ui;
 }
 
-///In SideBar///
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @brief BaseForm::on_SideBarBTN2/3/4_clicked
- * click to show pages
- */
-
-void BaseForm::on_SideBarBTN2_clicked()
-{
-    ch_threeDform->show();
-    ch_threeDform->startThreeDPlot();
-
-}
-void BaseForm::on_SideBarBTN3_clicked()
-{
-    ch_csvlogform->show();
-}
-void BaseForm::on_SideBarBTN4_clicked()
-{
-    ch_settingform->settingConfig_init();
-    ch_settingform->show();
-
-}
-
-
 /**
  * @brief BaseForm::on_BTNConnect_clicked -
  * 1. serialport is not opened:show ch_comform
@@ -213,18 +187,20 @@ void BaseForm::update_BTNConnect_state()
     bool isOpen = ch_serialport->PortIsOpened();
 
     if(!isOpen) {
-        ui->BTNConnect->setFixedWidth(190);
+
         if(ch_comform->isVisible()) {
             ui->BTNConnect->setEnabled(false);
         } else {
             ui->BTNConnect->setEnabled(true);
             ui->BTNDisconnect->hide();
         }
+        ui->stackedWidget->setCurrentIndex(1);
 
     } else {
-        ui->BTNConnect->setFixedWidth(150);
+
         ui->BTNConnect->setEnabled(false);
         ui->BTNDisconnect->show();
+        ui->stackedWidget->setCurrentIndex(0);
     }
     //enable all pages
 
@@ -717,3 +693,20 @@ void BaseForm::on_BTNChartQuat_clicked()
         m_chartQuat->setVisible(false);
 }
 
+
+void BaseForm::on_action3D_view_triggered()
+{
+    ch_threeDform->show();
+    ch_threeDform->startThreeDPlot();
+}
+
+void BaseForm::on_actionCSV_Logger_triggered()
+{
+    ch_csvlogform->show();
+}
+
+void BaseForm::on_actionDevice_Settiing_triggered()
+{
+    ch_settingform->settingConfig_init();
+    ch_settingform->show();
+}

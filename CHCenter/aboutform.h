@@ -17,6 +17,9 @@ public:
     explicit AboutForm(QWidget *parent = nullptr);
     ~AboutForm();
 
+    void setLabelVersion(QString sf_version);
+
+
 private slots:
     void on_LabelWeb_linkActivated(const QString &link);
 

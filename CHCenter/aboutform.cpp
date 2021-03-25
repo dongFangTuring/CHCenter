@@ -19,6 +19,11 @@ AboutForm::~AboutForm()
     delete ui;
 }
 
+void AboutForm::setLabelVersion(QString sf_version)
+{
+    ui->Label_Version->setText(sf_version);
+}
+
 void AboutForm::on_LabelWeb_linkActivated(const QString &link)
 {
     QDesktopServices::openUrl(QUrl("https://hipnuc.com"));

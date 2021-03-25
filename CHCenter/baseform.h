@@ -41,11 +41,7 @@ signals:
 
 private slots:
 
-    ///In SideBar///
-
-    void on_SideBarBTN2_clicked();
-    void on_SideBarBTN3_clicked();
-    void on_SideBarBTN4_clicked();
+    ///In Bottom Bar///
 
     void on_BTNConnect_clicked();
     void on_BTNDisconnect_clicked();
@@ -98,6 +94,12 @@ private slots:
     void on_BTNChartEul_clicked();
     void on_BTNChartQuat_clicked();
 
+
+    void on_action3D_view_triggered();
+
+    void on_actionCSV_Logger_triggered();
+
+    void on_actionDevice_Settiing_triggered();
 
 private:
     Ui::BaseForm *ui;
