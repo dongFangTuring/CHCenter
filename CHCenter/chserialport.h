@@ -84,6 +84,7 @@ private slots:
     //handle all data from serial
     void handleData();
     void protocol_0x5A(QByteArray&);
+    void protocol_ASC2(QByteArray asc2_data);
 
     //write to serial
     void slt_writeData(QString);

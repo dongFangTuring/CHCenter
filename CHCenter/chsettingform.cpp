@@ -18,6 +18,11 @@ CHSettingForm::~CHSettingForm()
     delete ui;
 }
 
+void CHSettingForm::appendText(QString line)
+{
+    ui->TB_Termial->append(line);
+}
+
 void CHSettingForm::closeEvent(QCloseEvent *event)
 {
 

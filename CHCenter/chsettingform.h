@@ -20,20 +20,8 @@ public:
     explicit CHSettingForm(QWidget *parent = nullptr);
     ~CHSettingForm();
 
-    struct CHConfig {
 
-        QString Setptl="";
-        QString Model="";
-
-        uint32_t ID=0;
-        int GWID=0, MaxNodeSize=0, GWFRQ=0;
-
-        uint16_t Bitmap=0;
-        uint16_t ODR=0;
-        uint32_t Baud=0;
-        uint32_t Mode=0;
-    };
-
+    void appendText(QString line);
 
 public slots:
     void StreamATcmd();
@@ -83,6 +71,21 @@ private:
     Ui::CHSettingForm *ui;
 
     uint32_t m_modbus_param[112];
+
+
+    struct CHConfig {
+
+        QString Setptl="";
+        QString Model="";
+
+        uint32_t ID=0;
+        int GWID=0, MaxNodeSize=0, GWFRQ=0;
+
+        uint16_t Bitmap=0;
+        uint16_t ODR=0;
+        uint32_t Baud=0;
+        uint32_t Mode=0;
+    };
     CHConfig CH_Config;
 
     void identifyProduct();

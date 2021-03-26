@@ -41,11 +41,15 @@ signals:
 
 private slots:
 
-    ///In Bottom Bar///
-
-    void on_BTNConnect_clicked();
-    void on_BTNDisconnect_clicked();
+    ///In connection of menubar///
     void update_BTNConnect_state();
+    void on_actionSerial_Port_triggered();
+    void on_actionStop_Connection_triggered();
+
+    ///tools in menubar///
+    void on_action3D_view_triggered();
+    void on_actionCSV_Logger_triggered();
+    void on_actionDevice_Settiing_triggered();
 
     //this will be show if device is HI221GW
     void updateDongleNodeList(bool, QVector<id0x91_t>);
@@ -95,11 +99,9 @@ private slots:
     void on_BTNChartQuat_clicked();
 
 
-    void on_action3D_view_triggered();
 
-    void on_actionCSV_Logger_triggered();
 
-    void on_actionDevice_Settiing_triggered();
+
 
 private:
     Ui::BaseForm *ui;

@@ -159,7 +159,7 @@ BaseForm::~BaseForm()
  * 2. serialport is opened:disconnect it
  * 3. while ch_comform is opened, BTN is disabled
  */
-void BaseForm::on_BTNConnect_clicked()
+void BaseForm::on_actionSerial_Port_triggered()
 {
     if(!ch_serialport->PortIsOpened()) {
         ch_comform->show();
@@ -172,7 +172,7 @@ void BaseForm::on_BTNConnect_clicked()
     updateDongleNodeList(false, a);
 }
 
-void BaseForm::on_BTNDisconnect_clicked()
+void BaseForm::on_actionStop_Connection_triggered()
 {
     if(ch_serialport->PortIsOpened()) {
         ch_serialport->closePort();
@@ -189,17 +189,16 @@ void BaseForm::update_BTNConnect_state()
     if(!isOpen) {
 
         if(ch_comform->isVisible()) {
-            ui->BTNConnect->setEnabled(false);
+            ui->actionSerial_Port->setEnabled(false);
         } else {
-            ui->BTNConnect->setEnabled(true);
-            ui->BTNDisconnect->hide();
+            ui->actionSerial_Port->setEnabled(true);
+            ui->actionStop_Connection->setEnabled(false);
         }
         ui->stackedWidget->setCurrentIndex(1);
 
     } else {
-
-        ui->BTNConnect->setEnabled(false);
-        ui->BTNDisconnect->show();
+        ui->actionSerial_Port->setEnabled(false);
+        ui->actionStop_Connection->setEnabled(true);
         ui->stackedWidget->setCurrentIndex(0);
     }
     //enable all pages
@@ -403,13 +402,14 @@ void BaseForm::updateBaseForm()
  */
 void BaseForm::getIMUmsg(QString str)
 {
-    if(str.indexOf("BAUD") >= 0) {
-        statusbar_msg.current_status = tr("Please restart the device to take effect, and connect with new Baudrate.");
-        ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-    }
-    if(str == "Data decoded error.") {
+
+    if(str == "DECODE_ERR") {
         statusbar_msg.current_status = tr("Data decoded error. Check if the Baudrate correct.");
         ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+    }
+    else{
+        ch_settingform->appendText(str);
+
     }
 }
 
@@ -710,3 +710,5 @@ void BaseForm::on_actionDevice_Settiing_triggered()
     ch_settingform->settingConfig_init();
     ch_settingform->show();
 }
+
+
