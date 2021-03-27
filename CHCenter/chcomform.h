@@ -9,7 +9,8 @@
 
 
 
-namespace Ui {
+namespace Ui
+{
 class CHComForm;
 }
 
@@ -21,19 +22,16 @@ public:
     explicit CHComForm(QWidget *parent = nullptr);
     ~CHComForm();
 
-public slots:
-    void on_BTNPortRefresh_clicked();
-
 private slots:
     void on_BTNCancle_clicked();
     void on_BTNOK_clicked();
     void on_ListPort_itemClicked(QListWidgetItem *);
-
+    void on_BTNPortRefresh_clicked();
 signals:
 
     //send to baseform
-    void sigPortChose(QString,int);
-    void sigPortCancle();
+    void sig_port_ok(QString,int);
+    void sig_port_cancel();
 
 
 private:

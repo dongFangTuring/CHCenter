@@ -39,8 +39,8 @@ BaseForm::BaseForm(QWidget *parent)
     ch_comform->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     //get BTN signal from comport selecting form
-    connect(ch_comform, SIGNAL(sigPortChose(QString, int)), this, SLOT(getsigPortChose(QString, int)));
-    connect(ch_comform, SIGNAL(sigPortCancle()), this, SLOT(getsigPortCancle()));
+    connect(ch_comform, SIGNAL(sig_port_ok(QString, int)), this, SLOT(getsigPortChose(QString, int)));
+    connect(ch_comform, SIGNAL(sig_port_cancel()), this, SLOT(getsigPortCancle()));
 
 
     ch_serialport = new CHSerialport(nullptr);
@@ -163,7 +163,6 @@ void BaseForm::on_actionSerial_Port_triggered()
 {
     if(!ch_serialport->PortIsOpened()) {
         ch_comform->show();
-        ch_comform->on_BTNPortRefresh_clicked();
     }
 
     update_BTNConnect_state();
@@ -345,14 +344,14 @@ void BaseForm::getIMUPackets(QVector<id0x91_t> packets)
 
     mutex_writing.lock();
 
-    if(num_imu==0){
+    if(num_imu==0) {
         //no node, pass
-    } else if(num_imu==1){
+    } else if(num_imu==1) {
         m_imu_data=packets.first();
         emit sigUpdateBaseFormChart(m_imu_data);
         emit sigSendIMUtoThreeD(m_imu_data);
 
-    } else if(num_imu>1){
+    } else if(num_imu>1) {
         m_imu_data = packets.at(cur_dongle_nodeIndex);
         emit sigUpdateBaseFormChart(m_imu_data);
         emit sigSendIMUtoThreeD(m_imu_data);
@@ -406,8 +405,7 @@ void BaseForm::getIMUmsg(QString str)
     if(str == "DECODE_ERR") {
         statusbar_msg.current_status = tr("Data decoded error. Check if the Baudrate correct.");
         ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-    }
-    else{
+    } else {
         ch_settingform->appendText(str);
 
     }
