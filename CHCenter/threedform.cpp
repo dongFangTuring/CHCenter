@@ -35,6 +35,11 @@ void ThreeDForm::closeEvent(QCloseEvent *event)
     }
 }
 
+void ThreeDForm::showEvent(QShowEvent *event)
+{
+    startThreeDPlot();
+}
+
 
 int ThreeDForm::initView()
 {
@@ -211,7 +216,6 @@ void ThreeDForm::objectReplot()
 void ThreeDForm::startThreeDPlot()
 {
     timer->start();
-
 }
 
 void ThreeDForm::stopThreeDPlot()

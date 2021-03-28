@@ -23,7 +23,7 @@ class CHSerialport : public QObject
 
 public:
     explicit CHSerialport(QObject *parent = nullptr);
-    ~CHSerialport();
+    ~CHSerialport() override;
 
 
     bool PortIsOpened(){

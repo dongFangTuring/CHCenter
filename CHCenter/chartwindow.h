@@ -8,20 +8,18 @@
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QLegendMarker>
 #include <QtCharts/QChartView>   //兩個基本模組
-
 #include <QPointF>     //點類
 #include <QList>         //列表
 #include <QTimer> //定時器
 #include <QTime>
 #include <QDebug>
-
 #include <QPen>
 #include <QPainter>
-
 #include <QThread>
-
 #include <math.h>
-
+#include <QCloseEvent>
+#include <QShowEvent>
+#include <array>
 
 QT_CHARTS_BEGIN_NAMESPACE
 class QLineSeries;
@@ -43,16 +41,17 @@ class CusChartView: public QChartView
 
 public:
     CusChartView(QChart* chart, QWidget *parent = nullptr);
-    int valueRange[2];
+    std::array<short,2> valueRange;
+
     float max_sample_number;
     uint sample_counter;
+
     int zoom_mode=0;
     bool isFreeMode=false;
 
     void zoom(bool in_out, bool x_y, int mode);
 
 protected:
-
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
@@ -71,7 +70,6 @@ private:
 
     uchar scale_level=5;
     ushort x_scales[15]= {50,100,200,500,1000,2000,5000,7500,10000,12500,15000,17500,20000,30000,50000};
-
 };
 
 
@@ -83,11 +81,11 @@ public:
     explicit ChartWindow(QWidget *parent = nullptr, QString type="");
     ~ChartWindow() override;
 
-    CusChartView *m_chartView;   //因為佈局時其它函式會訪問這個畫布，所以設為public
-    uint framerate;
+    void setFrameRate(uint tmp){
+        if(this->isVisible())
+            framerate=tmp;
+    }
     void updateLineData(float *);
-    void init();
-
 
 
 public slots:
@@ -97,26 +95,26 @@ public slots:
     void connectMarkers();                   //連線圖線與圖例
     void disconnectMarkers();               //斷開圖線與圖例
     void handleMarkerClicked();           //佔擊圖例時的處理函式
+protected:
+    void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private slots:
     void updateMovingWindow();
-
-
-
 
 private:
     Ui::ChartWindow *ui;
 
     //Y and X axis range
-    int valueRange[2];
+    std::array<short,2> valueRange;
+
     const float max_sample_number=50000;
     //record the type of chart, such as quat, acc..
     QString m_type;
 
-
-    QChart * m_chart;     //圖表元件，可理解為畫筆，用它畫曲線
+    QChart *m_chart=nullptr;     //圖表元件，可理解為畫筆，用它畫曲線
+    CusChartView *m_chartView=nullptr;
     QList<QLineSeries *> m_serieslist;   //曲線列表
-
 
     QList<QPointF> point_X;
     QList<QPointF> point_Y;
@@ -125,15 +123,13 @@ private:
     QList<QPointF> point_RFLine;
     QList<QPointF> point_norm;
 
-
+    uint framerate;
     uint sample_counter;
 
-    QLineSeries *m_series;     //曲線指標
-    QValueAxis *axisX;
-    QValueAxis *axisY;
+    QValueAxis *axisX=nullptr;
+    QValueAxis *axisY=nullptr;
 
-
-
+    void initChartParam();
 };
 
 

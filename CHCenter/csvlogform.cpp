@@ -44,15 +44,12 @@ CSVLogForm::CSVLogForm(QWidget *parent) :
 }
 
 CSVLogForm::~CSVLogForm()
-{
-    timer_log_period->stop();
-    ch_logfile.close();
+{  
     delete ui;
 }
 
 void CSVLogForm::closeEvent(QCloseEvent *event)
 {
-
     if(log_started) {
         QMessageBox msgBox;
         msgBox.setText(tr("You're still recording data"));
@@ -77,6 +74,8 @@ void CSVLogForm::closeEvent(QCloseEvent *event)
 
         }
     }
+    timer_log_period->stop();
+    ch_logfile.close();
 }
 
 

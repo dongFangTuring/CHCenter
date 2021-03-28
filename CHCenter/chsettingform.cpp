@@ -7,9 +7,6 @@ CHSettingForm::CHSettingForm(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle(tr("Device Settings"));
-
-    settingConfig_init();
-
 }
 
 CHSettingForm::~CHSettingForm()
@@ -25,13 +22,16 @@ void CHSettingForm::appendText(QString line)
 
 void CHSettingForm::closeEvent(QCloseEvent *event)
 {
-
     if (event->spontaneous()) {
         writeCmd(0x08); /* ENABLE OUTPUT */
     } else {
         QWidget::closeEvent(event);
     }
+}
 
+void CHSettingForm::showEvent(QShowEvent *event)
+{
+    settingConfig_init();
 }
 
 
@@ -61,7 +61,6 @@ void CHSettingForm::settingConfig_init()
 
     //identify product
     identifyProduct();
-
 }
 
 void CHSettingForm::identifyProduct()
@@ -69,41 +68,28 @@ void CHSettingForm::identifyProduct()
     bool is221 = CH_Config.Model == "HI221";
     bool is221dongle = CH_Config.Model == "HI221Dongle";
 
-    ui->Label_ID->setVisible(is221);
-    ui->SB_ID->setVisible(is221);
+    ui->Label_ID->setEnabled(is221);
+    ui->SB_ID->setEnabled(is221);
 
-    ui->Label_GWID->setVisible(is221||is221dongle);
-    ui->SB_GWID->setVisible(is221||is221dongle);
+    ui->Label_GWID->setEnabled(is221||is221dongle);
+    ui->SB_GWID->setEnabled(is221||is221dongle);
 
-    ui->CB_PTL->setVisible(!(is221||is221dongle));
-    ui->Label_PTL->setVisible(!(is221||is221dongle));
+    ui->CB_PTL->setEnabled(!(is221||is221dongle));
+    ui->Label_PTL->setEnabled(!(is221||is221dongle));
 
-    ui->Label_Mode->setVisible(!is221dongle);
-    ui->CB_Mode->setVisible(!is221dongle);
+    ui->Label_Mode->setEnabled(!is221dongle);
+    ui->CB_Mode->setEnabled(!is221dongle);
 
-    ui->Label_DongleParam->setVisible(is221dongle);
-    ui->CB_DongleParam->setVisible(is221dongle);
-
-
+    ui->Label_DongleParam->setEnabled(is221dongle);
+    ui->CB_DongleParam->setEnabled(is221dongle);
 }
-
-
-
-///obselete///
-void CHSettingForm::StreamATcmd()
-{
-    emit sigSendATcmd("AT+EOUT=1\r\n");
-}
-
-
-///////obselete///////
 
 
 void CHSettingForm::on_LoadParamBTN_clicked()
 {
 
-    //sigSetParam(read or write, array[], -1:write all, >0 write to rigister addr)
-    QVector<int16_t> reg_toread={0,2,3,4,9,16,40};
+    //sigSetParam(read or write, array[], -1:write all / >0 write to rigister addr)
+    QVector<int16_t> reg_toread={0,2,3,4,9,10,16,40};
 
     foreach(int16_t i,reg_toread){
         emit sigSetParam('r', &m_modbus_param[i],i);
@@ -205,6 +191,7 @@ void CHSettingForm::sltMdbusParamLoaded()
     }
 
     //UI load ODR
+
     for(int i=0; i < ui->CB_ODR->count(); i++) {
         if(CH_Config.ODR == ui->CB_ODR->itemText(i).toUInt()) {
             ui->CB_ODR->setCurrentIndex(i);
@@ -264,9 +251,6 @@ void CHSettingForm::sltMdbusParamLoaded()
     }
 
 }
-
-
-
 
 void CHSettingForm::on_BTN_clearTB_clicked()
 {

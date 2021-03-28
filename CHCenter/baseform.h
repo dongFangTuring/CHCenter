@@ -99,10 +99,6 @@ private slots:
     void on_BTNChartQuat_clicked();
 
 
-
-
-
-
 private:
     Ui::BaseForm *ui;
 

@@ -20,7 +20,7 @@ class CHComForm : public QWidget
 
 public:
     explicit CHComForm(QWidget *parent = nullptr);
-    ~CHComForm();
+    ~CHComForm() override;
 
 private slots:
     void on_BTNCancle_clicked();

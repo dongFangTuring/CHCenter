@@ -15,14 +15,12 @@ class AboutForm : public QWidget
 
 public:
     explicit AboutForm(QWidget *parent = nullptr);
-    ~AboutForm();
+    ~AboutForm() override;
 
     void setLabelVersion(QString sf_version);
 
-
 private slots:
     void on_LabelWeb_linkActivated(const QString &link);
-
     void on_LabelWeb2_linkActivated(const QString &link);
 
 private:

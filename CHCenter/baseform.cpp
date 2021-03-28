@@ -26,7 +26,6 @@ BaseForm::BaseForm(QWidget *parent)
     //set the stylesheet of baseform
 
     ui->LabelStatusMsg->setStyleSheet("background-color:white; color: black; padding:10px 25px;");
-    //ui->SideBar->setStyleSheet("background-color:#30302E; color:white;");
     ui->centralwidget->setStyleSheet("background-color:rgb(250, 250, 250);");
 
 
@@ -81,9 +80,6 @@ BaseForm::BaseForm(QWidget *parent)
     ch_threeDform = new ThreeDForm();
     connect(this, SIGNAL(sigSendIMUtoThreeD(id0x91_t)),
             ch_threeDform, SLOT(getIMUPackets(id0x91_t)));
-
-
-
     //page 3
     ch_csvlogform = new CSVLogForm();
 
@@ -163,12 +159,12 @@ void BaseForm::on_actionSerial_Port_triggered()
 {
     if(!ch_serialport->PortIsOpened()) {
         ch_comform->show();
+
+        update_BTNConnect_state();
+
+        QVector<id0x91_t> a;
+        updateDongleNodeList(false, a);
     }
-
-    update_BTNConnect_state();
-
-    QVector<id0x91_t> a;
-    updateDongleNodeList(false, a);
 }
 
 void BaseForm::on_actionStop_Connection_triggered()
@@ -255,7 +251,6 @@ void BaseForm::on_DongleNodeList_itemClicked(QListWidgetItem *item)
 
     cur_dongle_nodeID = id.toInt();
     cur_dongle_nodeIndex = ui->DongleNodeList->currentRow();
-
 }
 
 ///signal from ch_comform ui///
@@ -271,7 +266,6 @@ void BaseForm::on_DongleNodeList_itemClicked(QListWidgetItem *item)
  */
 void BaseForm::getsigPortChose(QString port_name, int baudrate)
 {
-
     ch_comform->hide();
     ch_serialport->linkCHdevices(port_name, baudrate);
 
@@ -301,19 +295,18 @@ void BaseForm::geterrorOpenPort()
 
     statusbar_msg.current_status = tr("Cannot build connection. Please check the selected port again");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-    update_BTNConnect_state();
 
+    update_BTNConnect_state();
 }
 void BaseForm::getsigPortOpened()
 {
     ch_comform->hide();
 
-    //"connect" BTN
-    update_BTNConnect_state();
-
     //statusbar
     statusbar_msg.current_status = tr("Streaming...");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+
+    update_BTNConnect_state();
 }
 
 void BaseForm::getsigPortClosed()
@@ -372,22 +365,6 @@ void BaseForm::getBitmap(uchar bitmap)
  */
 void BaseForm::updateBaseForm()
 {
-    //    static u_int sample_counter=0;
-    //    uint update_interval=ch_serialport->Frame_rate/30;
-    //    update_interval=update_interval*2;
-    //    if(update_interval<1)
-    //        update_interval=1;
-
-    //    if(sample_counter%update_interval==0){
-
-    //        updateIMUTable(m_imu_data, m_contentbits, m_protocol_tag);
-    //        m_ADI->setData(m_imu_data.eul[0],m_imu_data.eul[1]);
-    //        m_Compass->setYaw(m_imu_data.eul[2]);
-    //        m_protocol_tag=0;
-    //    }
-
-    //    sample_counter++;
-
     updateIMUTable(m_imu_data, m_contentbits);
     ui->GLWidgetADI->setData(m_imu_data.eul[0], m_imu_data.eul[1]);
     ui->GLWidgetCompass->setYaw(m_imu_data.eul[2]);
@@ -401,7 +378,6 @@ void BaseForm::updateBaseForm()
  */
 void BaseForm::getIMUmsg(QString str)
 {
-
     if(str == "DECODE_ERR") {
         statusbar_msg.current_status = tr("Data decoded error. Check if the Baudrate correct.");
         ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
@@ -429,7 +405,7 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     if(content_bits & BIT_VALID_ID) {
         if(!ui->LabelID->isVisible())
             ui->LabelID->setVisible(true);
-        ui->LabelID->setText("ID = " + QString::number(imu_data.id));
+        ui->LabelID->setText(tr("ID = %1").arg(imu_data.id));
         setptl += "90,";
     } else {
         if(ui->LabelID->isVisible())
@@ -520,33 +496,23 @@ void BaseForm::updateBaseFormChart(id0x91_t imu_data)
 
     if(m_contentbits & BIT_VALID_ACC) {
         m_chartAcc->updateLineData(imu_data.acc);
-        m_chartAcc->framerate = ch_serialport->Frame_rate;
-    } else {
-        m_chartAcc->setVisible(false);
+        m_chartAcc->setFrameRate(ch_serialport->Frame_rate);
     }
     if(m_contentbits & BIT_VALID_GYR) {
         m_chartGyr->updateLineData(imu_data.gyr);
-        m_chartGyr->framerate = ch_serialport->Frame_rate;
-    } else {
-        m_chartGyr->setVisible(false);
+        m_chartGyr->setFrameRate(ch_serialport->Frame_rate);
     }
     if(m_contentbits & BIT_VALID_MAG) {
         m_chartMag->updateLineData(imu_data.mag);
-        m_chartMag->framerate = ch_serialport->Frame_rate;
-    } else {
-        m_chartMag->setVisible(false);
+        m_chartMag->setFrameRate(ch_serialport->Frame_rate);
     }
     if(m_contentbits & BIT_VALID_EUL) {
         m_chartEul->updateLineData(imu_data.eul);
-        m_chartEul->framerate = ch_serialport->Frame_rate;
-    } else {
-        m_chartEul->setVisible(false);
+        m_chartEul->setFrameRate(ch_serialport->Frame_rate);
     }
     if(m_contentbits & BIT_VALID_QUAT) {
         m_chartQuat->updateLineData(imu_data.quat);
-        m_chartQuat->framerate = ch_serialport->Frame_rate;
-    } else {
-        m_chartQuat->setVisible(false);
+        m_chartQuat->setFrameRate(ch_serialport->Frame_rate);
     }
 
 
@@ -648,54 +614,32 @@ void BaseForm::showMessageBox(QString msg, QString title)
 
 void BaseForm::on_BTNChartAcc_clicked()
 {
-    if(!m_chartAcc->isVisible()) {
-        m_chartAcc->setVisible(true);
-        m_chartAcc->init();
-    } else
-        m_chartAcc->setVisible(false);
+    m_chartAcc->show();
 }
 
 void BaseForm::on_BTNChartGyr_clicked()
-{
-    if(!m_chartGyr->isVisible()) {
-        m_chartGyr->setVisible(true);
-        m_chartGyr->init();
-    } else
-        m_chartGyr->setVisible(false);
+{  
+    m_chartGyr->show();
 }
 
 void BaseForm::on_BTNChartMag_clicked()
 {
-    if(!m_chartMag->isVisible()) {
-        m_chartMag->setVisible(true);
-        m_chartMag->init();
-    } else
-        m_chartMag->setVisible(false);
+    m_chartMag->show();
 }
 
 void BaseForm::on_BTNChartEul_clicked()
-{
-    if(!m_chartEul->isVisible()) {
-        m_chartEul->setVisible(true);
-        m_chartEul->init();
-    } else
-        m_chartEul->setVisible(false);
+{  
+    m_chartEul->show();
 }
 
 void BaseForm::on_BTNChartQuat_clicked()
 {
-    if(!m_chartQuat->isVisible()) {
-        m_chartQuat->setVisible(true);
-        m_chartQuat->init();
-    } else
-        m_chartQuat->setVisible(false);
+    m_chartQuat->show();
 }
-
 
 void BaseForm::on_action3D_view_triggered()
 {
     ch_threeDform->show();
-    ch_threeDform->startThreeDPlot();
 }
 
 void BaseForm::on_actionCSV_Logger_triggered()
@@ -705,7 +649,6 @@ void BaseForm::on_actionCSV_Logger_triggered()
 
 void BaseForm::on_actionDevice_Settiing_triggered()
 {
-    ch_settingform->settingConfig_init();
     ch_settingform->show();
 }
 

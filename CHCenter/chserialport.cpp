@@ -284,7 +284,7 @@ void CHSerialport:: slt_serial_send(QByteArray &ba)
     QString a=ba.toHex().toUpper();
     QString split = a.replace(QRegularExpression("(.{2})"), "\\1 ");
 
-    emit sigSendIMUmsg(tr("Tx : %1").arg(split));
+    //emit sigSendIMUmsg(tr("Tx : %1").arg(split));
     //this->mserial->clear(QSerialPort::Input);
 
     CH_serial->waitForBytesWritten();

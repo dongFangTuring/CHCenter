@@ -11,107 +11,82 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     m_type=type;
 
     this->setStyleSheet("background-color:#424242; color:white;");
+}
 
+ChartWindow::~ChartWindow()
+{
+    delete ui;
+}
+
+void ChartWindow::initChartParam()
+{
     m_chart = new QChart;
     m_chartView = new CusChartView(m_chart);
-
 
     //create default axes first, so we can add series later.
     axisX = new QValueAxis;
     axisY = new QValueAxis;
 
-
     m_chart->addAxis(axisX, Qt::AlignBottom);//將座標軸加到chart上，居下
     m_chart->addAxis(axisY, Qt::AlignLeft);//居左
 
-
-    if(type=="acc") {
-
+    if(m_type=="acc") {
         this->setWindowTitle(tr("Acceleration Chart"));
-
         addSeries(point_RFLine, "");
         addSeries(point_X, "X");
         addSeries(point_Y, "Y");
         addSeries(point_Z, "Z");
         addSeries(point_norm, "Norm");
-
-        valueRange[0] = -16;
-        valueRange[1] = 16;
+        valueRange = {-16,16};
         m_chart->setTitle(tr("Acceleration (G)"));
-
-    } else if (type=="gyr") {
-
+    } else if (m_type=="gyr") {
         this->setWindowTitle(tr("Angular Velocity Chart"));
-
         addSeries(point_RFLine, "");
         addSeries(point_X, "X");
         addSeries(point_Y, "Y");
         addSeries(point_Z, "Z");
         addSeries(point_norm, "Norm");
-
-        valueRange[0] = -2000;
-        valueRange[1] = 2000;
+        valueRange = {-2000, 2000};
         m_chart->setTitle(tr("Angular Velocity (°/s)"));
-
-    } else if (type=="mag") {
-
+    } else if (m_type=="mag") {
         this->setWindowTitle(tr("Magnetic Field Chart"));
-
         addSeries(point_RFLine, "");
         addSeries(point_X, "X");
         addSeries(point_Y, "Y");
         addSeries(point_Z, "Z");
         addSeries(point_norm, "Norm");
-
-        valueRange[0] = -200;
-        valueRange[1] = 200;
+        valueRange={-200,200};
         m_chart->setTitle(tr("Magnetic Field (μT)"));
-    } else if (type=="eul") {
-
+    } else if (m_type=="eul") {
         this->setWindowTitle(tr("Eular Angles Chart"));
-
         addSeries(point_RFLine, "");
         addSeries(point_X, "Roll");
         addSeries(point_Y, "Pitch");
         addSeries(point_Z, "Yaw");
-
-
-        valueRange[0] = -180;
-        valueRange[1] = 360;
+        valueRange={-180,360};
         m_chart->setTitle(tr("Euler Angles (°)"));
-
-    } else if (type=="quat") {
-
+    } else if (m_type=="quat") {
         this->setWindowTitle(tr("Quaternion Chart"));
-
         addSeries(point_RFLine, "");
         addSeries(point_W, "W");
         addSeries(point_X, "X");
         addSeries(point_Y, "Y");
         addSeries(point_Z, "Z");
-
-
-        valueRange[0] = -1;
-        valueRange[1] = 1;
+        valueRange= {-1,1};
         m_chart->setTitle(tr("Quaternion (Norm)"));
-
     }
-
-
 
     axisX->setLabelFormat("%d");
     axisX->setTitleText("Samples");
 
+    //set axis tick
     axisY->setTickAnchor(0);
     axisY->setTickCount(11);
     axisY->setMinorTickCount(1);
     axisY->setTitleText("Value");
 
-
     //sync max and min value to cuschart class
-
-    m_chartView->valueRange[0] = valueRange[0];
-    m_chartView->valueRange[1] = valueRange[1];
+    m_chartView->valueRange=valueRange;
     m_chartView->max_sample_number = max_sample_number;
 
     //tune performance of opengl
@@ -120,37 +95,33 @@ ChartWindow::ChartWindow(QWidget *parent, QString type) :
     //m_chartView->setCacheMode(QGraphicsView::CacheBackground); //no effect to performance
     m_chartView->setOptimizationFlags(QGraphicsView::DontAdjustForAntialiasing);
     //m_chart->setCacheMode(QGraphicsItem::ItemCoordinateCache,QSize(2000,2000)); //no effect to performance
-
     //m_chartView->setRubberBand(QChartView::RectangleRubberBand);  //整體縮放
 
     ui->LayoutChart->addWidget(m_chartView);
 
-
     m_chart->legend()->setVisible(true);  //設定圖例可見
-    connectMarkers(); //將曲線與圖例連線起來，可以勾選進行顯示與隱藏
     m_chart->legend()->markers().first()->setVisible(false);//隱藏刷新線圖例
+    connectMarkers();//將曲線與圖例連線起來，可以勾選進行顯示與隱藏
 
-    init();
 
-}
+    foreach(QLineSeries *series,m_serieslist){
+        if(series->name()=="Norm"){
+            auto norm_maker=m_chart->legend()->markers().last();
+            norm_maker->clicked();}
+    }
 
-ChartWindow::~ChartWindow()
-{
-}
-
-void ChartWindow::init()
-{
     //default following mode
     m_chartView->isFreeMode=false;
     m_chartView->setFocus();
 
+    m_serieslist.at(0)->setVisible(true);
 
     //reset sample_counter
     sample_counter=0;
 
     //reset zoom
     axisX->setRange(0,1000);
-    axisY->setRange(valueRange[0], valueRange[1]);
+    axisY->setRange(valueRange.at(0), (valueRange.at(1)));
 
     //clear all lines
     point_W.clear();
@@ -176,24 +147,19 @@ void ChartWindow::init()
     }
 
     //refresh line in free mode
-    point_RFLine.append(QPointF(0,valueRange[0]));
-    point_RFLine.append(QPointF(0,valueRange[1]));
-
+    point_RFLine.append(QPointF(0,valueRange.at(0)));
+    point_RFLine.append(QPointF(0,valueRange.at(1)));
 }
 
 
 
 void ChartWindow::updateLineData(float *array)
 {
-
-
     if(this->isVisible()) {
 
         if(sample_counter>=max_sample_number) {
             sample_counter=0;
-        }
-
-        else {
+        } else {
             if(m_type=="quat") {
                 point_W.replace(sample_counter, QPointF(sample_counter, array[0]));
                 point_X.replace(sample_counter, QPointF(sample_counter, array[1]));
@@ -207,32 +173,27 @@ void ChartWindow::updateLineData(float *array)
                 point_Y.replace(sample_counter, QPointF(sample_counter, array[1]));
                 point_Z.replace(sample_counter, QPointF(sample_counter, array[2]));
             }
-
-
             sample_counter++;
         }
 
         //dynamic change update frequency of chart
         uint update_interval;
-        if(m_chartView->isFreeMode)
+        if(m_chartView->isFreeMode){
             update_interval=framerate/10;
-        else
+        } else
             update_interval=framerate/30;
+
         if(update_interval<1)
             update_interval=1;
-
         if(sample_counter%update_interval==0) {
             //move refresh line
             point_RFLine.replace(0,QPointF(sample_counter,valueRange[0]));
             point_RFLine.replace(1,QPointF(sample_counter,valueRange[1]));
             updateMovingWindow();
         }
-
     }
-
-
-
 }
+
 void ChartWindow::updateMovingWindow()
 {
     if(this->isVisible()) {
@@ -270,9 +231,9 @@ void ChartWindow::updateMovingWindow()
 
             //renumbering X axis of each point from 1 to zoom scale
             for(int i =0; i<wSizePoints_X.length(); i++) {
-                if(m_type=="quat")
+                if(m_type=="quat"){
                     wSizePoints_W.replace(i,QPointF(wSizePoints_W.at(i).x()+1-sample_counter+distance_x, wSizePoints_W.at(i).y()));
-                else if(m_type=="acc"||m_type=="gyr"||m_type=="mag") {
+                } else if(m_type=="acc"||m_type=="gyr"||m_type=="mag") {
                     wSizePoints_norm.replace(i,QPointF(wSizePoints_norm.at(i).x()+1-sample_counter+distance_x, wSizePoints_norm.at(i).y()));
                 }
 
@@ -282,16 +243,13 @@ void ChartWindow::updateMovingWindow()
 
             }
 
-
             //replaced with new series
             if(m_type=="quat") {
                 m_serieslist.at(1)->replace(wSizePoints_W);
                 m_serieslist.at(2)->replace(wSizePoints_X);
                 m_serieslist.at(3)->replace(wSizePoints_Y);
                 m_serieslist.at(4)->replace(wSizePoints_Z);
-            }
-
-            else {
+            } else {
                 m_serieslist.at(1)->replace(wSizePoints_X);
                 m_serieslist.at(2)->replace(wSizePoints_Y);
                 m_serieslist.at(3)->replace(wSizePoints_Z);
@@ -300,7 +258,6 @@ void ChartWindow::updateMovingWindow()
                     m_serieslist.at(4)->replace(wSizePoints_norm);
 
             }
-
 
             //set range of X axis
             axisX->setRange(0,distance_x);
@@ -311,9 +268,7 @@ void ChartWindow::updateMovingWindow()
                 m_serieslist.at(0)->setVisible(false); //hide refresh line
             }
 
-        }
-        //for free mode
-        else {
+        } else {//for free mode
             if(m_type=="quat") {
                 m_serieslist.at(1)->replace(point_W);
                 m_serieslist.at(2)->replace(point_X);
@@ -340,23 +295,15 @@ void ChartWindow::updateMovingWindow()
                 }
                 m_chartView->zoom_mode=1;  //zoom at the cursor pos
                 ui->LabelChartMode->setText(tr("Left Double Click: Follow/FreeDrag(O) mode"));
+
+                m_serieslist.at(0)->setVisible(true);
             }
-
-            m_serieslist.at(0)->replace(point_RFLine);
-            m_serieslist.at(0)->setVisible(true);
             m_chart->legend()->markers().first()->setVisible(false);
+            m_serieslist.at(0)->replace(point_RFLine);
+
         }
-
-
-
     }
-
 }
-
-
-
-
-
 
 void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //用於新增曲線
 {
@@ -376,10 +323,8 @@ void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //用�
     if(legend_title=="X" || legend_title=="Roll") {
         series->setPen(QPen(QColor(171,34,29), 1));
     } else if(legend_title=="Y" || legend_title=="Pitch") {
-
         series->setPen(QPen(QColor(13,139,77), 1));
     } else if(legend_title=="Z"  || legend_title=="Yaw") {
-
         series->setPen(QPen(QColor(65,83,175), 1));
     } else if(legend_title=="W") {
         series->setColor(Qt::gray);
@@ -387,39 +332,7 @@ void ChartWindow::addSeries(QList<QPointF> &data, QString legend_title)  //用�
         series->setPen(QPen(Qt::black, 1));
     } else if(legend_title=="Norm") {
         series->setPen(QPen(QColor(249,168,37), 1));
-        auto norm_maker=m_chart->legend()->markers().last();
-        norm_maker->series()->setVisible(false);
-        norm_maker->setVisible(true);
-
-        //Dim the marker, if series is not visible
-        qreal alpha = 1.0;
-
-        if (!norm_maker->series()->isVisible()) {
-            alpha = 0.5;
-        }
-
-        QColor color;
-        QBrush brush = norm_maker->labelBrush();
-        color = brush.color();
-        color.setAlphaF(alpha);
-        brush.setColor(color);
-        norm_maker->setLabelBrush(brush);
-
-        brush = norm_maker->brush();
-        color = brush.color();
-        color.setAlphaF(alpha);
-        brush.setColor(color);
-        norm_maker->setBrush(brush);
-
-        QPen pen = norm_maker->pen();
-        color = pen.color();
-        color.setAlphaF(alpha);
-        pen.setColor(color);
-        norm_maker->setPen(pen);
-        this->update();
     }
-
-
 }
 
 void ChartWindow::removeSeries()
@@ -456,7 +369,6 @@ void ChartWindow::handleMarkerClicked()
     Q_ASSERT(marker);
 
     switch (marker->type())
-
     {
     case QLegendMarker::LegendMarkerTypeXY: {
 
@@ -502,6 +414,39 @@ void ChartWindow::handleMarkerClicked()
         break;
 
     }
+    }
+}
+
+void ChartWindow::closeEvent(QCloseEvent *event)
+{   
+    foreach(QLineSeries *series,m_serieslist){
+        delete series;
+    }
+    m_serieslist.clear();
+
+    delete axisX;
+    delete axisY;
+    delete m_chart;
+    delete m_chartView;
+
+    axisX=nullptr;
+    axisY=nullptr;
+    m_chart=nullptr;
+    m_chartView=nullptr;
+
+    //clear all lines
+    point_W.clear();
+    point_X.clear();
+    point_Y.clear();
+    point_Z.clear();
+    point_norm.clear();
+    point_RFLine.clear();
+}
+
+void ChartWindow::showEvent(QShowEvent *event)
+{
+    if(m_chart==nullptr){
+        initChartParam();
     }
 }
 
@@ -562,10 +507,7 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
                 }
 
             }
-        }
-
-
-        else if(in_out==1) { //zoom out
+        }  else if(in_out==1) { //zoom out
             if(scale_level<14) {
                 scale_level++;
 
@@ -604,9 +546,9 @@ void CusChartView::zoom(bool in_out, bool x_y, int mode)
         if(in_out==0) { //zoom in
             if(!(distance_y<0.01))
                 axisY->setRange(view_center.y()-distance_y/2/2,view_center.y()+distance_y/2/2);
-            else {
+            else
                 axisY->setRange(view_center.y()-0.005,view_center.y()+0.005);
-            }
+
         } else if(in_out==1) { //zoom out
             axisY->setRange(view_center.y()-distance_y/2*2,view_center.y()+distance_y/2*2);
 

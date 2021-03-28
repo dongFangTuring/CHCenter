@@ -14,6 +14,9 @@
 #include <QTimer>
 #include <QMessageBox>
 
+#include <QCloseEvent>
+#include <QShowEvent>
+
 #include "utilities/imu_parser.h"
 
 using namespace std;
@@ -30,33 +33,30 @@ class ThreeDForm : public QWidget
 
 public:
     explicit ThreeDForm(QWidget *parent = nullptr);
-    ~ThreeDForm();
-    int loadobj(QString file);
+    ~ThreeDForm() override;
 
-    void startThreeDPlot();
-    void stopThreeDPlot();
+
 
 private slots:
+    //load obj from file
     void on_BNTLoad_clicked();
 
+    //signal to update roration
     void getIMUPackets(id0x91_t);
-
-    void on_BTNPosReset_clicked();
-
     void objectReplot();
 
+    //control btn, slider
+    void on_BTNPosReset_clicked();
     void on_SliderLeftRight_sliderMoved(int position);
-
     void on_SliderUpDown_sliderMoved(int theta);
-
     void on_SliderZoom_sliderMoved(int theta);
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 private:
     Ui::ThreeDForm *ui;
     QWidget *container;
-
 
     Qt3DExtras::Qt3DWindow *view;
     Qt3DCore::QTransform *objTransform;
@@ -74,11 +74,15 @@ private:
     QString obj_filepath;
 
     float m_euler[3]={}; //x, y, z
+    int m_cam_scale[3];  //zoom, up/down, left/right
 
+    int loadobj(QString file);
     int initView();
+    void startThreeDPlot();
+    void stopThreeDPlot();
     void drawLine(const QVector3D& start, const QVector3D& end, const QColor& color, Qt3DCore::QEntity *_rootEntity);
 
-    int m_cam_scale[3];  //zoom, up/down, left/right
+
 
 
 };

@@ -24,7 +24,7 @@ class CSVLogForm : public QWidget
 
 public:
     explicit CSVLogForm(QWidget *parent = nullptr);
-    ~CSVLogForm();
+    ~CSVLogForm() override;
 
 
 private slots:
