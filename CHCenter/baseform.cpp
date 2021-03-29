@@ -116,8 +116,7 @@ BaseForm::BaseForm(QWidget *parent)
 
 
     //set page 1 as the default page
-
-    update_BTNConnect_state();
+    on_actionSerial_Port_triggered();
 
 }
 
@@ -160,8 +159,6 @@ void BaseForm::on_actionSerial_Port_triggered()
     if(!ch_serialport->PortIsOpened()) {
         ch_comform->show();
 
-        update_BTNConnect_state();
-
         QVector<id0x91_t> a;
         updateDongleNodeList(false, a);
     }
@@ -177,31 +174,6 @@ void BaseForm::on_actionStop_Connection_triggered()
     }
 }
 
-void BaseForm::update_BTNConnect_state()
-{
-    bool isOpen = ch_serialport->PortIsOpened();
-
-    if(!isOpen) {
-
-        if(ch_comform->isVisible()) {
-            ui->actionSerial_Port->setEnabled(false);
-        } else {
-            ui->actionSerial_Port->setEnabled(true);
-            ui->actionStop_Connection->setEnabled(false);
-        }
-        ui->stackedWidget->setCurrentIndex(1);
-
-    } else {
-        ui->actionSerial_Port->setEnabled(false);
-        ui->actionStop_Connection->setEnabled(true);
-        ui->stackedWidget->setCurrentIndex(0);
-    }
-    //enable all pages
-
-    ch_threeDform->setEnabled(isOpen);
-    ch_csvlogform->setEnabled(isOpen);
-    ch_settingform->setEnabled(isOpen);
-}
 
 /**
  * @brief BaseForm::updateDongleNodeList
@@ -247,6 +219,7 @@ void BaseForm::updateDongleNodeList(bool is_dongle, QVector<id0x91_t> packets)
  */
 void BaseForm::on_DongleNodeList_itemClicked(QListWidgetItem *item)
 {
+    Q_UNUSED(item);
     QString id = ui->DongleNodeList->currentItem()->text().split(" : ").last();
 
     cur_dongle_nodeID = id.toInt();
@@ -279,7 +252,6 @@ void BaseForm::getsigPortChose(QString port_name, int baudrate)
 void BaseForm::getsigPortCancle()
 {
     ch_comform->close();
-    update_BTNConnect_state();
 }
 
 
@@ -296,7 +268,6 @@ void BaseForm::geterrorOpenPort()
     statusbar_msg.current_status = tr("Cannot build connection. Please check the selected port again");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
-    update_BTNConnect_state();
 }
 void BaseForm::getsigPortOpened()
 {
@@ -306,7 +277,6 @@ void BaseForm::getsigPortOpened()
     statusbar_msg.current_status = tr("Streaming...");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
-    update_BTNConnect_state();
 }
 
 void BaseForm::getsigPortClosed()
@@ -321,8 +291,6 @@ void BaseForm::getsigPortClosed()
     statusbar_msg.current_status = tr("Unconnected");
     statusbar_msg.sw_version = tr("Software Version : %1").arg(sf_version);
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-
-    update_BTNConnect_state();
 
 }
 
@@ -618,7 +586,7 @@ void BaseForm::on_BTNChartAcc_clicked()
 }
 
 void BaseForm::on_BTNChartGyr_clicked()
-{  
+{
     m_chartGyr->show();
 }
 
@@ -628,7 +596,7 @@ void BaseForm::on_BTNChartMag_clicked()
 }
 
 void BaseForm::on_BTNChartEul_clicked()
-{  
+{
     m_chartEul->show();
 }
 

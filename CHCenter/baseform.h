@@ -20,7 +20,10 @@
 
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class BaseForm; }
+namespace Ui
+{
+class BaseForm;
+}
 QT_END_NAMESPACE
 
 class BaseForm : public QMainWindow
@@ -42,7 +45,6 @@ signals:
 private slots:
 
     ///In connection of menubar///
-    void update_BTNConnect_state();
     void on_actionSerial_Port_triggered();
     void on_actionStop_Connection_triggered();
 
@@ -135,13 +137,14 @@ private:
     AboutForm *m_aboutform;
 
     //information in status bar
-    struct StatusbarMsg{
+    struct StatusbarMsg {
         QString sw_version="";
         QString port="";
         QString baudrate="";
         QString current_status="";
 
-        QString getMsg(void){
+        QString getMsg(void)
+        {
 
             QString full_msg="";
 

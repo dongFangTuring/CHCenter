@@ -1519,18 +1519,26 @@ color: black;
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>919</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuWindow">
+   <widget class="QMenu" name="menuDescription">
     <property name="title">
-     <string>Window</string>
+     <string>Others</string>
     </property>
     <widget class="QMenu" name="menuLanguage">
      <property name="title">
@@ -1541,14 +1549,9 @@ color: black;
      <addaction name="actionEnglish"/>
     </widget>
     <addaction name="menuLanguage"/>
-    <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menuDescription">
-    <property name="title">
-     <string>Description</string>
-    </property>
     <addaction name="actionFAQ"/>
     <addaction name="actionAbout"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -1568,35 +1571,11 @@ color: black;
    </widget>
    <addaction name="menuConnect"/>
    <addaction name="menuTools"/>
-   <addaction name="menuWindow"/>
    <addaction name="menuDescription"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-  </widget>
-  <action name="actionTraditional_Chinese">
-   <property name="text">
-    <string>Traditional Chinese</string>
-   </property>
-  </action>
-  <action name="actionSimplified_Chinese">
-   <property name="text">
-    <string>Simplified Chinese</string>
-   </property>
-  </action>
   <action name="actionEnglish">
    <property name="text">
     <string>English</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
    </property>
   </action>
   <action name="actionFAQ">
@@ -1632,6 +1611,21 @@ color: black;
   <action name="actionStop_Connection">
    <property name="text">
     <string>Stop Connection</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionSimplified_Chinese">
+   <property name="text">
+    <string>Simplified Chinese</string>
+   </property>
+  </action>
+  <action name="actionTraditional_Chinese">
+   <property name="text">
+    <string>Traditional_Chinese</string>
    </property>
   </action>
  </widget>
