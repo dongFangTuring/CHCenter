@@ -39,109 +39,124 @@
         <translation>软件版本 :</translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="189"/>
+        <location filename="aboutform.ui" line="204"/>
         <source>1.0.2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="174"/>
+        <location filename="aboutform.ui" line="189"/>
         <source>-substantially improve performance of chart, 3D view</source>
         <oldsource>-improve chart and graphic performence.</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="199"/>
-        <source>1.0.1</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="204"/>
-        <source>-fix:compass, empty HI221 Dongle</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="209"/>
-        <source>1.0.0</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="219"/>
-        <source>0.9.0</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="239"/>
-        <source>0.2.0</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="249"/>
-        <source>0.1.0</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="214"/>
+        <source>1.0.1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="219"/>
+        <source>-fix:compass, empty HI221 Dongle</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="224"/>
+        <source>1.0.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="234"/>
+        <source>0.9.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="254"/>
+        <source>0.2.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="264"/>
+        <source>0.1.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="229"/>
         <source>-chart : you can track where you want to zoom</source>
         <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="144"/>
-        <location filename="aboutform.ui" line="169"/>
+        <location filename="aboutform.ui" line="184"/>
         <source>1.1.0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="169"/>
+        <source>1.2.0</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="174"/>
+        <source>-ui redesigned</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="179"/>
-        <source>-add : detection of disconnection, wrong Baud</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="aboutform.ui" line="184"/>
-        <source>-ui : able to open multi-windows</source>
-        <translation type="unfinished"></translation>
+        <source>-modbus adaptation</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="aboutform.ui" line="194"/>
-        <source>-improve chart and graphic performance</source>
-        <translation type="unfinished"></translation>
+        <source>-add : detection of disconnection, wrong Baud</source>
+        <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="224"/>
+        <location filename="aboutform.ui" line="199"/>
+        <source>-ui : able to open multi-windows</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="209"/>
+        <source>-improve chart and graphic performance</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="aboutform.ui" line="239"/>
         <source>-fix some bugs</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="229"/>
+        <location filename="aboutform.ui" line="244"/>
         <source>-zoom and move chart </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="234"/>
+        <location filename="aboutform.ui" line="249"/>
         <source>-add About, FAQ page</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="244"/>
+        <location filename="aboutform.ui" line="259"/>
         <source>-add chart</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="254"/>
+        <location filename="aboutform.ui" line="269"/>
         <source>-initial release</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="259"/>
+        <location filename="aboutform.ui" line="274"/>
         <source>-logger, setting, 3D, data display</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="264"/>
+        <location filename="aboutform.ui" line="279"/>
         <source>-support all products</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="aboutform.ui" line="284"/>
+        <location filename="aboutform.ui" line="299"/>
         <source>Copy right HiPNUC 2021. GNU GPLv3.</source>
         <translation></translation>
     </message>
@@ -159,245 +174,218 @@
         <translation>CH Center</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1549"/>
+        <location filename="baseform.ui" line="1278"/>
         <source>Tools</source>
         <translation>工具</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1557"/>
+        <location filename="baseform.ui" line="1286"/>
         <source>Connect</source>
         <oldsource>Connect </oldsource>
         <translation>连接设备</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1565"/>
+        <location filename="baseform.ui" line="1294"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>帮助</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1592"/>
+        <location filename="baseform.ui" line="1301"/>
+        <source>Charts</source>
+        <translation>图表</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="1332"/>
         <source>3D View</source>
         <translation>3D姿态</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1597"/>
+        <location filename="baseform.ui" line="1337"/>
         <source>CSV Logger</source>
         <translation>数据记录</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1602"/>
+        <location filename="baseform.ui" line="1342"/>
         <source>Device Setting</source>
         <translation>配置模块</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="215"/>
+        <location filename="baseform.ui" line="336"/>
+        <location filename="baseform.ui" line="1372"/>
+        <source>Linear Accelaration (g)</source>
+        <oldsource>Linear Acceleration</oldsource>
+        <translation>加速度 (g)</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="503"/>
+        <location filename="baseform.ui" line="1377"/>
+        <source>Gyroscope (°/s)</source>
+        <oldsource>Gyroscope</oldsource>
+        <translation type="unfinished">角速度 (°/s)</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="670"/>
+        <location filename="baseform.ui" line="1382"/>
+        <source>Magnetometer (μT)</source>
+        <oldsource>Magnetometer</oldsource>
+        <translation>磁场計 (μT)</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="837"/>
+        <location filename="baseform.ui" line="1387"/>
+        <source>Euler Angle (°)</source>
+        <oldsource>Euler Angle</oldsource>
+        <translation>欧拉角 (°)</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="1007"/>
+        <location filename="baseform.ui" line="1392"/>
+        <source>Quaternion</source>
+        <translation>四元数</translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="205"/>
         <source>Data Protocol = </source>
         <translatorcomment>传输协议 = </translatorcomment>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="108"/>
+        <location filename="baseform.ui" line="83"/>
         <source>Attitude Indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>仪表板</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="143"/>
+        <location filename="baseform.ui" line="133"/>
         <source>Streaming Informaion</source>
-        <translation type="unfinished"></translation>
+        <translation>串流信息</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="242"/>
+        <location filename="baseform.ui" line="232"/>
         <source>Frame Rate : </source>
         <oldsource>Frame Rate = 0 Hz</oldsource>
         <translation>幀率 : </translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="267"/>
+        <location filename="baseform.ui" line="257"/>
         <source>0 Hz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="304"/>
+        <location filename="baseform.ui" line="294"/>
         <source>ID = 0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="363"/>
-        <source>Raw Data</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="394"/>
-        <source>Linear Accelaration (g)</source>
-        <translation>加速度 (g)</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="435"/>
-        <source>X= </source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="454"/>
-        <location filename="baseform.ui" line="483"/>
-        <location filename="baseform.ui" line="518"/>
-        <location filename="baseform.ui" line="677"/>
-        <location filename="baseform.ui" line="699"/>
+        <location filename="baseform.ui" line="387"/>
+        <location filename="baseform.ui" line="422"/>
+        <location filename="baseform.ui" line="457"/>
+        <location filename="baseform.ui" line="554"/>
+        <location filename="baseform.ui" line="589"/>
+        <location filename="baseform.ui" line="624"/>
         <location filename="baseform.ui" line="721"/>
-        <location filename="baseform.ui" line="883"/>
-        <location filename="baseform.ui" line="905"/>
-        <location filename="baseform.ui" line="927"/>
-        <location filename="baseform.ui" line="1125"/>
-        <location filename="baseform.ui" line="1147"/>
+        <location filename="baseform.ui" line="756"/>
+        <location filename="baseform.ui" line="791"/>
+        <location filename="baseform.ui" line="888"/>
+        <location filename="baseform.ui" line="923"/>
+        <location filename="baseform.ui" line="958"/>
+        <location filename="baseform.ui" line="1058"/>
+        <location filename="baseform.ui" line="1093"/>
+        <location filename="baseform.ui" line="1128"/>
         <location filename="baseform.ui" line="1169"/>
-        <location filename="baseform.ui" line="1335"/>
-        <location filename="baseform.ui" line="1357"/>
-        <location filename="baseform.ui" line="1379"/>
-        <location filename="baseform.ui" line="1401"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="464"/>
-        <source>Y= </source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="499"/>
-        <source>Z= </source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="603"/>
-        <source>Gyroscope (°/s)</source>
-        <oldsource>Gyroscope (°/s)     </oldsource>
-        <translation>陀螺仪 (角速度(°/s))</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="644"/>
-        <location filename="baseform.ui" line="850"/>
-        <location filename="baseform.ui" line="1289"/>
+        <location filename="baseform.ui" line="368"/>
+        <location filename="baseform.ui" line="535"/>
+        <location filename="baseform.ui" line="702"/>
+        <location filename="baseform.ui" line="1039"/>
         <source>X=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="651"/>
-        <location filename="baseform.ui" line="857"/>
-        <location filename="baseform.ui" line="1303"/>
+        <location filename="baseform.ui" line="403"/>
+        <location filename="baseform.ui" line="570"/>
+        <location filename="baseform.ui" line="737"/>
+        <location filename="baseform.ui" line="1074"/>
         <source>Y=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="658"/>
-        <location filename="baseform.ui" line="864"/>
-        <location filename="baseform.ui" line="1310"/>
+        <location filename="baseform.ui" line="438"/>
+        <location filename="baseform.ui" line="605"/>
+        <location filename="baseform.ui" line="772"/>
+        <location filename="baseform.ui" line="1109"/>
         <source>Z=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="806"/>
-        <source>Magnetometer (μT)</source>
-        <translation>磁场计 (μT)</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1026"/>
-        <source>Sensor Fusion</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1054"/>
-        <source>Euler Angle (°)</source>
-        <oldsource>Euler Angle (°)             </oldsource>
-        <translation>欧拉角 (°)</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1092"/>
+        <location filename="baseform.ui" line="869"/>
         <source>Roll=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1099"/>
+        <location filename="baseform.ui" line="904"/>
         <source>Pitch=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1106"/>
+        <location filename="baseform.ui" line="939"/>
         <source>Yaw=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1257"/>
-        <source>Quaterinion</source>
-        <oldsource>Quaterinion (norm)</oldsource>
-        <translation>四元数</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1296"/>
+        <location filename="baseform.ui" line="1144"/>
         <source>W=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1511"/>
+        <location filename="baseform.ui" line="1240"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <source>Others</source>
-        <translation type="vanished">其他</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1627"/>
+        <location filename="baseform.ui" line="1367"/>
         <source>Traditional_Chinese</source>
-        <translation type="unfinished"></translation>
+        <translation>繁體中文</translation>
     </message>
     <message>
-        <source>Window</source>
-        <translation type="vanished">窗口</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1541"/>
+        <location filename="baseform.ui" line="1270"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <source>Description</source>
-        <translation type="vanished">说明</translation>
-    </message>
-    <message>
-        <source>Traditional Chinese</source>
-        <translation type="vanished">繁體中文</translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1622"/>
+        <location filename="baseform.ui" line="1362"/>
         <source>Simplified Chinese</source>
         <translation>简体中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1577"/>
+        <location filename="baseform.ui" line="1317"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1607"/>
+        <location filename="baseform.ui" line="1347"/>
         <source>Serial Port</source>
         <translation>选择串口</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1612"/>
+        <location filename="baseform.ui" line="1352"/>
         <source>Stop Connection</source>
         <translation>断开串口连接</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1617"/>
+        <location filename="baseform.ui" line="1357"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1582"/>
+        <location filename="baseform.ui" line="1322"/>
         <source>FAQ</source>
         <translation>FAQ</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1587"/>
+        <location filename="baseform.ui" line="1327"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
@@ -455,10 +443,6 @@
         <translation>数据串流中...</translation>
     </message>
     <message>
-        <source>Please restart the device to take effect, and connect with new Baudrate.</source>
-        <translation type="vanished">请重启设备以生效，并以新的波特率重新连接。</translation>
-    </message>
-    <message>
         <location filename="baseform.cpp" line="350"/>
         <source>Data decoded error. Check if the Baudrate correct.</source>
         <translation>数据解码错误，请检查连接波特率是否正确。</translation>
@@ -466,24 +450,24 @@
     <message>
         <location filename="baseform.cpp" line="376"/>
         <source>ID = %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="458"/>
+        <location filename="baseform.cpp" line="477"/>
         <source>Data Protocol = %1</source>
         <translation>数据协议 = %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="518"/>
-        <location filename="baseform.cpp" line="534"/>
-        <location filename="baseform.cpp" line="551"/>
+        <location filename="baseform.cpp" line="537"/>
+        <location filename="baseform.cpp" line="553"/>
+        <location filename="baseform.cpp" line="570"/>
         <source>Please restart software to activate new language.</source>
         <translation>请重启本程序以套用新语言。</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="518"/>
-        <location filename="baseform.cpp" line="534"/>
-        <location filename="baseform.cpp" line="551"/>
+        <location filename="baseform.cpp" line="537"/>
+        <location filename="baseform.cpp" line="553"/>
+        <location filename="baseform.cpp" line="570"/>
         <source>Information</source>
         <translation>提醒</translation>
     </message>
@@ -529,21 +513,9 @@
         <translation></translation>
     </message>
     <message>
-        <source>Received Message</source>
-        <translation type="vanished">接收区</translation>
-    </message>
-    <message>
-        <source>AT Command</source>
-        <translation type="vanished">AT 指令</translation>
-    </message>
-    <message>
         <location filename="chsettingform.ui" line="178"/>
         <source>Baud</source>
         <translation>波特率</translation>
-    </message>
-    <message>
-        <source>Advanced Settings</source>
-        <translation type="vanished">进阶设定</translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="200"/>
@@ -575,7 +547,7 @@
     <message>
         <location filename="chsettingform.ui" line="209"/>
         <source>115200</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="219"/>
@@ -591,59 +563,59 @@
         <location filename="chsettingform.ui" line="243"/>
         <location filename="chsettingform.ui" line="247"/>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="252"/>
         <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="125"/>
         <source>Save &amp;&amp; Apply</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="257"/>
         <source>10</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="262"/>
         <source>50</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="267"/>
         <source>100</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="272"/>
         <source>200</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="277"/>
         <source>400</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="285"/>
         <source>Mode</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="301"/>
         <location filename="chsettingform.ui" line="305"/>
         <source>6 Axis (VRU)</source>
         <extracomment>test comments</extracomment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="310"/>
         <source>9 Axis (AHRS)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="324"/>
@@ -653,12 +625,12 @@
     <message>
         <location filename="chsettingform.ui" line="338"/>
         <source>IMUSOL (0x91)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="343"/>
         <source>OLD</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="357"/>
@@ -694,7 +666,7 @@
     <message>
         <location filename="chsettingform.ui" line="450"/>
         <source>AT+EOUT=0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="457"/>
@@ -714,37 +686,37 @@
     <message>
         <location filename="chsettingform.ui" line="507"/>
         <source>0x90 -ID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="514"/>
         <source>0xA0 -Accelerometer (g)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="521"/>
         <source>0xB0 -Gyroscope (°/s)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="528"/>
         <source>0xC0 -Magnetometer (μT)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="535"/>
         <source>0xD0 -Euler Angle (°)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="542"/>
         <source>0xD1 -Quaternion</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="549"/>
         <source>0xF0 -Air Pressure</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.ui" line="466"/>
@@ -753,83 +725,7 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Times New Roman&apos;,&apos;Times New Roman&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quick Function</source>
-        <translation type="vanished">快捷功能</translation>
-    </message>
-    <message>
-        <source>INFO</source>
-        <translation type="vanished">模块信息</translation>
-    </message>
-    <message>
-        <source>6 axis mode</source>
-        <translation type="vanished">设为六轴模式</translation>
-    </message>
-    <message>
-        <source>9 axis mode</source>
-        <translation type="vanished">设为九轴模式</translation>
-    </message>
-    <message>
-        <source>Stop Output</source>
-        <translation type="vanished">停止模块输出</translation>
-    </message>
-    <message>
-        <source>Restart</source>
-        <translation type="vanished">重启模块</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="vanished">幀率</translation>
-    </message>
-    <message>
-        <source>Old Protocol (All)</source>
-        <translation type="vanished">旧协议 (全部)</translation>
-    </message>
-    <message>
-        <source>Dongle ID : </source>
-        <translation type="vanished">无线 ID : </translation>
-    </message>
-    <message>
-        <source>Data Protocol</source>
-        <translation type="vanished">数据协议</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation type="vanished">ID</translation>
-    </message>
-    <message>
-        <source>Accelerometer (g)</source>
-        <translation type="vanished">加速度計 (g)</translation>
-    </message>
-    <message>
-        <source>Gyroscope (°/s)</source>
-        <translation type="vanished">陀螺仪(°/s)</translation>
-    </message>
-    <message>
-        <source>Magnetometer (μT)</source>
-        <translation type="vanished">磁场计 (μT)</translation>
-    </message>
-    <message>
-        <source>Euler Angle</source>
-        <translation type="vanished">欧拉角 (°)</translation>
-    </message>
-    <message>
-        <source>Quaternion</source>
-        <translation type="vanished">四元数</translation>
-    </message>
-    <message>
-        <source>IMUSOL (All)</source>
-        <translation type="vanished">IMUSOL (全部)</translation>
-    </message>
-    <message>
-        <source>ID Setting</source>
-        <translation type="vanished">ID 设置</translation>
-    </message>
-    <message>
-        <source>Node ID (ID) : </source>
-        <translation type="vanished">节点 ID (ID) : </translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="chsettingform.cpp" line="9"/>
@@ -837,69 +733,15 @@ p, li { white-space: pre-wrap; }
         <translation>设备设置</translation>
     </message>
     <message>
-        <location filename="chsettingform.cpp" line="137"/>
+        <location filename="chsettingform.cpp" line="240"/>
+        <location filename="chsettingform.cpp" line="245"/>
         <source>%1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="chsettingform.cpp" line="138"/>
-        <source> UUID: %1%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="chsettingform.cpp" line="179"/>
+        <location filename="chsettingform.cpp" line="114"/>
         <source>Exception: dongle param-%1,%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Do you want to save settings and restart module?</source>
-        <translation type="vanished">是否保存设置并重启模块以生效?</translation>
-    </message>
-    <message>
-        <source>Don&apos;t save</source>
-        <translation type="vanished">不保存</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation type="vanished">是</translation>
-    </message>
-    <message>
-        <source>Frame Rate = %1
-</source>
-        <translation type="vanished">幀率 = %1
-</translation>
-    </message>
-    <message>
-        <source>Baudrate = %1
-</source>
-        <translation type="vanished">波特率 =  %1
-</translation>
-    </message>
-    <message>
-        <source>Data Content = %1
-</source>
-        <translation type="vanished">数据协议 = %1
-</translation>
-    </message>
-    <message>
-        <source>Node ID = %1
-</source>
-        <translatorcomment>Node ID = %1
-</translatorcomment>
-        <translation type="vanished">节点ID = %1
-</translation>
-    </message>
-    <message>
-        <source>GWID = %1
-</source>
-        <translation type="vanished">GWID = %1
-</translation>
-    </message>
-    <message>
-        <source>Mode = %1
-</source>
-        <translation type="vanished">姿态融合模式 = %1 轴
-</translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1141,10 +983,6 @@ p, li { white-space: pre-wrap; }
         <translation>右键双击：跟随/自由拖曳 模式</translation>
     </message>
     <message>
-        <source>Auto Scale Y</source>
-        <translation type="vanished">自动调整Y轴</translation>
-    </message>
-    <message>
         <location filename="chartwindow.ui" line="64"/>
         <source>(Ctrl/Right Button) + Wheel: zoom X-axis</source>
         <translation>(Ctrl /鼠标右键)+滚轮：缩放X轴</translation>
@@ -1213,6 +1051,14 @@ p, li { white-space: pre-wrap; }
         <location filename="chartwindow.cpp" line="297"/>
         <source>Left Double Click: Follow/FreeDrag(O) mode</source>
         <translation>右键双击：跟随/自由拖曳(O) 模式</translation>
+    </message>
+</context>
+<context>
+    <name>FFTChartWindow</name>
+    <message>
+        <location filename="fftchartwindow.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

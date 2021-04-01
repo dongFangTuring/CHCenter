@@ -21,8 +21,25 @@ public:
     explicit CHSettingForm(QWidget *parent = nullptr);
     ~CHSettingForm() override;
 
-    void appendText(QString line);
+    struct CHConfig {
+        QString Setptl="";
+        QString Model="";
+        QString UUID="";
+        uint32_t ID=0;
+        int GWID=0, MaxNodeSize=0, GWFRQ=0;
+        uint16_t Bitmap=0;
+        uint16_t ODR=0;
+        uint32_t Baud=0;
+        uint32_t Mode=0;
+    };
 
+
+    void appendText(QString line);
+    CHConfig getCHConfig(){
+        on_LoadParamBTN_clicked();
+        writeCmd(0x08); /* ENABLE OUTPUT */
+        return CH_Config;
+    }
 
 public slots:
 
@@ -30,29 +47,16 @@ public slots:
 private slots:
 
     //control btn
-    void sltMdbusParamLoaded();
+    void sltMdbusParamLoaded(uint read_reg, uint reg_index);
     void on_LoadParamBTN_clicked();
     void on_RSTBTN_clicked();
     void on_BTN_clearTB_clicked();
 
     //old ptl
     void on_CB_PTL_activated(int index);
-    void on_CB_90_clicked();
-    void on_CB_A0_clicked();
-    void on_CB_B0_clicked();
-    void on_CB_C0_clicked();
-    void on_CB_D0_clicked();
-    void on_CB_D1_clicked();
-    void on_CB_F0_clicked();
 
-    //modbus cmd
-    void on_CB_ODR_activated(const QString &arg1);
-    void on_CB_Mode_activated(int index);
-    void on_CB_Baud_activated(const QString &arg1);
+    //at cmd
     void on_BTN_ATCMD_clicked();
-    void on_SB_GWID_valueChanged(int arg1);
-    void on_SB_ID_valueChanged(int arg1);
-    void on_CB_DongleParam_activated(int index);
 
 signals:
     void sigSendATcmd(QString);
@@ -64,23 +68,17 @@ protected:
     void showEvent(QShowEvent *event) override;
 private:
     Ui::CHSettingForm *ui;
-    struct CHConfig {
-        QString Setptl="";
-        QString Model="";
-        uint32_t ID=0;
-        int GWID=0, MaxNodeSize=0, GWFRQ=0;
-        uint16_t Bitmap=0;
-        uint16_t ODR=0;
-        uint32_t Baud=0;
-        uint32_t Mode=0;
-    };
 
     CHConfig CH_Config;
-    uint32_t m_modbus_param[112];
+    uint32_t tmp_cmd;
 
     void settingConfig_init();
     void identifyProduct();
-    void writeUART_CFG();
+    void uiLoadConfig();
+
+    uint32_t calcu_UART_CFG();
+    uint32_t calcu_DongleParam();
+
     void writeCmd(uint8_t cmd);
     void delay(uint32_t ms);
 

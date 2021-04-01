@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<QVector<id0x91_t>>("QVector<id0x91_t>");
     qRegisterMetaType<QByteArray>("QByteArray");
     qRegisterMetaType<int16_t>("int16_t");
-
+    qRegisterMetaType<QVector<double>>("QVector<double>");
 
 
     QSurfaceFormat fmt;

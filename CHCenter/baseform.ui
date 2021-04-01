@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>919</width>
-    <height>836</height>
+    <width>816</width>
+    <height>757</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,8 +21,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>900</width>
-    <height>836</height>
+    <width>800</width>
+    <height>750</height>
    </size>
   </property>
   <property name="mouseTracking">
@@ -76,44 +76,34 @@
         <widget class="QWidget" name="PageConnected">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <layout class="QHBoxLayout" name="DataTopBar">
-            <property name="spacing">
-             <number>20</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::MinimumExpanding</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
              <widget class="QGroupBox" name="groupBox">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="title">
                <string>Attitude Indicator</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_8">
                <item>
                 <widget class="QCompass" name="GLWidgetCompass">
                  <property name="minimumSize">
                   <size>
-                   <width>140</width>
-                   <height>140</height>
+                   <width>160</width>
+                   <height>160</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>160</width>
+                   <height>160</height>
                   </size>
                  </property>
                 </widget>
@@ -128,8 +118,14 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>140</width>
-                   <height>140</height>
+                   <width>160</width>
+                   <height>160</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>160</width>
+                   <height>160</height>
                   </size>
                  </property>
                 </widget>
@@ -139,6 +135,12 @@
             </item>
             <item>
              <widget class="QGroupBox" name="groupBox_2">
+              <property name="font">
+               <font>
+                <family>Times New Roman</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="title">
                <string>Streaming Informaion</string>
               </property>
@@ -162,7 +164,7 @@
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>160</width>
+                   <width>166666</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -313,60 +315,12 @@ color:balck;
               </layout>
              </widget>
             </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout"/>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::MinimumExpanding</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
            </layout>
-          </item>
-          <item>
-           <widget class="Line" name="line">
-            <property name="frameShadow">
-             <enum>QFrame::Plain</enum>
-            </property>
-            <property name="lineWidth">
-             <number>2</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_10">
-              <item>
-               <widget class="QLabel" name="label_12">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Raw Data</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
               <item>
                <widget class="QGroupBox" name="LabelGPAcc">
                 <property name="sizePolicy">
@@ -378,7 +332,7 @@ color:balck;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>150</height>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="font">
@@ -394,7 +348,7 @@ color:balck;
                  <string>Linear Accelaration (g)</string>
                 </property>
                 <property name="flat">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
                  <property name="spacing">
@@ -413,34 +367,25 @@ color:balck;
                   <number>9</number>
                  </property>
                  <item>
-                  <layout class="QFormLayout" name="formLayout">
-                   <property name="formAlignment">
-                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                   </property>
-                   <property name="horizontalSpacing">
-                    <number>0</number>
-                   </property>
-                   <property name="verticalSpacing">
-                    <number>10</number>
-                   </property>
-                   <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_11">
+                   <item>
                     <widget class="QLabel" name="label">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>X= </string>
+                      <string>X=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item>
                     <widget class="QLabel" name="LabelAccX">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -454,22 +399,28 @@ color:balck;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
+                   <item>
                     <widget class="QLabel" name="label_3">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
-                      <string>Y= </string>
+                      <string>Y=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
+                   <item>
                     <widget class="QLabel" name="LabelAccY">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -483,11 +434,11 @@ color:balck;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
+                   <item>
                     <widget class="QLabel" name="label_2">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -496,15 +447,15 @@ color:balck;
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>Z= </string>
+                      <string>Z=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
+                   <item>
                     <widget class="QLabel" name="LabelAccZ">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -518,63 +469,24 @@ color:balck;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <spacer name="horizontalSpacer_3">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="BTNChartAcc">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>100</height>
-                    </size>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-font-size:20px;
-background-color: white; 
-color: #1f1f1f; 
-border-width: 2px;
-border-style: solid;
-border-color: black;
-border-radius:1px;
-}
-QPushButton:hover:!pressed{
-background-color: gray;
-color: white;
-}
-QPushButton:pressed{
-background-color: white;
-color: black;
-}
-QPushButton:!enabled {
-background-color:white;
-color: black;
-}</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="resources.qrc">
-                     <normaloff>:/images/line-chart.png</normaloff>:/images/line-chart.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>80</width>
-                     <height>80</height>
-                    </size>
-                   </property>
-                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -590,7 +502,7 @@ color: black;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>150</height>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="font">
@@ -603,7 +515,7 @@ color: black;
                  <string>Gyroscope (°/s)</string>
                 </property>
                 <property name="flat">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
                  <property name="spacing">
@@ -622,17 +534,8 @@ color: black;
                   <number>9</number>
                  </property>
                  <item>
-                  <layout class="QFormLayout" name="formLayout_2">
-                   <property name="formAlignment">
-                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                   </property>
-                   <property name="horizontalSpacing">
-                    <number>0</number>
-                   </property>
-                   <property name="verticalSpacing">
-                    <number>10</number>
-                   </property>
-                   <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_12">
+                   <item>
                     <widget class="QLabel" name="label_5">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -645,69 +548,81 @@ color: black;
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
+                   <item>
+                    <widget class="QLabel" name="LabelGyroX">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="label_4">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>Y=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
+                   <item>
+                    <widget class="QLabel" name="LabelGyroY">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="label_6">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>Z=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="LabelGyroY">
-                     <property name="minimumSize">
-                      <size>
-                       <width>50</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>50</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QLabel" name="LabelGyroX">
-                     <property name="minimumSize">
-                      <size>
-                       <width>50</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>50</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
+                   <item>
                     <widget class="QLabel" name="LabelGyroZ">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -721,63 +636,24 @@ color: black;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <spacer name="horizontalSpacer_4">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="BTNChartGyr">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>100</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-font-size:20px;
-background-color: white; 
-color: #1f1f1f; 
-border-width: 2px;
-border-style: solid;
-border-color: black;
-border-radius:1px;
-}
-QPushButton:hover:!pressed{
-background-color: gray;
-color: white;
-}
-QPushButton:pressed{
-background-color: white;
-color: black;
-}
-QPushButton:!enabled {
-background-color:white;
-color: black;
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="resources.qrc">
-                     <normaloff>:/images/line-chart.png</normaloff>:/images/line-chart.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>80</width>
-                     <height>80</height>
-                    </size>
-                   </property>
-                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -793,7 +669,7 @@ color: black;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>150</height>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="font">
@@ -806,7 +682,7 @@ color: black;
                  <string>Magnetometer (μT)</string>
                 </property>
                 <property name="flat">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_6">
                  <property name="spacing">
@@ -825,20 +701,8 @@ color: black;
                   <number>9</number>
                  </property>
                  <item>
-                  <layout class="QFormLayout" name="formLayout_3">
-                   <property name="labelAlignment">
-                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                   </property>
-                   <property name="formAlignment">
-                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                   </property>
-                   <property name="horizontalSpacing">
-                    <number>0</number>
-                   </property>
-                   <property name="verticalSpacing">
-                    <number>10</number>
-                   </property>
-                   <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_13">
+                   <item>
                     <widget class="QLabel" name="label_9">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -851,69 +715,81 @@ color: black;
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
+                   <item>
+                    <widget class="QLabel" name="LabelMagX">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="label_8">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>Y=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
+                   <item>
+                    <widget class="QLabel" name="LabelMagY">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="label_7">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>Z=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="LabelMagX">
-                     <property name="minimumSize">
-                      <size>
-                       <width>50</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>50</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QLabel" name="LabelMagY">
-                     <property name="minimumSize">
-                      <size>
-                       <width>50</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>50</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
+                   <item>
                     <widget class="QLabel" name="LabelMagZ">
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -927,107 +803,26 @@ color: black;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <spacer name="horizontalSpacer_5">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
                  </item>
-                 <item>
-                  <widget class="QPushButton" name="BTNChartMag">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>100</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-font-size:20px;
-background-color: white; 
-color: #1f1f1f; 
-border-width: 2px;
-border-style: solid;
-border-color: black;
-border-radius:1px;
-}
-QPushButton:hover:!pressed{
-background-color: gray;
-color: white;
-}
-QPushButton:pressed{
-background-color: white;
-color: black;
-}
-QPushButton:!enabled {
-background-color:white;
-color: black;
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="resources.qrc">
-                     <normaloff>:/images/line-chart.png</normaloff>:/images/line-chart.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>80</width>
-                     <height>80</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
-               </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_9">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetDefaultConstraint</enum>
-              </property>
-              <item>
-               <widget class="QLabel" name="label_11">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Sensor Fusion</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
                </widget>
               </item>
               <item>
@@ -1041,7 +836,7 @@ color: black;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>150</height>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1054,7 +849,7 @@ color: black;
                  <string>Euler Angle (°)</string>
                 </property>
                 <property name="flat">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_7">
                  <property name="spacing">
@@ -1073,14 +868,8 @@ color: black;
                   <number>9</number>
                  </property>
                  <item>
-                  <layout class="QFormLayout" name="formLayout_4">
-                   <property name="horizontalSpacing">
-                    <number>0</number>
-                   </property>
-                   <property name="verticalSpacing">
-                    <number>10</number>
-                   </property>
-                   <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_14">
+                   <item>
                     <widget class="QLabel" name="label_20">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -1093,21 +882,7 @@ color: black;
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_22">
-                     <property name="text">
-                      <string>Pitch=</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_19">
-                     <property name="text">
-                      <string>Yaw=</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
+                   <item>
                     <widget class="QLabel" name="LabelEulerX">
                      <property name="minimumSize">
                       <size>
@@ -1125,11 +900,24 @@ color: black;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
+                   <item>
+                    <widget class="QLabel" name="label_22">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Pitch=</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="LabelEulerY">
                      <property name="minimumSize">
                       <size>
@@ -1147,11 +935,24 @@ color: black;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
+                   <item>
+                    <widget class="QLabel" name="label_19">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Yaw=</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="LabelEulerZ">
                      <property name="minimumSize">
                       <size>
@@ -1169,63 +970,24 @@ color: black;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <spacer name="horizontalSpacer_6">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="BTNChartEul">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>100</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-font-size:20px;
-background-color: white; 
-color: #1f1f1f; 
-border-width: 2px;
-border-style: solid;
-border-color: black;
-border-radius:1px;
-}
-QPushButton:hover:!pressed{
-background-color: gray;
-color: white;
-}
-QPushButton:pressed{
-background-color: white;
-color: black;
-}
-QPushButton:!enabled {
-background-color:white;
-color: black;
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="resources.qrc">
-                     <normaloff>:/images/line-chart.png</normaloff>:/images/line-chart.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>80</width>
-                     <height>80</height>
-                    </size>
-                   </property>
-                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -1244,7 +1006,7 @@ color: black;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>150</height>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1254,10 +1016,10 @@ color: black;
                  </font>
                 </property>
                 <property name="title">
-                 <string>Quaterinion</string>
+                 <string>Quaternion</string>
                 </property>
                 <property name="flat">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_10">
                  <property name="spacing">
@@ -1276,42 +1038,126 @@ color: black;
                   <number>9</number>
                  </property>
                  <item>
-                  <layout class="QFormLayout" name="formLayout_5">
-                   <property name="horizontalSpacing">
-                    <number>0</number>
-                   </property>
-                   <property name="verticalSpacing">
-                    <number>10</number>
-                   </property>
-                   <item row="1" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_15">
+                   <item>
                     <widget class="QLabel" name="label_26">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>X=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_27">
+                   <item>
+                    <widget class="QLabel" name="LabelQuatX">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
                      <property name="text">
-                      <string>W=</string>
+                      <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
+                   <item>
                     <widget class="QLabel" name="label_21">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>Y=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
+                   <item>
+                    <widget class="QLabel" name="LabelQuatY">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="label_31">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>Z=</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item>
+                    <widget class="QLabel" name="LabelQuatZ">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="label_27">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>W=</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="LabelQuatW">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1321,7 +1167,7 @@ color: black;
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>50</width>
+                       <width>60</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -1335,135 +1181,30 @@ color: black;
                       <string>0</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="QLabel" name="LabelQuatX">
-                     <property name="minimumSize">
+                   <item>
+                    <spacer name="horizontalSpacer_7">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
                       <size>
-                       <width>50</width>
-                       <height>0</height>
+                       <width>40</width>
+                       <height>20</height>
                       </size>
                      </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>50</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QLabel" name="LabelQuatY">
-                     <property name="minimumSize">
-                      <size>
-                       <width>50</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>50</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QLabel" name="LabelQuatZ">
-                     <property name="minimumSize">
-                      <size>
-                       <width>50</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>50</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
+                    </spacer>
                    </item>
                   </layout>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="BTNChartQuat">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>100</width>
-                     <height>100</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-font-size:20px;
-background-color: white; 
-color: #1f1f1f; 
-border-width: 2px;
-border-style: solid;
-border-color: black;
-border-radius:1px;
-}
-QPushButton:hover:!pressed{
-background-color: gray;
-color: white;
-}
-QPushButton:pressed{
-background-color: white;
-color: black;
-}
-QPushButton:!enabled {
-background-color:white;
-color: black;
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="resources.qrc">
-                     <normaloff>:/images/line-chart.png</normaloff>:/images/line-chart.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>80</width>
-                     <height>80</height>
-                    </size>
-                   </property>
-                  </widget>
                  </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <spacer name="verticalSpacer">
+               <spacer name="verticalSpacer_2">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>
@@ -1532,8 +1273,8 @@ color: black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>919</width>
-     <height>25</height>
+     <width>816</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuLanguage_2">
@@ -1567,8 +1308,19 @@ color: black;
     <addaction name="actionFAQ"/>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuCharts">
+    <property name="title">
+     <string>Charts</string>
+    </property>
+    <addaction name="actionLinear_Acceleration"/>
+    <addaction name="actionGyroscope"/>
+    <addaction name="actionMagnetometer"/>
+    <addaction name="actionEuler_Angle"/>
+    <addaction name="actionQuaternion"/>
+   </widget>
    <addaction name="menuConnect"/>
    <addaction name="menuTools"/>
+   <addaction name="menuCharts"/>
    <addaction name="menuLanguage_2"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -1627,6 +1379,31 @@ color: black;
     <string>Traditional_Chinese</string>
    </property>
   </action>
+  <action name="actionLinear_Acceleration">
+   <property name="text">
+    <string>Linear Accelaration (g)</string>
+   </property>
+  </action>
+  <action name="actionGyroscope">
+   <property name="text">
+    <string>Gyroscope (°/s)</string>
+   </property>
+  </action>
+  <action name="actionMagnetometer">
+   <property name="text">
+    <string>Magnetometer (μT)</string>
+   </property>
+  </action>
+  <action name="actionEuler_Angle">
+   <property name="text">
+    <string>Euler Angle (°)</string>
+   </property>
+  </action>
+  <action name="actionQuaternion">
+   <property name="text">
+    <string>Quaternion</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1640,8 +1417,6 @@ color: black;
    <header>attitudeindicator.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

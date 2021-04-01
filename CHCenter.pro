@@ -20,10 +20,12 @@ SOURCES += \
     CHCenter/chserialport.cpp \
     CHCenter/chsettingform.cpp \
     CHCenter/csvlogform.cpp \
+    CHCenter/fftchartwindow.cpp \
     CHCenter/main.cpp \
     CHCenter/threedform.cpp \
     kptl/kboot_protocol.cpp \
     mdbus/mdbus.cpp \
+    utilities/fft.cpp \
     utilities/imu_parser.cpp
 
 HEADERS += \
@@ -35,9 +37,11 @@ HEADERS += \
     CHCenter/chserialport.h \
     CHCenter/chsettingform.h \
     CHCenter/csvlogform.h \
+    CHCenter/fftchartwindow.h \
     CHCenter/threedform.h \
     kptl/kboot_protocol.h \
     mdbus/mdbus.h \
+    utilities/fft.h \
     utilities/imu_parser.h
 
 FORMS += \
@@ -47,6 +51,7 @@ FORMS += \
     CHCenter/chcomform.ui \
     CHCenter/chsettingform.ui \
     CHCenter/csvlogform.ui \
+    CHCenter/fftchartwindow.ui \
     CHCenter/threedform.ui
 
 TRANSLATIONS += \

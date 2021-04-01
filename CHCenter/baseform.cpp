@@ -8,7 +8,7 @@
  *
  */
 
-QString sf_version = "1.1.0"; //major.minor.bugix
+QString sf_version = "1.2.0"; //major.minor.bugix
 
 BaseForm::BaseForm(QWidget *parent)
     : QMainWindow(parent)
@@ -383,6 +383,7 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     if(content_bits & BIT_VALID_ACC) {
         if(!ui->LabelGPAcc->isVisible()) {
             ui->LabelGPAcc->setVisible(true);
+            ui->actionLinear_Acceleration->setVisible(true);
         }
         ui->LabelAccX->setText(QString::number(imu_data.acc[0], 'f', 3));
         ui->LabelAccY->setText(QString::number(imu_data.acc[1], 'f', 3));
@@ -391,52 +392,70 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     } else {
         if(ui->LabelGPAcc->isVisible()) {
             ui->LabelGPAcc->setVisible(false);
+            ui->actionLinear_Acceleration->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_GYR) {
-        if(!ui->LabelGPGyro->isVisible())
+        if(!ui->LabelGPGyro->isVisible()){
             ui->LabelGPGyro->setVisible(true);
+            ui->actionGyroscope->setVisible(true);
+        }
         ui->LabelGyroX->setText(QString::number(imu_data.gyr[0], 'f', 3));
         ui->LabelGyroY->setText(QString::number(imu_data.gyr[1], 'f', 3));
         ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2], 'f', 3));
         setptl += "B0,";
     } else {
-        if(ui->LabelGPGyro->isVisible())
+        if(ui->LabelGPGyro->isVisible()){
             ui->LabelGPGyro->setVisible(false);
+            ui->actionGyroscope->setVisible(false);
+        }
     }
     if(content_bits & BIT_VALID_MAG) {
-        if(!ui->LabelGPMag->isVisible())
+        if(!ui->LabelGPMag->isVisible()){
             ui->LabelGPMag->setVisible(true);
+            ui->actionMagnetometer->setVisible(true);
+        }
+
         ui->LabelMagX->setText(QString::number(imu_data.mag[0], 'f', 0));
         ui->LabelMagY->setText(QString::number(imu_data.mag[1], 'f', 0));
         ui->LabelMagZ->setText(QString::number(imu_data.mag[2], 'f', 0));
         setptl += "C0,";
     } else {
-        if(ui->LabelGPMag->isVisible())
+        if(ui->LabelGPMag->isVisible()){
             ui->LabelGPMag->setVisible(false);
+            ui->actionMagnetometer->setVisible(false);
+        }
     }
     if(content_bits & BIT_VALID_EUL) {
-        if(!ui->LabelGPEuler->isVisible())
+        if(!ui->LabelGPEuler->isVisible()){
             ui->LabelGPEuler->setVisible(true);
+            ui->actionEuler_Angle->setVisible(true);
+        }
         ui->LabelEulerX->setText(QString::number(imu_data.eul[0], 'f', 2));
         ui->LabelEulerY->setText(QString::number(imu_data.eul[1], 'f', 2));
         ui->LabelEulerZ->setText(QString::number(imu_data.eul[2], 'f', 2));
         setptl += "D0,";
     } else {
-        if(ui->LabelGPEuler->isVisible())
+        if(ui->LabelGPEuler->isVisible()){
             ui->LabelGPEuler->setVisible(false);
+            ui->actionEuler_Angle->setVisible(false);
+        }
     }
     if(content_bits & BIT_VALID_QUAT) {
-        if(!ui->LabelGPQuat->isVisible())
+        if(!ui->LabelGPQuat->isVisible()){
             ui->LabelGPQuat->setVisible(true);
+            ui->actionQuaternion->setVisible(true);
+        }
         ui->LabelQuatW->setText(QString::number(imu_data.quat[0], 'f', 3));
         ui->LabelQuatX->setText(QString::number(imu_data.quat[1], 'f', 3));
         ui->LabelQuatY->setText(QString::number(imu_data.quat[2], 'f', 3));
         ui->LabelQuatZ->setText(QString::number(imu_data.quat[3], 'f', 3));
         setptl += "D1,";
     } else {
-        if(ui->LabelGPQuat->isVisible())
+        if(ui->LabelGPQuat->isVisible()){
             ui->LabelGPQuat->setVisible(false);
+            ui->actionQuaternion->setVisible(false);
+        }
     }
 
     if(content_bits & BIT_VALID_TIME_STAMP) {
@@ -576,34 +595,7 @@ void BaseForm::showMessageBox(QString msg, QString title)
 
 
 
-
-///Chart BTN///
-////////////////////////////////////////////////////////////////////////////////////////
-
-void BaseForm::on_BTNChartAcc_clicked()
-{
-    m_chartAcc->show();
-}
-
-void BaseForm::on_BTNChartGyr_clicked()
-{
-    m_chartGyr->show();
-}
-
-void BaseForm::on_BTNChartMag_clicked()
-{
-    m_chartMag->show();
-}
-
-void BaseForm::on_BTNChartEul_clicked()
-{
-    m_chartEul->show();
-}
-
-void BaseForm::on_BTNChartQuat_clicked()
-{
-    m_chartQuat->show();
-}
+///tools in menubar///
 
 void BaseForm::on_action3D_view_triggered()
 {
@@ -620,4 +612,30 @@ void BaseForm::on_actionDevice_Settiing_triggered()
     ch_settingform->show();
 }
 
+
+///chart actions in menubar///
+void BaseForm::on_actionLinear_Acceleration_triggered()
+{
+    m_chartAcc->show();
+}
+
+void BaseForm::on_actionGyroscope_triggered()
+{
+    m_chartGyr->show();
+}
+
+void BaseForm::on_actionMagnetometer_triggered()
+{
+    m_chartMag->show();
+}
+
+void BaseForm::on_actionEuler_Angle_triggered()
+{
+    m_chartEul->show();
+}
+
+void BaseForm::on_actionQuaternion_triggered()
+{
+    m_chartQuat->show();
+}
 

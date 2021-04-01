@@ -3,7 +3,7 @@
 QADI::QADI(QWidget *parent)
     : QOpenGLWidget(parent)
 {
-    m_sizeMin = 140;
+    m_sizeMin = 160;
     m_sizeMax = 160;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;
@@ -216,24 +216,18 @@ void QADI::paintGL()
         painter.setFont(font_roll);
 
         for(short i=0; i<nRollLines; i++) {
-            if( i < nRollLines/2 )
-                s = QString("%1").arg(-i*rotAng);
-            else
-                s = QString("%1").arg(360-i*rotAng);
+
 
             fx1 = 0;
             fy1 = -m_size/2 + m_offset;
             fx2 = 0;
 
             if( i % 3 == 0 ) {
-                fy2 = fy1 + rollLineLeng;
+                fy2 = fy1 + rollLineLeng/2;
                 painter.drawLine(QPointF(fx1, fy1), QPointF(fx2, fy2));
 
-                fy2 = fy1 + rollLineLeng+2;
-                painter.drawText(QRectF(-50, fy2, 100, fontSize+2),
-                                 Qt::AlignCenter, s);
             } else {
-                fy2 = fy1 + rollLineLeng/2;
+                fy2 = fy1 + rollLineLeng/3;
                 painter.drawLine(QPointF(fx1, fy1), QPointF(fx2, fy2));
             }
 
@@ -241,6 +235,20 @@ void QADI::paintGL()
         }
     }
 
+    //draw roll text
+    {
+        blackPen.setWidth(1);
+        qreal dis=m_size/2-15;
+        qreal width=30;
+        painter.drawText(QRectF(-15, -dis, width, 14),
+                         Qt::AlignCenter, "0");
+        painter.drawText(QRectF(-dis, -5, width, 14),
+                         Qt::AlignCenter, "90");
+        painter.drawText(QRectF(dis-30, -5, width, 14),
+                         Qt::AlignCenter, "-90");
+        painter.drawText(QRectF(-15, dis-15, width, 14),
+                         Qt::AlignCenter, "180");
+    }
     // draw roll marker
     {
         int     rollMarkerSize = m_size/25;
@@ -277,7 +285,7 @@ QCompass::QCompass(QWidget *parent)
     : QOpenGLWidget(parent)
 {
 
-    m_sizeMin = 140;
+    m_sizeMin = 160;
     m_sizeMax = 160;
     m_offset = 2;
     m_size = m_sizeMin - 2*m_offset;

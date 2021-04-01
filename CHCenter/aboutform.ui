@@ -166,6 +166,21 @@
      </property>
      <item>
       <property name="text">
+       <string>1.2.0</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>-ui redesigned</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>-modbus adaptation</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>1.1.0</string>
       </property>
      </item>

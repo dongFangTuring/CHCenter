@@ -94,11 +94,12 @@ private slots:
 
     ///StatusBar///
     void showMessageBox(QString msg, QString title);
-    void on_BTNChartAcc_clicked();
-    void on_BTNChartGyr_clicked();
-    void on_BTNChartMag_clicked();
-    void on_BTNChartEul_clicked();
-    void on_BTNChartQuat_clicked();
+
+    void on_actionLinear_Acceleration_triggered();
+    void on_actionGyroscope_triggered();
+    void on_actionMagnetometer_triggered();
+    void on_actionEuler_Angle_triggered();
+    void on_actionQuaternion_triggered();
 
 
 private:
