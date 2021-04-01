@@ -1536,22 +1536,13 @@ color: black;
      <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuDescription">
+   <widget class="QMenu" name="menuLanguage_2">
     <property name="title">
-     <string>Others</string>
+     <string>Language</string>
     </property>
-    <widget class="QMenu" name="menuLanguage">
-     <property name="title">
-      <string>Language</string>
-     </property>
-     <addaction name="actionTraditional_Chinese"/>
-     <addaction name="actionSimplified_Chinese"/>
-     <addaction name="actionEnglish"/>
-    </widget>
-    <addaction name="menuLanguage"/>
-    <addaction name="actionFAQ"/>
-    <addaction name="actionAbout"/>
-    <addaction name="actionExit"/>
+    <addaction name="actionTraditional_Chinese"/>
+    <addaction name="actionSimplified_Chinese"/>
+    <addaction name="actionEnglish"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -1569,9 +1560,17 @@ color: black;
     <addaction name="separator"/>
     <addaction name="actionStop_Connection"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionFAQ"/>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuConnect"/>
    <addaction name="menuTools"/>
-   <addaction name="menuDescription"/>
+   <addaction name="menuLanguage_2"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionEnglish">
    <property name="text">

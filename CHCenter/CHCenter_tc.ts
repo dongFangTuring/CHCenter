@@ -159,28 +159,33 @@
         <translation>CH Center</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1558"/>
+        <location filename="baseform.ui" line="1549"/>
         <source>Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1566"/>
+        <location filename="baseform.ui" line="1557"/>
         <source>Connect</source>
         <oldsource>Connect </oldsource>
         <translation>連接設備</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1593"/>
+        <location filename="baseform.ui" line="1565"/>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="1592"/>
         <source>3D View</source>
         <translation>3D 姿態模擬</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1598"/>
+        <location filename="baseform.ui" line="1597"/>
         <source>CSV Logger</source>
         <translation>CSV 紀錄工具</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1603"/>
+        <location filename="baseform.ui" line="1602"/>
         <source>Device Setting</source>
         <translation>模組設定</translation>
     </message>
@@ -335,12 +340,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1541"/>
-        <source>Others</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="baseform.ui" line="1628"/>
+        <location filename="baseform.ui" line="1627"/>
         <source>Traditional_Chinese</source>
         <translation type="unfinished"></translation>
     </message>
@@ -349,7 +349,7 @@
         <translation type="vanished">視窗</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1545"/>
+        <location filename="baseform.ui" line="1541"/>
         <source>Language</source>
         <translation>語言</translation>
     </message>
@@ -362,37 +362,37 @@
         <translation type="vanished">繁體中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1623"/>
+        <location filename="baseform.ui" line="1622"/>
         <source>Simplified Chinese</source>
         <translation>简体中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1578"/>
+        <location filename="baseform.ui" line="1577"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1608"/>
+        <location filename="baseform.ui" line="1607"/>
         <source>Serial Port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1613"/>
+        <location filename="baseform.ui" line="1612"/>
         <source>Stop Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1618"/>
+        <location filename="baseform.ui" line="1617"/>
         <source>Exit</source>
         <translation>離開</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1583"/>
+        <location filename="baseform.ui" line="1582"/>
         <source>FAQ</source>
         <translation>常見問題</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1588"/>
+        <location filename="baseform.ui" line="1587"/>
         <source>About</source>
         <translation>關於</translation>
     </message>
