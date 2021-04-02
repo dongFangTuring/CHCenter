@@ -115,9 +115,6 @@ BaseForm::BaseForm(QWidget *parent)
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
 
-    //set page 1 as the default page
-    on_actionSerial_Port_triggered();
-
 }
 
 void BaseForm::closeEvent (QCloseEvent *event)
@@ -396,7 +393,7 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
         }
     }
     if(content_bits & BIT_VALID_GYR) {
-        if(!ui->LabelGPGyro->isVisible()){
+        if(!ui->LabelGPGyro->isVisible()) {
             ui->LabelGPGyro->setVisible(true);
             ui->actionGyroscope->setVisible(true);
         }
@@ -405,13 +402,13 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
         ui->LabelGyroZ->setText(QString::number(imu_data.gyr[2], 'f', 3));
         setptl += "B0,";
     } else {
-        if(ui->LabelGPGyro->isVisible()){
+        if(ui->LabelGPGyro->isVisible()) {
             ui->LabelGPGyro->setVisible(false);
             ui->actionGyroscope->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_MAG) {
-        if(!ui->LabelGPMag->isVisible()){
+        if(!ui->LabelGPMag->isVisible()) {
             ui->LabelGPMag->setVisible(true);
             ui->actionMagnetometer->setVisible(true);
         }
@@ -421,13 +418,13 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
         ui->LabelMagZ->setText(QString::number(imu_data.mag[2], 'f', 0));
         setptl += "C0,";
     } else {
-        if(ui->LabelGPMag->isVisible()){
+        if(ui->LabelGPMag->isVisible()) {
             ui->LabelGPMag->setVisible(false);
             ui->actionMagnetometer->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_EUL) {
-        if(!ui->LabelGPEuler->isVisible()){
+        if(!ui->LabelGPEuler->isVisible()) {
             ui->LabelGPEuler->setVisible(true);
             ui->actionEuler_Angle->setVisible(true);
         }
@@ -436,13 +433,13 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
         ui->LabelEulerZ->setText(QString::number(imu_data.eul[2], 'f', 2));
         setptl += "D0,";
     } else {
-        if(ui->LabelGPEuler->isVisible()){
+        if(ui->LabelGPEuler->isVisible()) {
             ui->LabelGPEuler->setVisible(false);
             ui->actionEuler_Angle->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_QUAT) {
-        if(!ui->LabelGPQuat->isVisible()){
+        if(!ui->LabelGPQuat->isVisible()) {
             ui->LabelGPQuat->setVisible(true);
             ui->actionQuaternion->setVisible(true);
         }
@@ -452,7 +449,7 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
         ui->LabelQuatZ->setText(QString::number(imu_data.quat[3], 'f', 3));
         setptl += "D1,";
     } else {
-        if(ui->LabelGPQuat->isVisible()){
+        if(ui->LabelGPQuat->isVisible()) {
             ui->LabelGPQuat->setVisible(false);
             ui->actionQuaternion->setVisible(false);
         }
