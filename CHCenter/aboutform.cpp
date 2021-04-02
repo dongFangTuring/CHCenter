@@ -26,10 +26,12 @@ void AboutForm::setLabelVersion(QString sf_version)
 
 void AboutForm::on_LabelWeb_linkActivated(const QString &link)
 {
+    Q_UNUSED(&link);
     QDesktopServices::openUrl(QUrl("https://hipnuc.com"));
 }
 
 void AboutForm::on_LabelWeb2_linkActivated(const QString &link)
 {
+    Q_UNUSED(&link);
     QDesktopServices::openUrl(QUrl("https://hipnuc.com/datahub.html"));
 }
