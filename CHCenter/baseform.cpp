@@ -34,14 +34,7 @@ BaseForm::BaseForm(QWidget *parent)
     ui->DongleNodeList->setVisible(false);
 
 
-    ch_comform = new CHComForm(this);
-    ch_comform->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-
-    //get BTN signal from comport selecting form
-    connect(ch_comform, SIGNAL(sig_port_ok(QString, int)), this, SLOT(getsigPortChose(QString, int)));
-    connect(ch_comform, SIGNAL(sig_port_cancel()), this, SLOT(getsigPortCancle()));
-
-
+    ch_comform = new form_com_slect(this);
     ch_serialport = new CHSerialport(nullptr);
 
     //get data from ch_serialport class
@@ -113,8 +106,6 @@ BaseForm::BaseForm(QWidget *parent)
     statusbar_msg.current_status = tr("Unconnected");
     statusbar_msg.sw_version = tr("Software Version : %1").arg(sf_version);
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-
-
 }
 
 void BaseForm::closeEvent (QCloseEvent *event)
@@ -122,8 +113,6 @@ void BaseForm::closeEvent (QCloseEvent *event)
 
     ch_serialport->closePort();
 
-    //serial port
-    ch_comform->close();
 
     ch_settingform->close();
     ch_threeDform->close();
@@ -153,17 +142,29 @@ BaseForm::~BaseForm()
  */
 void BaseForm::on_actionSerial_Port_triggered()
 {
-    if(!ch_serialport->PortIsOpened()) {
-        ch_comform->show();
+    if(!ch_serialport->isOpen())
+    {
+        if (ch_comform->exec() == QDialog::Accepted)
+        {
+            ch_serialport->linkCHdevices(ch_comform->port_name, ch_comform->baud);
 
-        QVector<id0x91_t> a;
-        updateDongleNodeList(false, a);
+            statusbar_msg.baudrate = QString::number(ch_comform->baud);
+            statusbar_msg.port = ch_comform->port_name;
+            statusbar_msg.current_status = tr("Connecting...");
+            statusbar_msg.sw_version = "";
+            ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
+
+            QVector<id0x91_t> a;
+            updateDongleNodeList(false, a);
+        }
+
+
     }
 }
 
 void BaseForm::on_actionStop_Connection_triggered()
 {
-    if(ch_serialport->PortIsOpened()) {
+    if(ch_serialport->isOpen()) {
         ch_serialport->closePort();
 
         QVector<id0x91_t> a;
@@ -223,33 +224,6 @@ void BaseForm::on_DongleNodeList_itemClicked(QListWidgetItem *item)
     cur_dongle_nodeIndex = ui->DongleNodeList->currentRow();
 }
 
-///signal from ch_comform ui///
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-
-
-/**
- * @brief BaseForm::rec_port_chose -
- * linking to CH device, if port can't opened, thead will be stop and pop up an error message.
- * 1.sigPortOpened():getsigPortOpened() and start sigSendData()
- * 2.errorOpenPort():call geterrorOpenPort()
- */
-void BaseForm::getsigPortChose(QString port_name, int baudrate)
-{
-    ch_comform->hide();
-    ch_serialport->linkCHdevices(port_name, baudrate);
-
-    statusbar_msg.baudrate = QString::number(baudrate);
-    statusbar_msg.port = port_name;
-    statusbar_msg.current_status = tr("Connecting...");
-    statusbar_msg.sw_version = "";
-    ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
-}
-
-void BaseForm::getsigPortCancle()
-{
-    ch_comform->close();
-}
 
 
 ///signal from chserial class///
@@ -259,17 +233,12 @@ void BaseForm::getsigPortCancle()
 void BaseForm::geterrorOpenPort()
 {
     showMessageBox(tr("Cannot build connection"), tr("Error"));
-
-    ch_comform->show();
-
     statusbar_msg.current_status = tr("Cannot build connection. Please check the selected port again");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());
 
 }
 void BaseForm::getsigPortOpened()
 {
-    ch_comform->hide();
-
     //statusbar
     statusbar_msg.current_status = tr("Streaming...");
     ui->LabelStatusMsg->setText(statusbar_msg.getMsg());

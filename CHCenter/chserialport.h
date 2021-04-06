@@ -16,7 +16,7 @@
 #include "mdbus/mdbus.h"
 
 
-class CHSerialport : public QObject
+class CHSerialport : public QSerialPort
 {
     Q_OBJECT
 
@@ -26,9 +26,6 @@ public:
     ~CHSerialport() override;
 
 
-    bool PortIsOpened(){
-        return CH_serial->isOpen();
-    }
 
     uint Frame_rate=0;
 

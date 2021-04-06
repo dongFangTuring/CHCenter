@@ -90,7 +90,7 @@ background-color: grey;
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resources.qrc">
+            <iconset>
              <normaloff>:/images/refreshing.png</normaloff>:/images/refreshing.png</iconset>
            </property>
            <property name="iconSize">
@@ -131,7 +131,7 @@ background-color: grey;
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resources.qrc">
+            <iconset>
              <normaloff>:/images/ok.png</normaloff>:/images/ok.png</iconset>
            </property>
            <property name="iconSize">
@@ -172,7 +172,7 @@ background-color: grey;
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resources.qrc">
+            <iconset>
              <normaloff>:/images/cancel.png</normaloff>:/images/cancel.png</iconset>
            </property>
            <property name="iconSize">
@@ -190,11 +190,17 @@ background-color: grey;
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="LabelSelected">
-         <property name="text">
-          <string>Selected :</string>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-        </widget>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <widget class="QLabel" name="LabelBaud">
@@ -225,8 +231,6 @@ background-color: grey;
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

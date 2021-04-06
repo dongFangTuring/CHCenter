@@ -8,7 +8,7 @@
 #include <QGraphicsScene>
 
 
-#include "chcomform.h"
+#include "form_com_select.h"
 #include "chserialport.h"
 #include "attitudeindicator.h"
 #include "chsettingform.h"
@@ -57,9 +57,6 @@ private slots:
     void updateDongleNodeList(bool, QVector<id0x91_t>);
     void on_DongleNodeList_itemClicked(QListWidgetItem *item);
 
-    ///signal from CHComForm ui///
-    void getsigPortChose(QString port_name,int baudrate);
-    void getsigPortCancle();
 
     ///signal from CHSerialPort class///
     void geterrorOpenPort();
@@ -120,7 +117,7 @@ private:
     QCompass *m_Compass;
 
     //serial port
-    CHComForm *ch_comform;
+    form_com_slect *ch_comform;
     CHSerialport *ch_serialport;
     int cur_dongle_nodeID=0;
     int cur_dongle_nodeIndex;

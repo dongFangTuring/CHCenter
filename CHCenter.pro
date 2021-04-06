@@ -16,11 +16,11 @@ SOURCES += \
     CHCenter/attitudeindicator.cpp \
     CHCenter/baseform.cpp \
     CHCenter/chartwindow.cpp \
-    CHCenter/chcomform.cpp \
     CHCenter/chserialport.cpp \
     CHCenter/chsettingform.cpp \
     CHCenter/csvlogform.cpp \
     CHCenter/fftchartwindow.cpp \
+    CHCenter/form_com_select.cpp \
     CHCenter/main.cpp \
     CHCenter/threedform.cpp \
     kptl/kboot_protocol.cpp \
@@ -33,11 +33,11 @@ HEADERS += \
     CHCenter/attitudeindicator.h \
     CHCenter/baseform.h\
     CHCenter/chartwindow.h \
-    CHCenter/chcomform.h \
     CHCenter/chserialport.h \
     CHCenter/chsettingform.h \
     CHCenter/csvlogform.h \
     CHCenter/fftchartwindow.h \
+    CHCenter/form_com_select.h \
     CHCenter/threedform.h \
     kptl/kboot_protocol.h \
     mdbus/mdbus.h \
@@ -48,10 +48,10 @@ FORMS += \
     CHCenter/aboutform.ui \
     CHCenter/baseform.ui \
     CHCenter/chartwindow.ui \
-    CHCenter/chcomform.ui \
     CHCenter/chsettingform.ui \
     CHCenter/csvlogform.ui \
     CHCenter/fftchartwindow.ui \
+    CHCenter/form_com_select.ui \
     CHCenter/threedform.ui
 
 TRANSLATIONS += \

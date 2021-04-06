@@ -49,7 +49,6 @@ public:
     explicit imu_parser(QObject *parent = nullptr);
     uint32_t bitmap;
 
-
     void parse(QByteArray &ba);
 
     id0x91_t        dev[MAX_NODE_SIZE];       /* dev[0] is filled when single IMU connected */

@@ -1,6 +1,6 @@
 #include "chserialport.h"
 
-CHSerialport::CHSerialport(QObject *parent) : QObject(parent)
+CHSerialport::CHSerialport(QObject *parent) : QSerialPort(parent)
 {
     //this->setParent(nullptr); this is unnecessary
     m_thread = new QThread();
@@ -112,10 +112,11 @@ void CHSerialport::countFrameRate()
 {
 
     mutex_writing.lock();
-    Frame_rate=m_frame_counter;
-    m_frame_counter=0;
+    Frame_rate = m_frame_counter;
+    m_frame_counter = 0;
     mutex_writing.unlock();
-    if(Frame_rate==0) {
+    if(Frame_rate == 0)
+    {
         checkPortStatus();
     }
 
