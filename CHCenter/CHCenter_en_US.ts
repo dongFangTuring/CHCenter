@@ -174,232 +174,236 @@
         <translation>CH Center</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1278"/>
+        <location filename="baseform.ui" line="1290"/>
         <source>Tools</source>
         <translation>Tools</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1286"/>
+        <location filename="baseform.ui" line="1298"/>
         <source>Connect</source>
         <oldsource>Connect </oldsource>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1294"/>
+        <location filename="baseform.ui" line="1306"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1332"/>
+        <location filename="baseform.ui" line="1344"/>
         <source>3D View</source>
         <translation>3D View</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1337"/>
+        <location filename="baseform.ui" line="1349"/>
         <source>CSV Logger</source>
         <translation>CSV Logger</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1342"/>
+        <location filename="baseform.ui" line="1354"/>
         <source>Device Setting</source>
         <translation>Device Setting</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="205"/>
+        <location filename="baseform.ui" line="217"/>
         <source>Data Protocol = </source>
         <translation>Data Protocol = </translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="83"/>
+        <location filename="baseform.ui" line="89"/>
         <source>Attitude Indicator</source>
         <translation>Attitude Indicator</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="133"/>
+        <location filename="baseform.ui" line="145"/>
         <source>Streaming Informaion</source>
         <translation>Streaming Informaion</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="232"/>
+        <location filename="baseform.ui" line="244"/>
         <source>Frame Rate : </source>
         <oldsource>Frame Rate = 0 Hz</oldsource>
         <translation>Frame Rate : </translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="257"/>
+        <location filename="baseform.ui" line="269"/>
         <source>0 Hz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="294"/>
+        <location filename="baseform.ui" line="306"/>
         <source>ID = 0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="336"/>
-        <location filename="baseform.ui" line="1372"/>
+        <location filename="baseform.ui" line="348"/>
+        <location filename="baseform.ui" line="1384"/>
         <source>Linear Accelaration (g)</source>
         <translation>Linear Accelaration (g)</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="387"/>
-        <location filename="baseform.ui" line="422"/>
-        <location filename="baseform.ui" line="457"/>
-        <location filename="baseform.ui" line="554"/>
-        <location filename="baseform.ui" line="589"/>
-        <location filename="baseform.ui" line="624"/>
-        <location filename="baseform.ui" line="721"/>
-        <location filename="baseform.ui" line="756"/>
-        <location filename="baseform.ui" line="791"/>
-        <location filename="baseform.ui" line="888"/>
-        <location filename="baseform.ui" line="923"/>
-        <location filename="baseform.ui" line="958"/>
-        <location filename="baseform.ui" line="1058"/>
-        <location filename="baseform.ui" line="1093"/>
-        <location filename="baseform.ui" line="1128"/>
-        <location filename="baseform.ui" line="1169"/>
+        <location filename="baseform.ui" line="399"/>
+        <location filename="baseform.ui" line="434"/>
+        <location filename="baseform.ui" line="469"/>
+        <location filename="baseform.ui" line="566"/>
+        <location filename="baseform.ui" line="601"/>
+        <location filename="baseform.ui" line="636"/>
+        <location filename="baseform.ui" line="733"/>
+        <location filename="baseform.ui" line="768"/>
+        <location filename="baseform.ui" line="803"/>
+        <location filename="baseform.ui" line="900"/>
+        <location filename="baseform.ui" line="935"/>
+        <location filename="baseform.ui" line="970"/>
+        <location filename="baseform.ui" line="1070"/>
+        <location filename="baseform.ui" line="1105"/>
+        <location filename="baseform.ui" line="1140"/>
+        <location filename="baseform.ui" line="1181"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="503"/>
-        <location filename="baseform.ui" line="1377"/>
+        <location filename="baseform.ui" line="515"/>
+        <location filename="baseform.ui" line="1389"/>
         <source>Gyroscope (°/s)</source>
         <oldsource>Gyroscope (°/s)     </oldsource>
         <translation>Gyroscope (°/s)</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="368"/>
-        <location filename="baseform.ui" line="535"/>
-        <location filename="baseform.ui" line="702"/>
-        <location filename="baseform.ui" line="1039"/>
+        <location filename="baseform.ui" line="380"/>
+        <location filename="baseform.ui" line="547"/>
+        <location filename="baseform.ui" line="714"/>
+        <location filename="baseform.ui" line="1051"/>
         <source>X=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="403"/>
-        <location filename="baseform.ui" line="570"/>
-        <location filename="baseform.ui" line="737"/>
-        <location filename="baseform.ui" line="1074"/>
+        <location filename="baseform.ui" line="415"/>
+        <location filename="baseform.ui" line="582"/>
+        <location filename="baseform.ui" line="749"/>
+        <location filename="baseform.ui" line="1086"/>
         <source>Y=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="438"/>
-        <location filename="baseform.ui" line="605"/>
-        <location filename="baseform.ui" line="772"/>
-        <location filename="baseform.ui" line="1109"/>
+        <location filename="baseform.ui" line="450"/>
+        <location filename="baseform.ui" line="617"/>
+        <location filename="baseform.ui" line="784"/>
+        <location filename="baseform.ui" line="1121"/>
         <source>Z=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="670"/>
-        <location filename="baseform.ui" line="1382"/>
+        <location filename="baseform.ui" line="682"/>
+        <location filename="baseform.ui" line="1394"/>
         <source>Magnetometer (μT)</source>
         <translation>Magnetometer (μT)</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="837"/>
-        <location filename="baseform.ui" line="1387"/>
+        <location filename="baseform.ui" line="849"/>
+        <location filename="baseform.ui" line="1399"/>
         <source>Euler Angle (°)</source>
         <oldsource>Euler Angle (°)             </oldsource>
         <translation>Euler Angle (°)</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="869"/>
+        <location filename="baseform.ui" line="881"/>
         <source>Roll=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="904"/>
+        <location filename="baseform.ui" line="916"/>
         <source>Pitch=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="939"/>
+        <location filename="baseform.ui" line="951"/>
         <source>Yaw=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1007"/>
-        <location filename="baseform.ui" line="1392"/>
+        <location filename="baseform.ui" line="1019"/>
+        <location filename="baseform.ui" line="1404"/>
         <source>Quaternion</source>
         <oldsource>Quaterinion</oldsource>
         <translation>Quaterinion</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1144"/>
+        <location filename="baseform.ui" line="1156"/>
         <source>W=</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1240"/>
+        <location filename="baseform.ui" line="1252"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1301"/>
+        <location filename="baseform.ui" line="1313"/>
         <source>Charts</source>
         <translation>Charts</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1367"/>
+        <location filename="baseform.ui" line="1334"/>
+        <source>Webside</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="baseform.ui" line="1379"/>
         <source>Traditional_Chinese</source>
         <translation>Traditional_Chinese</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1270"/>
+        <location filename="baseform.ui" line="1282"/>
         <source>Language</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1362"/>
+        <location filename="baseform.ui" line="1374"/>
         <source>Simplified Chinese</source>
         <translation>简体中文</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1317"/>
+        <location filename="baseform.ui" line="1329"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1347"/>
+        <location filename="baseform.ui" line="1359"/>
         <source>Serial Port</source>
         <translation>Serial Port</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1352"/>
+        <location filename="baseform.ui" line="1364"/>
         <source>Stop Connection</source>
         <translation>Stop Connection</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1357"/>
+        <location filename="baseform.ui" line="1369"/>
         <source>Exit</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1322"/>
         <source>FAQ</source>
-        <translation>FAQ</translation>
+        <translation type="vanished">FAQ</translation>
     </message>
     <message>
-        <location filename="baseform.ui" line="1327"/>
+        <location filename="baseform.ui" line="1339"/>
         <source>About</source>
         <translation>About</translation>
     </message>
     <message>
         <location filename="baseform.cpp" line="113"/>
-        <location filename="baseform.cpp" line="291"/>
+        <location filename="baseform.cpp" line="288"/>
         <source>Unconnected</source>
         <translation>Unconnected</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="192"/>
+        <location filename="baseform.cpp" line="189"/>
         <source>No node is online.</source>
         <translation>No node is online.</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="199"/>
+        <location filename="baseform.cpp" line="196"/>
         <source>Wireless Node ID : %1</source>
         <translation>Wireless Node ID : %1</translation>
     </message>
@@ -411,61 +415,61 @@
     </message>
     <message>
         <location filename="baseform.cpp" line="114"/>
-        <location filename="baseform.cpp" line="292"/>
+        <location filename="baseform.cpp" line="289"/>
         <source>Software Version : %1</source>
         <translation>Software Version : %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="247"/>
+        <location filename="baseform.cpp" line="244"/>
         <source>Connecting...</source>
         <translation>Connecting...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="264"/>
+        <location filename="baseform.cpp" line="261"/>
         <source>Cannot build connection</source>
         <translation>Cannot build connection</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="264"/>
+        <location filename="baseform.cpp" line="261"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="268"/>
+        <location filename="baseform.cpp" line="265"/>
         <source>Cannot build connection. Please check the selected port again</source>
         <translation>Cannot build connection. Please check the selected port again.</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="277"/>
+        <location filename="baseform.cpp" line="274"/>
         <source>Streaming...</source>
         <translation>Streaming...</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="350"/>
+        <location filename="baseform.cpp" line="347"/>
         <source>Data decoded error. Check if the Baudrate correct.</source>
         <translation>Data decoded error. Check if the Baudrate correct.</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="376"/>
+        <location filename="baseform.cpp" line="373"/>
         <source>ID = %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="477"/>
+        <location filename="baseform.cpp" line="474"/>
         <source>Data Protocol = %1</source>
         <translation>Data Protocol = %1</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="537"/>
-        <location filename="baseform.cpp" line="553"/>
-        <location filename="baseform.cpp" line="570"/>
+        <location filename="baseform.cpp" line="534"/>
+        <location filename="baseform.cpp" line="550"/>
+        <location filename="baseform.cpp" line="567"/>
         <source>Please restart software to activate new language.</source>
         <translation>Please restart CHCenter to activate the new language.</translation>
     </message>
     <message>
-        <location filename="baseform.cpp" line="537"/>
-        <location filename="baseform.cpp" line="553"/>
-        <location filename="baseform.cpp" line="570"/>
+        <location filename="baseform.cpp" line="534"/>
+        <location filename="baseform.cpp" line="550"/>
+        <location filename="baseform.cpp" line="567"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>

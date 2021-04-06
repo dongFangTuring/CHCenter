@@ -8,7 +8,7 @@ typedef struct
 {
     uint8_t     tag;                /* 0x91 */
     uint8_t     id;
-    uint8_t     rev[6];             /* reserved */
+    int16_t     pos[3];              /* HP pos, used for short time posation tracking, cannot used for navigation */
     uint32_t    ts;                 /* timestamp */
     float       acc[3];
     float       gyr[3];

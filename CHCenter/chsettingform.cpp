@@ -1,6 +1,7 @@
 #include "chsettingform.h"
 #include "ui_chsettingform.h"
 #include <QAbstractButton>
+
 CHSettingForm::CHSettingForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CHSettingForm)
@@ -9,7 +10,7 @@ CHSettingForm::CHSettingForm(QWidget *parent) :
     this->setWindowTitle(tr("Device Settings"));
 
     //in cmd box press enter = click atcmd btn
-    connect(ui->LE_ATCMD,SIGNAL(returnPressed()),ui->BTN_ATCMD, SLOT(click()));
+    connect(ui->LE_ATCMD, SIGNAL(returnPressed()), ui->BTN_ATCMD, SLOT(click()));
 }
 
 CHSettingForm::~CHSettingForm()
@@ -34,6 +35,7 @@ void CHSettingForm::closeEvent(QCloseEvent *event)
 
 void CHSettingForm::showEvent(QShowEvent *event)
 {
+    Q_UNUSED(event);
     settingConfig_init();
 }
 
@@ -58,7 +60,7 @@ void CHSettingForm::settingConfig_init()
 
     //delay 100ms to clear text
     QEventLoop eventloop;
-    QTimer::singleShot(100, &eventloop, SLOT(quit()));
+    QTimer::singleShot(20, &eventloop, SLOT(quit()));
     eventloop.exec();
     ui->TB_Termial->clear();
 
@@ -68,27 +70,48 @@ void CHSettingForm::settingConfig_init()
 
 void CHSettingForm::identifyProduct()
 {
-    bool is226 = CH_Config.Model == "HI226";
-    bool is221 = CH_Config.Model == "HI221";
-    bool is221dongle = CH_Config.Model == "HI221Dongle";
+    ui->Label_Mode->setVisible(false);
+    ui->CB_Mode->setVisible(false);
 
-    ui->Label_Mode->setEnabled(!is226);
-    ui->CB_Mode->setEnabled(!is226);
+    ui->Label_DongleParam->setVisible(false);
+    ui->CB_DongleParam->setVisible(false);
 
-    ui->Label_ID->setEnabled(is221);
-    ui->SB_ID->setEnabled(is221);
+    ui->Label_GWID->setVisible(false);
+    ui->SB_GWID->setVisible(false);
 
-    ui->Label_GWID->setEnabled(is221||is221dongle);
-    ui->SB_GWID->setEnabled(is221||is221dongle);
+    ui->Label_ID->setVisible(false);
+    ui->SB_ID->setVisible(false);
 
-    ui->CB_PTL->setEnabled(!(is221||is221dongle));
-    ui->Label_PTL->setEnabled(!(is221||is221dongle));
+    ui->Label_PTL->setVisible(false);
+    ui->CB_PTL->setVisible(false);
 
-    ui->Label_Mode->setEnabled(!is221dongle);
-    ui->CB_Mode->setEnabled(!is221dongle);
+    if(CH_Config.Model == "HI226" || CH_Config.Model == "HI229")
+    {
+        ui->Label_PTL->setVisible(true);
+        ui->CB_PTL->setVisible(true);
+    }
 
-    ui->Label_DongleParam->setEnabled(is221dongle);
-    ui->CB_DongleParam->setEnabled(is221dongle);
+    if(CH_Config.Model == "HI229" || CH_Config.Model == "CH100" || CH_Config.Model == "CH110" || CH_Config.Model == "HI221")
+    {
+        ui->Label_Mode->setVisible(true);
+        ui->CB_Mode->setVisible(true);
+    }
+
+    if(CH_Config.Model == "HI221" || CH_Config.Model == "HI221Dongle")
+    {
+        ui->Label_GWID->setVisible(true);
+        ui->SB_GWID->setVisible(true);
+
+        ui->Label_ID->setVisible(true);
+        ui->SB_ID->setVisible(true);
+    }
+
+    if(CH_Config.Model == "HI221Dongle")
+    {
+        ui->Label_DongleParam->setVisible(true);
+        ui->CB_DongleParam->setVisible(true);
+    }
+
 }
 
 void CHSettingForm::uiLoadConfig()

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>742</width>
-    <height>707</height>
+    <height>760</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -279,52 +279,6 @@
                 </item>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="Label_Mode">
-                <property name="text">
-                 <string>Mode</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QComboBox" name="CB_Mode">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="editable">
-                 <bool>false</bool>
-                </property>
-                <property name="currentText">
-                 <string>6 Axis (VRU)</string>
-                </property>
-                <item>
-                 <property name="text">
-                  <string extracomment="test comments">6 Axis (VRU)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>9 Axis (AHRS)</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="Label_PTL">
-                <property name="minimumSize">
-                 <size>
-                  <width>120</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Output Protocol</string>
-                </property>
-               </widget>
-              </item>
               <item row="3" column="1">
                <widget class="QComboBox" name="CB_PTL">
                 <property name="minimumSize">
@@ -345,7 +299,7 @@
                 </item>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="5" column="0">
                <widget class="QLabel" name="Label_ID">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -358,7 +312,20 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
+              <item row="5" column="1">
+               <widget class="QSpinBox" name="SB_ID">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximum">
+                 <number>16</number>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
                <widget class="QLabel" name="Label_GWID">
                 <property name="minimumSize">
                  <size>
@@ -371,7 +338,7 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="1">
+              <item row="6" column="1">
                <widget class="QSpinBox" name="SB_GWID">
                 <property name="minimumSize">
                  <size>
@@ -381,14 +348,14 @@
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
+              <item row="7" column="0">
                <widget class="QLabel" name="Label_DongleParam">
                 <property name="text">
                  <string>Dongle Parameters</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="1">
+              <item row="7" column="1">
                <widget class="QComboBox" name="CB_DongleParam">
                 <property name="minimumSize">
                  <size>
@@ -416,17 +383,50 @@
                 </item>
                </widget>
               </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="Label_PTL">
+                <property name="minimumSize">
+                 <size>
+                  <width>120</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Output Protocol</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="Label_Mode">
+                <property name="text">
+                 <string>Mode</string>
+                </property>
+               </widget>
+              </item>
               <item row="4" column="1">
-               <widget class="QSpinBox" name="SB_ID">
+               <widget class="QComboBox" name="CB_Mode">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
                   <height>30</height>
                  </size>
                 </property>
-                <property name="maximum">
-                 <number>16</number>
+                <property name="editable">
+                 <bool>false</bool>
                 </property>
+                <property name="currentText">
+                 <string>6 Axis (VRU)</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string extracomment="test comments">6 Axis (VRU)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>9 Axis (AHRS)</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>

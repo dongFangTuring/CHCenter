@@ -89,7 +89,6 @@ private slots:
     void on_actionTraditional_Chinese_triggered();
     void on_actionSimplified_Chinese_triggered();
     void on_actionEnglish_triggered();
-    void on_actionFAQ_triggered();
     void on_actionAbout_triggered();
 
     ///StatusBar///
@@ -101,6 +100,8 @@ private slots:
     void on_actionEuler_Angle_triggered();
     void on_actionQuaternion_triggered();
 
+
+    void on_actionWebside_triggered();
 
 private:
     Ui::BaseForm *ui;

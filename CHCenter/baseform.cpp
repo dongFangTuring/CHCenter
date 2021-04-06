@@ -380,7 +380,6 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     if(content_bits & BIT_VALID_ACC) {
         if(!ui->LabelGPAcc->isVisible()) {
             ui->LabelGPAcc->setVisible(true);
-            ui->actionLinear_Acceleration->setVisible(true);
         }
         ui->LabelAccX->setText(QString::number(imu_data.acc[0], 'f', 3));
         ui->LabelAccY->setText(QString::number(imu_data.acc[1], 'f', 3));
@@ -389,13 +388,11 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     } else {
         if(ui->LabelGPAcc->isVisible()) {
             ui->LabelGPAcc->setVisible(false);
-            ui->actionLinear_Acceleration->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_GYR) {
         if(!ui->LabelGPGyro->isVisible()) {
             ui->LabelGPGyro->setVisible(true);
-            ui->actionGyroscope->setVisible(true);
         }
         ui->LabelGyroX->setText(QString::number(imu_data.gyr[0], 'f', 3));
         ui->LabelGyroY->setText(QString::number(imu_data.gyr[1], 'f', 3));
@@ -404,13 +401,11 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     } else {
         if(ui->LabelGPGyro->isVisible()) {
             ui->LabelGPGyro->setVisible(false);
-            ui->actionGyroscope->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_MAG) {
         if(!ui->LabelGPMag->isVisible()) {
             ui->LabelGPMag->setVisible(true);
-            ui->actionMagnetometer->setVisible(true);
         }
 
         ui->LabelMagX->setText(QString::number(imu_data.mag[0], 'f', 0));
@@ -420,13 +415,11 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     } else {
         if(ui->LabelGPMag->isVisible()) {
             ui->LabelGPMag->setVisible(false);
-            ui->actionMagnetometer->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_EUL) {
         if(!ui->LabelGPEuler->isVisible()) {
             ui->LabelGPEuler->setVisible(true);
-            ui->actionEuler_Angle->setVisible(true);
         }
         ui->LabelEulerX->setText(QString::number(imu_data.eul[0], 'f', 2));
         ui->LabelEulerY->setText(QString::number(imu_data.eul[1], 'f', 2));
@@ -435,13 +428,11 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     } else {
         if(ui->LabelGPEuler->isVisible()) {
             ui->LabelGPEuler->setVisible(false);
-            ui->actionEuler_Angle->setVisible(false);
         }
     }
     if(content_bits & BIT_VALID_QUAT) {
         if(!ui->LabelGPQuat->isVisible()) {
             ui->LabelGPQuat->setVisible(true);
-            ui->actionQuaternion->setVisible(true);
         }
         ui->LabelQuatW->setText(QString::number(imu_data.quat[0], 'f', 3));
         ui->LabelQuatX->setText(QString::number(imu_data.quat[1], 'f', 3));
@@ -451,7 +442,6 @@ void BaseForm::updateIMUTable(id0x91_t imu_data, uchar content_bits)
     } else {
         if(ui->LabelGPQuat->isVisible()) {
             ui->LabelGPQuat->setVisible(false);
-            ui->actionQuaternion->setVisible(false);
         }
     }
 
@@ -568,10 +558,6 @@ void BaseForm::on_actionEnglish_triggered()
 
 }
 
-void BaseForm::on_actionFAQ_triggered()
-{
-    QDesktopServices::openUrl(QUrl("https://hipnuc.com/datahub.html"));
-}
 
 void BaseForm::on_actionAbout_triggered()
 {
@@ -636,3 +622,8 @@ void BaseForm::on_actionQuaternion_triggered()
     m_chartQuat->show();
 }
 
+
+void BaseForm::on_actionWebside_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://hipnuc.com/datahub.html"));
+}

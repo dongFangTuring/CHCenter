@@ -1274,7 +1274,7 @@ color:balck;
      <x>0</x>
      <y>0</y>
      <width>816</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuLanguage_2">
@@ -1305,7 +1305,7 @@ color:balck;
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionFAQ"/>
+    <addaction name="actionWebside"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuCharts">
@@ -1329,9 +1329,9 @@ color:balck;
     <string>English</string>
    </property>
   </action>
-  <action name="actionFAQ">
+  <action name="actionWebside">
    <property name="text">
-    <string>FAQ</string>
+    <string>Webside</string>
    </property>
   </action>
   <action name="actionAbout">

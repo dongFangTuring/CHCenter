@@ -135,35 +135,6 @@ void imu_parser::parse(QByteArray &ba)
                 }
                 break;
 
-            case KItemDongleRaw:
-                //                receive_gwsol.tag = KItemDongleRaw;
-                //                receive_gwsol.gw_id = p[offset + 1];
-                //                receive_gwsol.n = p[offset + 2];
-                //                offset += 8;
-                //                bitmap |= BIT_VALID_ID;
-                //                bitmap |= BIT_VALID_ACC;
-                //                bitmap |= BIT_VALID_GYR;
-
-                //                for (int i = 0; i < receive_gwsol.n; i++)
-                //                {
-
-                //                    receive_gwsol.receive_imusol[i].tag = p[offset];
-                //                    receive_gwsol.receive_imusol[i].id = p[offset + 1];
-
-                //                    offset += 12;
-                //                    stream2int16(temp, p + offset);
-                //                    receive_gwsol.receive_imusol[i].acc[0] = (float)temp[0] / 1000;
-                //                    receive_gwsol.receive_imusol[i].acc[1] = (float)temp[1] / 1000;
-                //                    receive_gwsol.receive_imusol[i].acc[2] = (float)temp[2] / 1000;
-                //                    offset += 6;
-                //                    stream2int16(temp, p + offset);
-                //                    receive_gwsol.receive_imusol[i].gyr[0] = (float)temp[0] / 10;
-                //                    receive_gwsol.receive_imusol[i].gyr[1] = (float)temp[1] / 10;
-                //                    receive_gwsol.receive_imusol[i].gyr[2] = (float)temp[2] / 10;
-                //                    offset += 6;
-                //                }
-                break;
-
             default:
                 offset++;
             }
